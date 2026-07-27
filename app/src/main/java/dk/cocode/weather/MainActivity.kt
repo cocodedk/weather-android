@@ -9,11 +9,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dk.cocode.weather.ui.WeatherScreen
 import dk.cocode.weather.ui.WeatherViewModel
 import dk.cocode.weather.ui.theme.WeatherTheme
+import dk.cocode.weather.widget.WeatherWidgetProvider
 
 class MainActivity : ComponentActivity() {
 
@@ -47,6 +49,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            val context = LocalContext.current
+
             WeatherTheme(isNight = state.isNight) {
                 WeatherScreen(
                     state = state,
@@ -59,6 +63,7 @@ class MainActivity : ComponentActivity() {
                     onUseDeviceLocation = vm::useDeviceLocation,
                     onToggleUnits = vm::toggleUnits,
                     onCycleTheme = vm::cycleTheme,
+                    onAddWidget = { WeatherWidgetProvider.requestPin(context) },
                     onMessageShown = vm::consumeMessage,
                 )
             }

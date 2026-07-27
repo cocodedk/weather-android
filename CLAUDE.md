@@ -79,7 +79,17 @@ The app must stay fully usable with location permission denied, location service
 switched off, or no fix available. Search is the always-available path;
 `DeviceLocation` degrades through: fresh fix → stale cached fix → helpful error.
 
-### 4. `website/js/wx.js` and `domain/` must be kept in step by hand
+### 4. The widget draws the app's icons, it does not copy them
+
+A widget cannot host a Composable and RemoteViews only takes bitmaps or
+drawables. Rather than maintain a parallel set of vector drawables that would
+quietly drift, `WidgetIcons` runs the app's own `drawWeatherIcon` through a
+`CanvasDrawScope` off-screen and hands the pixels to `setImageViewBitmap`.
+
+That is why `drawWeatherIcon` is `internal` rather than `private`. If you make it
+private again, the widget loses its artwork.
+
+### 5. `website/js/wx.js` and `domain/` must be kept in step by hand
 
 The Tizen project could copy its shared modules into the site verbatim, because
 both sides were JavaScript. Across Kotlin and JS that is impossible, so
@@ -120,10 +130,15 @@ ui/
   icons/               the Tizen SVG sprite, as Canvas draw calls
   theme/Theme.kt       the two Tizen palettes + gradient
 
+widget/            home screen widget
+  WeatherWidgetProvider.kt  AppWidgetProvider; goAsync() + coroutine to fetch
+  WidgetViews.kt            builds the RemoteViews (pure presentation)
+  WidgetIcons.kt            drives the app's drawWeatherIcon into a Bitmap
+
 website/           GitHub Pages site — plain HTML/CSS/JS, no build step
   index.html         English; da/ and fa/ are the other two languages
   styles.css         one stylesheet for all three, with [dir="rtl"] overrides
-  js/wx.js           JS mirror of domain/ + the API clients — see rule 4
+  js/wx.js           JS mirror of domain/ + the API clients — see rule 5
   js/live.js         the live panel, location search, and page atmosphere
   js/sprite.js       the icon sprite, injected so one copy serves every page
   js/i18n/{da,fa}.js translated strings; English is what wx.js already speaks

@@ -56,6 +56,7 @@ fun WeatherScreen(
     onUseDeviceLocation: () -> Unit,
     onToggleUnits: () -> Unit,
     onCycleTheme: () -> Unit,
+    onAddWidget: () -> Unit,
     onMessageShown: () -> Unit,
 ) {
     val snackbars = remember { SnackbarHostState() }
@@ -78,6 +79,7 @@ fun WeatherScreen(
                 onToggleUnits = onToggleUnits,
                 onCycleTheme = onCycleTheme,
                 onRefresh = onRefresh,
+                onAddWidget = onAddWidget,
             )
         },
     ) { padding ->

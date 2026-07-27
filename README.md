@@ -36,6 +36,9 @@ anything.
   from Denmark.
 - **Seven days, selectable.** Tap a day and the headline, the six stat tiles and
   the hourly strip all retarget to it.
+- **Home screen widget.** Current conditions for the selected location, in the
+  app's own artwork. Follows whatever place is selected in the app, refreshes
+  every half hour, and taps through to the full forecast.
 - **Metric or imperial.** Converted on the client, so switching needs no refetch.
 - **Works offline.** The last successful response is cached per location and shown
   with a stale marker when the network is unavailable.
@@ -70,7 +73,8 @@ Contributors should run `./scripts/install-hooks.sh` after cloning. See
 app/src/main/java/dk/cocode/weather/
 ├── domain/     pure Kotlin — WMO codes, units, wall-clock parsing (no Android imports)
 ├── data/       Open-Meteo clients, device location, DataStore, per-place cache
-└── ui/         Compose screen, ViewModel, and the icon set drawn to a Canvas
+├── ui/         Compose screen, ViewModel, and the icon set drawn to a Canvas
+└── widget/     home screen widget (RemoteViews), reusing the app's icon geometry
 website/        GitHub Pages site — plain HTML/CSS/JS, no build step
 tools/          selftest.html — exercises the site's JS against the live API
 ```
