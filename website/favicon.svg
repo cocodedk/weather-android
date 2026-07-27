@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- The app's own sun-behind-cloud mark, reduced to what survives at 16px:
+       the gold disc reads even when the cloud becomes a single shape. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#17457F"/>
+      <stop offset="1" stop-color="#3D87C7"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="url(#sky)"/>
+  <circle cx="20.5" cy="11.5" r="5" fill="#FFD257"/>
+  <g fill="#fff">
+    <circle cx="12" cy="18.5" r="5.5"/>
+    <circle cx="19" cy="20.5" r="4"/>
+    <rect x="6.5" y="19" width="16.5" height="7" rx="3.5"/>
+  </g>
+</svg>

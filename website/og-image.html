@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Source for og.png (1200x630). Render with:
+     google-chrome-stable --headless --disable-gpu --no-sandbox \
+       --window-size=1200,630 --virtual-time-budget=6000 \
+       --screenshot=website/og.png "file://$PWD/website/og-image.html"
+
+     The image argues the product in one glance: three cities, the same instant,
+     three different local clocks. That is the thing the TV version could not do. -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px; height: 630px; overflow: hidden;
+    background: linear-gradient(160deg, #17457F 0%, #3D87C7 100%);
+    color: #fff; font-family: 'Space Grotesk', sans-serif;
+    padding: 56px 64px; display: flex; flex-direction: column;
+    position: relative;
+  }
+  .glow {
+    position: absolute; top: -150px; right: -100px; width: 620px; height: 620px;
+    background: radial-gradient(circle, #FFD257 0%, transparent 66%);
+    opacity: 0.2; filter: blur(50px);
+  }
+  header { display: flex; align-items: center; gap: 12px; position: relative; }
+  header svg { width: 40px; height: 40px; color: #FFD257; }
+  header b { font-size: 27px; font-weight: 700; letter-spacing: -0.01em; }
+  .eyebrow {
+    margin-inline-start: auto; font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #FFD257;
+  }
+  h1 {
+    margin-top: 26px; font-size: 63px; font-weight: 700;
+    letter-spacing: -0.035em; line-height: 1.03; position: relative;
+  }
+  .sub {
+    margin-top: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 19px;
+    color: rgba(255,255,255,0.74); position: relative;
+  }
+  .cards { display: flex; gap: 18px; margin-top: auto; position: relative; }
+  .card {
+    flex: 1; padding: 22px 24px; border-radius: 18px;
+    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.18);
+  }
+  .card.night { background: rgba(6,12,34,0.42); border-color: rgba(255,255,255,0.14); }
+  .city {
+    font-family: 'IBM Plex Mono', monospace; font-size: 15px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: rgba(255,255,255,0.76);
+  }
+  .row { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+  .row svg { width: 52px; height: 52px; }
+  .t { font-size: 50px; font-weight: 500; letter-spacing: -0.03em; }
+  .t span { font-size: 22px; vertical-align: 14px; }
+  .clock {
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.18);
+    display: flex; align-items: baseline; gap: 9px;
+  }
+  .clock b { font-size: 27px; font-weight: 500; letter-spacing: -0.02em; }
+  .clock i {
+    font-family: 'IBM Plex Mono', monospace; font-style: normal; font-size: 12px;
+    letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.66);
+  }
+  footer {
+    margin-top: 26px; font-family: 'IBM Plex Mono', monospace; font-size: 16px;
+    color: rgba(255,255,255,0.66); position: relative;
+  }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="partly" viewBox="0 0 64 64">
+    <circle cx="43" cy="20" r="9" fill="#FFD257"/>
+    <g stroke="#FFD257" stroke-width="3" stroke-linecap="round" fill="none">
+      <line x1="43" y1="3" x2="43" y2="7"/><line x1="58" y1="20" x2="62" y2="20"/>
+      <line x1="54.3" y1="9.7" x2="57" y2="7"/><line x1="31.7" y1="9.7" x2="29" y2="7"/>
+    </g>
+    <g fill="#fff">
+      <circle cx="23" cy="35" r="10"/><circle cx="36" cy="38" r="8"/>
+      <rect x="13" y="38" width="31" height="12" rx="6"/>
+    </g>
+  </symbol>
+  <symbol id="partly-night" viewBox="0 0 64 64">
+    <g transform="translate(30 2) scale(0.5)">
+      <path d="M56 34.1A24 24 0 1 1 29.9 8 18.7 18.7 0 0 0 56 34.1z" fill="#CBD8FF"/>
+    </g>
+    <g fill="#fff">
+      <circle cx="23" cy="35" r="10"/><circle cx="36" cy="38" r="8"/>
+      <rect x="13" y="38" width="31" height="12" rx="6"/>
+    </g>
+  </symbol>
+  <symbol id="cloudy" viewBox="0 0 64 64">
+    <g fill="#fff">
+      <circle cx="26" cy="26" r="11"/><circle cx="41" cy="30" r="9"/>
+      <rect x="14" y="30" width="36" height="13" rx="6.5"/>
+    </g>
+  </symbol>
+</svg>
+
+<header>
+  <svg viewBox="0 0 64 64"><use href="#partly"/></svg>
+  <b>Weather</b>
+  <span class="eyebrow">Android · open source</span>
+</header>
+
+<h1>Weather, wherever<br>you point it.</h1>
+<p class="sub">Any city on Earth, or your phone's GPS, in that place's own local time.</p>
+
+<div class="cards">
+  <div class="card">
+    <div class="city">Copenhagen</div>
+    <div class="row">
+      <svg viewBox="0 0 64 64"><use href="#partly"/></svg>
+      <div class="t">18<span>°C</span></div>
+    </div>
+    <div class="clock"><b>11:48</b><i>local time</i></div>
+  </div>
+
+  <div class="card night">
+    <div class="city">Tokyo</div>
+    <div class="row">
+      <svg viewBox="0 0 64 64"><use href="#partly-night"/></svg>
+      <div class="t">27<span>°C</span></div>
+    </div>
+    <div class="clock"><b>18:48</b><i>local time</i></div>
+  </div>
+
+  <div class="card">
+    <div class="city">Lima</div>
+    <div class="row">
+      <svg viewBox="0 0 64 64"><use href="#cloudy"/></svg>
+      <div class="t">17<span>°C</span></div>
+    </div>
+    <div class="clock"><b>05:48</b><i>local time</i></div>
+  </div>
+</div>
+
+<footer>Built by Babak Bandpey · cocode.dk · github.com/cocodedk/weather-android</footer>
+</body>
+</html>

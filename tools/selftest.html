@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<style>body{font:14px monospace;background:#0b1c33;color:#dfe9ff;padding:20px;line-height:1.7}
+b{color:#ffd257}.ok{color:#8ef0a0}.bad{color:#ff8f8f}</style></head><body>
+<h1 style="font-size:15px;color:#ffd257;margin:0 0 12px">wx.js self-test — live Open-Meteo</h1>
+<div id="out">running…</div>
+<script src="../website/js/wx.js"></script>
+<script>
+const out = [];
+function log(ok, msg){ out.push(`<div class="${ok?'ok':'bad'}">${ok?'PASS':'FAIL'} — ${msg}</div>`); }
+(async () => {
+  try {
+    const hits = await WX.search('Reykjavik', 'en');
+    log(hits.length > 0, `search("Reykjavik") returned ${hits.length} places`);
+    if (hits.length) {
+      const p = hits[0];
+      log(!!p.name && typeof p.latitude === 'number',
+          `top hit: ${p.name}, ${p.country} (${p.latitude}, ${p.longitude})`);
+      const m = await WX.fetchForecast(p);
+      log(m.daily.length === 7, `forecast: ${m.daily.length} days, ${m.hourly.length} hours`);
+      log(typeof m.current.temperature_2m === 'number',
+          `now: ${WX.temp(m.current.temperature_2m)}${WX.tempUnit()} — ${WX.label(m.current.weather_code)}`);
+      const off = m.utcOffset;
+      const d = new Date(Date.now() + off*1000);
+      log(true, `utcOffset ${off}s → local clock ${WX.pad2(d.getUTCHours())}:${WX.pad2(d.getUTCMinutes())}`);
+      log(WX.icon(0,false) === 'clear-night', `night icon mapping: ${WX.icon(0,false)}`);
+      log(WX.weekday('2026-07-27') === 'Monday', `weekday('2026-07-27') = ${WX.weekday('2026-07-27')}`);
+      log(WX.clock('2026-07-27T22:15') === '22:15', `clock parses wall time as digits: ${WX.clock('2026-07-27T22:15')}`);
+    }
+    const none = await WX.search('zzzzqqqxx', 'en');
+    log(none.length === 0, `search with no matches returns [] (got ${none.length})`);
+  } catch (e) { log(false, 'threw: ' + e.message); }
+  document.getElementById('out').innerHTML = out.join('');
+})();
+</script></body></html>

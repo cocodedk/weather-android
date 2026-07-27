@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sun behind a cloud, drawn inside the 72dp adaptive-icon safe zone
+     (centre 108x108, safe circle diameter 66). Mirrors the "partly" sprite. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- sun -->
+    <group android:translateX="0" android:translateY="0">
+        <path
+            android:fillColor="#FFD257"
+            android:pathData="M66,38m-11,0a11,11 0 1,0 22,0a11,11 0 1,0 -22,0" />
+        <path
+            android:strokeColor="#FFD257"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:pathData="M66,19L66,24 M66,52L66,55 M85,38L90,38 M42,38L47,38 M79.4,24.6L83,21 M52.6,24.6L49,21 M79.4,51.4L83,55" />
+    </group>
+
+    <!-- cloud -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,56m-13,0a13,13 0 1,0 26,0a13,13 0 1,0 -26,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M57,60m-10,0a10,10 0 1,0 20,0a10,10 0 1,0 -20,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M27,60h40a8,8 0 0,1 0,16h-40a8,8 0 0,1 0,-16z" />
+</vector>

@@ -1,0 +1,38 @@
+# Normalize all text files to LF on commit
+* text=auto eol=lf
+
+*.kt        text eol=lf
+*.kts       text eol=lf
+*.java      text eol=lf
+*.sh        text eol=lf
+*.xml       text eol=lf
+*.json      text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+*.md        text eol=lf
+*.html      text eol=lf
+*.css       text eol=lf
+*.js        text eol=lf
+*.pro       text eol=lf
+*.properties text eol=lf
+*.txt       text eol=lf
+
+# Binary — never diff or convert
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.webp      binary
+*.pdf       binary
+*.apk       binary
+*.jar       binary
+*.keystore  binary
+*.jks       binary
+*.zip       binary
+
+# SVG is text, but diffing generated path data is noise.
+*.svg       text eol=lf linguist-generated=false
+
+# Gradle wrapper jar is a binary the repo intentionally carries.
+gradle/wrapper/gradle-wrapper.jar binary

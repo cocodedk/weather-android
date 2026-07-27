@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- SEO keywords:
+     primary:   android weather app any location
+     secondary: open-meteo android app, gps weather app android, open source weather app
+     intent:    transactional (download) with informational support
+-->
+
+<title>Weather: an Android forecast app for any location</title>
+<meta name="description" content="A free, open-source Android weather app. Search any city on Earth or use your phone's GPS, and read every forecast in that place's own local time. No API key, no account, no tracking.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://cocodedk.github.io/weather-android/">
+
+<link rel="alternate" hreflang="en" href="https://cocodedk.github.io/weather-android/">
+<link rel="alternate" hreflang="da" href="https://cocodedk.github.io/weather-android/da/">
+<link rel="alternate" hreflang="fa" href="https://cocodedk.github.io/weather-android/fa/">
+<link rel="alternate" hreflang="x-default" href="https://cocodedk.github.io/weather-android/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Weather for Android">
+<meta property="og:title" content="Weather: an Android forecast app for any location">
+<meta property="og:description" content="Search any city on Earth or use your phone's GPS. Every forecast reads in that place's own local time. Free, open source, no API key.">
+<meta property="og:url" content="https://cocodedk.github.io/weather-android/">
+<meta property="og:image" content="https://cocodedk.github.io/weather-android/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Weather app showing 18 degrees and partly cloudy for Copenhagen, beside a seven-day forecast.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="da_DK">
+<meta property="og:locale:alternate" content="fa_IR">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Weather: an Android forecast app for any location">
+<meta name="twitter:description" content="Search any city on Earth or use your phone's GPS. Every forecast reads in that place's own local time.">
+<meta name="twitter:image" content="https://cocodedk.github.io/weather-android/og.png">
+<meta name="twitter:image:alt" content="The Weather app showing current conditions and a seven-day forecast.">
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "Weather",
+  "description": "A free, open-source Android weather app that shows current conditions, a 24-hour outlook and a 7-day forecast for any location, found by search or by device GPS.",
+  "url": "https://cocodedk.github.io/weather-android/",
+  "downloadUrl": "https://github.com/cocodedk/weather-android/releases/latest",
+  "applicationCategory": "WeatherApplication",
+  "operatingSystem": "Android 8.0+",
+  "inLanguage": "en",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": {
+    "@type": "Person",
+    "name": "Babak Bandpey",
+    "url": "https://cocode.dk",
+    "sameAs": ["https://linkedin.com/in/babakbandpey", "https://github.com/cocodedk"]
+  },
+  "codeRepository": "https://github.com/cocodedk/weather-android",
+  "license": "https://www.apache.org/licenses/LICENSE-2.0"
+}
+</script>
+</head>
+<body>
+
+<div class="shell">
+
+<nav class="nav">
+  <a class="brand" href="./">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-partly"/></svg>
+    Weather
+  </a>
+  <div class="langs">
+    <span class="on">EN</span>
+    <a href="da/" hreflang="da">DA</a>
+    <a href="fa/" hreflang="fa">FA</a>
+  </div>
+</nav>
+
+<div class="hero-grid">
+
+  <header class="hero">
+    <p class="eyebrow">Android · Open-Meteo · no API key</p>
+    <h1>Weather, wherever you point it.</h1>
+    <p class="lede">
+      Search any city on Earth, or hand it your phone's GPS. Every forecast reads
+      in that place's own local time, not yours.
+    </p>
+
+    <div class="wx-search">
+      <label class="visually-hidden" for="wx-search">Search for a city or town</label>
+      <input id="wx-search" type="search" autocomplete="off" role="combobox"
+             aria-expanded="false" aria-controls="wx-results"
+             placeholder="Search any city or town">
+      <div id="wx-results" hidden></div>
+    </div>
+
+    <ul class="chips">
+      <li><button class="chip" data-name="Copenhagen" data-country="Denmark" data-lat="55.6761" data-lon="12.5683">Copenhagen</button></li>
+      <li><button class="chip" data-name="Tokyo" data-country="Japan" data-lat="35.6895" data-lon="139.6917">Tokyo</button></li>
+      <li><button class="chip" data-name="Reykjavík" data-country="Iceland" data-lat="64.1466" data-lon="-21.9426">Reykjavík</button></li>
+      <li><button class="chip" data-name="Cairo" data-country="Egypt" data-lat="30.0444" data-lon="31.2357">Cairo</button></li>
+      <li><button class="chip" data-name="Lima" data-country="Peru" data-lat="-12.0464" data-lon="-77.0428">Lima</button></li>
+    </ul>
+  </header>
+
+  <section class="wx-panel" id="wx-panel" aria-live="polite" aria-label="Live forecast">
+    <div class="wx-head">
+      <svg id="wx-icon" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-cloudy"/></svg>
+      <div class="wx-read">
+        <div id="wx-temp">--<span>°C</span></div>
+        <div id="wx-cond">Loading the forecast…</div>
+        <div id="wx-place">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="wx-time">
+      <span id="wx-clock">--:--</span>
+      <span>local time</span>
+      <span class="wx-status" id="wx-status"></span>
+    </div>
+
+    <dl id="wx-tiles"></dl>
+    <ul class="strip" id="wx-hours"></ul>
+    <ul class="days" id="wx-days"></ul>
+  </section>
+
+</div>
+
+<main>
+
+<section>
+  <h2>What it does</h2>
+  <p class="sub">
+    The same six readings, the same 24-hour strip and the same seven days the TV
+    version showed. Now for anywhere, on a screen you carry.
+  </p>
+  <ul class="feats">
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-clear"/></svg>
+      <h3>Any location</h3>
+      <p>Type-ahead search over Open-Meteo's geocoder. Country and region are shown,
+         so you can tell the twelve places called Springfield apart.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-gauge"/></svg>
+      <h3>Device GPS</h3>
+      <p>One tap finds your coordinates and names the place. Permission is optional.
+         Search keeps working if you say no.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-sunrise"/></svg>
+      <h3>The right local time</h3>
+      <p>Each place shows its own wall clock and its own day and night icons, taken
+         from the API's UTC offset rather than your phone's.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-thermo"/></svg>
+      <h3>Seven days, selectable</h3>
+      <p>Tap a day and the headline, the six stat tiles and the hourly strip all
+         switch to it.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-drop"/></svg>
+      <h3>Works offline</h3>
+      <p>The last good response is cached per location and shown with a stale
+         marker when the network is gone.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-wind"/></svg>
+      <h3>Nothing to sign up for</h3>
+      <p>No API key, no account, no analytics, no ads. Open-Meteo is free and needs
+         no key, and there is no tracking in the app.</p>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ported from a television</h2>
+  <div class="origin">
+    <p>
+      This started as
+      <a href="https://github.com/cocodedk/copenhagen-weather-tv">Copenhagen Weather</a>,
+      a Samsung Tizen TV app driven entirely by a remote control. It showed one
+      hardcoded city, because a television sits in one room.
+    </p>
+    <p>
+      The Android version keeps that app's palette, its weather icons and its
+      day-selection model, and drops the D-pad focus engine that a touchscreen has
+      no use for. What it adds is the thing a phone actually needs: somewhere to
+      put a location.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Get it</h2>
+  <p class="sub">Android 8.0 or newer. The APK is signed and attached to every release.</p>
+  <div class="cta">
+    <a class="btn btn-primary" href="https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk">Download the APK</a>
+    <a class="btn btn-ghost" href="https://github.com/cocodedk/weather-android">Read the source</a>
+  </div>
+  <pre><code>git clone https://github.com/cocodedk/weather-android.git
+cd weather-android
+./gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk</code></pre>
+</section>
+
+</main>
+
+<footer>
+  <p>Apache-2.0 &nbsp;|&nbsp; © 2026 <a href="https://cocode.dk" target="_blank" rel="noreferrer">Cocode</a> &nbsp;|&nbsp; Created by <a href="https://linkedin.com/in/babakbandpey" target="_blank" rel="noreferrer">Babak Bandpey</a></p>
+  <p>Forecasts from <a href="https://open-meteo.com" target="_blank" rel="noreferrer">Open-Meteo</a>.</p>
+</footer>
+
+</div>
+
+<script src="js/sprite.js"></script>
+<script src="js/wx.js"></script>
+<script src="js/live.js"></script>
+</body>
+</html>

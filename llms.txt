@@ -1,0 +1,45 @@
+# Weather
+
+> A free, open-source Android weather app that shows current conditions, a
+> 24-hour outlook and a 7-day forecast for any location — found by search or by
+> device GPS. Kotlin and Jetpack Compose, no API key, no account, no tracking.
+> Ported from a Samsung Tizen TV app that showed one hardcoded city.
+
+Built by Babak Bandpey (Cocode, https://cocode.dk). Apache-2.0.
+
+Two design rules govern most of the code and are the usual source of confusion:
+
+- **Wall-clock times are parsed as digits, never as instants.** Open-Meteo returns
+  local time strings already in the requested location's timezone. Routing them
+  through `Instant`/`Date` would re-interpret them in the phone's zone and shift
+  every forecast for a city the user does not live in. `Units.parseLocal` reads
+  the digits directly; `PlaceHeader` derives the location's clock from the API's
+  `utc_offset_seconds`.
+- **Missing data renders as `--`, never as a number.** `org.json` returns `NaN`
+  and `0` where the API means "no value", so `data/Json.kt` collapses those to
+  Kotlin `null` before any formatter sees them.
+
+## Docs
+
+- [README](https://github.com/cocodedk/weather-android/blob/main/README.md): what it is, features, build instructions, architecture
+- [CLAUDE.md](https://github.com/cocodedk/weather-android/blob/main/CLAUDE.md): architecture, layer rules, conventions, and what carried over from the Tizen app
+- [CONTRIBUTING](https://github.com/cocodedk/weather-android/blob/main/CONTRIBUTING.md): local setup, hooks, branch naming, PR checklist
+- [SECURITY](https://github.com/cocodedk/weather-android/blob/main/SECURITY.md): reporting policy and the app's (small) attack surface
+
+## Source
+
+- [domain/](https://github.com/cocodedk/weather-android/tree/main/app/src/main/java/dk/cocode/weather/domain): pure Kotlin — WMO codes, unit conversion, wall-clock parsing. No Android imports.
+- [data/](https://github.com/cocodedk/weather-android/tree/main/app/src/main/java/dk/cocode/weather/data): Open-Meteo forecast and geocoding clients, device location, DataStore persistence, per-place response cache
+- [ui/](https://github.com/cocodedk/weather-android/tree/main/app/src/main/java/dk/cocode/weather/ui): Compose screen, ViewModel, and the weather icon set drawn to a Canvas
+- [website/](https://github.com/cocodedk/weather-android/tree/main/website): the GitHub Pages site — plain HTML/CSS/JS, no build step, with a live Open-Meteo widget
+
+## Related
+
+- [Copenhagen Weather (Tizen TV)](https://github.com/cocodedk/copenhagen-weather-tv): the app this was ported from
+- [Open-Meteo](https://open-meteo.com): the forecast and geocoding API, free and key-less
+
+## Optional
+
+- [Website — English](https://cocodedk.github.io/weather-android/)
+- [Website — Dansk](https://cocodedk.github.io/weather-android/da/)
+- [Website — فارسی](https://cocodedk.github.io/weather-android/fa/)

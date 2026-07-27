@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matches the Tizen day palette's first gradient stop so the launch window
+         does not flash a different colour before the Compose gradient draws. -->
+    <color name="splash_bg">#17457F</color>
+</resources>

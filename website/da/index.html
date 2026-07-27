@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Weather — en vejr-app til Android for ethvert sted</title>
+<meta name="description" content="En gratis Android vejr-app med åben kildekode. Søg efter enhver by i verden, eller brug telefonens GPS, og se hver prognose i stedets egen lokale tid. Ingen API-nøgle, ingen konto, ingen sporing.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://cocodedk.github.io/weather-android/da/">
+
+<link rel="alternate" hreflang="en" href="https://cocodedk.github.io/weather-android/">
+<link rel="alternate" hreflang="da" href="https://cocodedk.github.io/weather-android/da/">
+<link rel="alternate" hreflang="fa" href="https://cocodedk.github.io/weather-android/fa/">
+<link rel="alternate" hreflang="x-default" href="https://cocodedk.github.io/weather-android/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Weather til Android">
+<meta property="og:title" content="Weather — en vejr-app til Android for ethvert sted">
+<meta property="og:description" content="Søg efter enhver by i verden, eller brug telefonens GPS. Hver prognose vises i stedets egen lokale tid.">
+<meta property="og:url" content="https://cocodedk.github.io/weather-android/da/">
+<meta property="og:image" content="https://cocodedk.github.io/weather-android/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Weather-appen viser 18 grader og delvist skyet for København ved siden af en syvdagsprognose.">
+<meta property="og:locale" content="da_DK">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="fa_IR">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Weather — en vejr-app til Android for ethvert sted">
+<meta name="twitter:description" content="Søg efter enhver by i verden, eller brug telefonens GPS. Hver prognose vises i stedets egen lokale tid.">
+<meta name="twitter:image" content="https://cocodedk.github.io/weather-android/og.png">
+<meta name="twitter:image:alt" content="Weather-appen viser aktuelle forhold og en syvdagsprognose.">
+
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "Weather",
+  "description": "En gratis Android vejr-app med åben kildekode, der viser aktuelle forhold, et døgns udsigt og en syvdagsprognose for ethvert sted — fundet ved søgning eller via enhedens GPS.",
+  "url": "https://cocodedk.github.io/weather-android/da/",
+  "downloadUrl": "https://github.com/cocodedk/weather-android/releases/latest",
+  "applicationCategory": "WeatherApplication",
+  "operatingSystem": "Android 8.0+",
+  "inLanguage": "da",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "DKK" },
+  "author": {
+    "@type": "Person",
+    "name": "Babak Bandpey",
+    "url": "https://cocode.dk",
+    "sameAs": ["https://linkedin.com/in/babakbandpey", "https://github.com/cocodedk"]
+  },
+  "codeRepository": "https://github.com/cocodedk/weather-android",
+  "license": "https://www.apache.org/licenses/LICENSE-2.0"
+}
+</script>
+</head>
+<body>
+
+<div class="shell">
+
+<nav class="nav">
+  <a class="brand" href="./">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-partly"/></svg>
+    Weather
+  </a>
+  <div class="langs">
+    <a href="../" hreflang="en">EN</a>
+    <span class="on">DA</span>
+    <a href="../fa/" hreflang="fa">FA</a>
+  </div>
+</nav>
+
+<div class="hero-grid">
+
+  <header class="hero">
+    <p class="eyebrow">Android · Open-Meteo · ingen API-nøgle</p>
+    <h1>Vejret, hvor du end peger.</h1>
+    <p class="lede">
+      Søg efter enhver by i verden, eller lad den bruge telefonens GPS. Hver
+      prognose vises i stedets egen lokale tid — ikke din.
+    </p>
+
+    <div class="wx-search">
+      <label class="visually-hidden" for="wx-search">Søg efter en by</label>
+      <input id="wx-search" type="search" autocomplete="off" role="combobox"
+             aria-expanded="false" aria-controls="wx-results"
+             placeholder="Søg efter en by">
+      <div id="wx-results" hidden></div>
+    </div>
+
+    <ul class="chips">
+      <li><button class="chip" data-name="København" data-country="Danmark" data-lat="55.6761" data-lon="12.5683">København</button></li>
+      <li><button class="chip" data-name="Tokyo" data-country="Japan" data-lat="35.6895" data-lon="139.6917">Tokyo</button></li>
+      <li><button class="chip" data-name="Reykjavík" data-country="Island" data-lat="64.1466" data-lon="-21.9426">Reykjavík</button></li>
+      <li><button class="chip" data-name="Kairo" data-country="Egypten" data-lat="30.0444" data-lon="31.2357">Kairo</button></li>
+      <li><button class="chip" data-name="Lima" data-country="Peru" data-lat="-12.0464" data-lon="-77.0428">Lima</button></li>
+    </ul>
+  </header>
+
+  <section class="wx-panel" id="wx-panel" aria-live="polite" aria-label="Aktuel prognose">
+    <div class="wx-head">
+      <svg id="wx-icon" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-cloudy"/></svg>
+      <div class="wx-read">
+        <div id="wx-temp">--<span>°C</span></div>
+        <div id="wx-cond">Henter prognosen…</div>
+        <div id="wx-place">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="wx-time">
+      <span id="wx-clock">--:--</span>
+      <span>lokal tid</span>
+      <span class="wx-status" id="wx-status"></span>
+    </div>
+
+    <dl id="wx-tiles"></dl>
+    <ul class="strip" id="wx-hours"></ul>
+    <ul class="days" id="wx-days"></ul>
+  </section>
+
+</div>
+
+<main>
+
+<section>
+  <h2>Hvad den kan</h2>
+  <p class="sub">
+    De samme seks aflæsninger, den samme døgnstribe og de samme syv dage, som
+    tv-udgaven viste — nu for hvor som helst, på en skærm du har med dig.
+  </p>
+  <ul class="feats">
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-clear"/></svg>
+      <h3>Ethvert sted</h3>
+      <p>Søgning mens du skriver, via Open-Meteos geokoder. Land og region vises,
+         så de tolv byer, der hedder det samme, kan skelnes fra hinanden.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-gauge"/></svg>
+      <h3>Enhedens GPS</h3>
+      <p>Ét tryk finder dine koordinater og giver dem et navn. Tilladelsen er
+         valgfri — søgningen virker stadig, hvis du siger nej.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-sunrise"/></svg>
+      <h3>Den rigtige lokale tid</h3>
+      <p>Hvert sted viser sit eget ur og sine egne dag- og nat-ikoner, hentet fra
+         API'ets UTC-forskydning i stedet for din telefons.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-thermo"/></svg>
+      <h3>Syv dage, der kan vælges</h3>
+      <p>Tryk på en dag, og overskriften, de seks felter og timestriben skifter
+         alle til den.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-drop"/></svg>
+      <h3>Virker offline</h3>
+      <p>Det sidste gode svar gemmes per sted og vises med en markering, når
+         nettet er væk.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-wind"/></svg>
+      <h3>Intet at melde sig til</h3>
+      <p>Ingen API-nøgle, ingen konto, ingen statistik, ingen reklamer. Open-Meteo
+         er gratis og uden nøgle, og appen sporer intet.</p>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h2>Portet fra et fjernsyn</h2>
+  <div class="origin">
+    <p>
+      Det begyndte som
+      <a href="https://github.com/cocodedk/copenhagen-weather-tv">Copenhagen Weather</a>,
+      en Samsung Tizen tv-app, der styres udelukkende med en fjernbetjening. Den
+      viste én fast by, for et fjernsyn står i ét rum.
+    </p>
+    <p>
+      Android-udgaven beholder appens farver, dens vejrikoner og dens dagsvalg og
+      dropper den D-pad-navigation, som en touchskærm ikke har brug for. Det, den
+      tilføjer, er det, en telefon faktisk har brug for: et sted at putte en
+      lokation.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Hent den</h2>
+  <p class="sub">Android 8.0 eller nyere. APK'en er signeret og vedhæftet hver udgivelse.</p>
+  <div class="cta">
+    <a class="btn btn-primary" href="https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk">Hent APK'en</a>
+    <a class="btn btn-ghost" href="https://github.com/cocodedk/weather-android">Læs kildekoden</a>
+  </div>
+  <pre><code>git clone https://github.com/cocodedk/weather-android.git
+cd weather-android
+./gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk</code></pre>
+</section>
+
+</main>
+
+<footer>
+  <p>Apache-2.0 &nbsp;|&nbsp; © 2026 <a href="https://cocode.dk" target="_blank" rel="noreferrer">Cocode</a> &nbsp;|&nbsp; Skabt af <a href="https://linkedin.com/in/babakbandpey" target="_blank" rel="noreferrer">Babak Bandpey</a></p>
+  <p>Prognoser fra <a href="https://open-meteo.com" target="_blank" rel="noreferrer">Open-Meteo</a>.</p>
+</footer>
+
+</div>
+
+<script src="../js/sprite.js"></script>
+<script src="../js/i18n/da.js"></script>
+<script src="../js/wx.js"></script>
+<script src="../js/live.js"></script>
+</body>
+</html>

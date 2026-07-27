@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Weather — اپ هواشناسی اندروید برای هر نقطه‌ای</title>
+<meta name="description" content="یک اپ هواشناسی رایگان و متن‌باز برای اندروید. هر شهری روی زمین را جست‌وجو کنید یا از GPS گوشی استفاده کنید؛ هر پیش‌بینی به وقت محلی همان‌جا نشان داده می‌شود. بدون کلید API، بدون حساب کاربری، بدون ردیابی.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://cocodedk.github.io/weather-android/fa/">
+
+<link rel="alternate" hreflang="en" href="https://cocodedk.github.io/weather-android/">
+<link rel="alternate" hreflang="da" href="https://cocodedk.github.io/weather-android/da/">
+<link rel="alternate" hreflang="fa" href="https://cocodedk.github.io/weather-android/fa/">
+<link rel="alternate" hreflang="x-default" href="https://cocodedk.github.io/weather-android/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Weather برای اندروید">
+<meta property="og:title" content="Weather — اپ هواشناسی اندروید برای هر نقطه‌ای">
+<meta property="og:description" content="هر شهری روی زمین را جست‌وجو کنید یا از GPS گوشی استفاده کنید. هر پیش‌بینی به وقت محلی همان‌جا خوانده می‌شود.">
+<meta property="og:url" content="https://cocodedk.github.io/weather-android/fa/">
+<meta property="og:image" content="https://cocodedk.github.io/weather-android/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="اپ Weather دمای ۱۸ درجه و هوای نیمه‌ابری کپنهاگ را کنار پیش‌بینی هفت‌روزه نشان می‌دهد.">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="da_DK">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Weather — اپ هواشناسی اندروید برای هر نقطه‌ای">
+<meta name="twitter:description" content="هر شهری روی زمین را جست‌وجو کنید یا از GPS گوشی استفاده کنید. هر پیش‌بینی به وقت محلی همان‌جا خوانده می‌شود.">
+<meta name="twitter:image" content="https://cocodedk.github.io/weather-android/og.png">
+<meta name="twitter:image:alt" content="اپ Weather وضعیت کنونی هوا و پیش‌بینی هفت‌روزه را نشان می‌دهد.">
+
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "Weather",
+  "description": "یک اپ هواشناسی رایگان و متن‌باز برای اندروید که وضعیت کنونی، چشم‌انداز ۲۴ ساعته و پیش‌بینی هفت‌روزه را برای هر نقطه‌ای نشان می‌دهد — چه با جست‌وجو و چه با GPS دستگاه.",
+  "url": "https://cocodedk.github.io/weather-android/fa/",
+  "downloadUrl": "https://github.com/cocodedk/weather-android/releases/latest",
+  "applicationCategory": "WeatherApplication",
+  "operatingSystem": "Android 8.0+",
+  "inLanguage": "fa",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": {
+    "@type": "Person",
+    "name": "بابک بندپی",
+    "url": "https://cocode.dk",
+    "sameAs": ["https://linkedin.com/in/babakbandpey", "https://github.com/cocodedk"]
+  },
+  "codeRepository": "https://github.com/cocodedk/weather-android",
+  "license": "https://www.apache.org/licenses/LICENSE-2.0"
+}
+</script>
+</head>
+<body>
+
+<div class="shell">
+
+<nav class="nav">
+  <a class="brand" href="./">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-partly"/></svg>
+    Weather
+  </a>
+  <div class="langs">
+    <a href="../" hreflang="en">EN</a>
+    <a href="../da/" hreflang="da">DA</a>
+    <span class="on">FA</span>
+  </div>
+</nav>
+
+<div class="hero-grid">
+
+  <header class="hero">
+    <p class="eyebrow">اندروید · Open-Meteo · بدون کلید API</p>
+    <h1>هوای هر جا که نشانه بگیری.</h1>
+    <p class="lede">
+      هر شهری روی زمین را جست‌وجو کن، یا GPS گوشی را در اختیارش بگذار. هر
+      پیش‌بینی به وقت محلی همان‌جا خوانده می‌شود، نه وقت تو.
+    </p>
+
+    <div class="wx-search">
+      <label class="visually-hidden" for="wx-search">جست‌وجوی شهر</label>
+      <input id="wx-search" type="search" autocomplete="off" role="combobox"
+             aria-expanded="false" aria-controls="wx-results"
+             placeholder="نام هر شهر یا شهرک را بنویسید">
+      <div id="wx-results" hidden></div>
+    </div>
+
+    <ul class="chips">
+      <li><button class="chip" data-name="کپنهاگ" data-country="دانمارک" data-lat="55.6761" data-lon="12.5683">کپنهاگ</button></li>
+      <li><button class="chip" data-name="تهران" data-country="ایران" data-lat="35.6892" data-lon="51.3890">تهران</button></li>
+      <li><button class="chip" data-name="توکیو" data-country="ژاپن" data-lat="35.6895" data-lon="139.6917">توکیو</button></li>
+      <li><button class="chip" data-name="ریکیاویک" data-country="ایسلند" data-lat="64.1466" data-lon="-21.9426">ریکیاویک</button></li>
+      <li><button class="chip" data-name="لیما" data-country="پرو" data-lat="-12.0464" data-lon="-77.0428">لیما</button></li>
+    </ul>
+  </header>
+
+  <section class="wx-panel" id="wx-panel" aria-live="polite" aria-label="پیش‌بینی زنده">
+    <div class="wx-head">
+      <svg id="wx-icon" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-cloudy"/></svg>
+      <div class="wx-read">
+        <div id="wx-temp">--<span>°C</span></div>
+        <div id="wx-cond">در حال دریافت پیش‌بینی…</div>
+        <div id="wx-place">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="wx-time">
+      <span id="wx-clock">--:--</span>
+      <span>وقت محلی</span>
+      <span class="wx-status" id="wx-status"></span>
+    </div>
+
+    <dl id="wx-tiles"></dl>
+    <ul class="strip" id="wx-hours"></ul>
+    <ul class="days" id="wx-days"></ul>
+  </section>
+
+</div>
+
+<main>
+
+<section>
+  <h2>چه کاری می‌کند</h2>
+  <p class="sub">
+    همان شش سنجه، همان نوار ۲۴ ساعته و همان هفت روزی که نسخهٔ تلویزیونی نشان
+    می‌داد — این بار برای هر نقطه‌ای، روی صفحه‌ای که همراه توست.
+  </p>
+  <ul class="feats">
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-clear"/></svg>
+      <h3>هر نقطه‌ای</h3>
+      <p>جست‌وجوی هم‌زمان با تایپ، روی geocoder سرویس Open-Meteo. نام کشور و استان
+         هم می‌آید تا دوازده شهر هم‌نام از هم بازشناخته شوند.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-gauge"/></svg>
+      <h3>GPS دستگاه</h3>
+      <p>یک ضربه، مختصات شما را پیدا می‌کند و نامش را درمی‌آورد. اجازه‌دادن
+         اختیاری است — اگر ندهید، جست‌وجو همچنان کار می‌کند.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-sunrise"/></svg>
+      <h3>وقت محلیِ درست</h3>
+      <p>هر مکان ساعت خودش و نمادهای روز و شب خودش را نشان می‌دهد، بر پایهٔ اختلاف
+         وقت جهانی که API می‌دهد، نه ساعت گوشی شما.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-thermo"/></svg>
+      <h3>هفت روز، قابل انتخاب</h3>
+      <p>روی یک روز بزنید تا تیتر، شش کاشی سنجه و نوار ساعتی همگی به همان روز
+         بروند.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-drop"/></svg>
+      <h3>آفلاین هم کار می‌کند</h3>
+      <p>آخرین پاسخ درست برای هر مکان جداگانه ذخیره می‌شود و وقتی شبکه نیست، با
+         نشانهٔ «قدیمی» نشان داده می‌شود.</p>
+    </li>
+    <li class="feat">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-wind"/></svg>
+      <h3>هیچ ثبت‌نامی لازم نیست</h3>
+      <p>نه کلید API، نه حساب کاربری، نه آمارگیری، نه تبلیغات. Open-Meteo رایگان و
+         بی‌کلید است و اپ هیچ ردیابی‌ای ندارد.</p>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h2>برگرفته از یک تلویزیون</h2>
+  <div class="origin">
+    <p>
+      این کار با
+      <a href="https://github.com/cocodedk/copenhagen-weather-tv">Copenhagen Weather</a>
+      شروع شد؛ یک اپ تلویزیونی سامسونگ Tizen که تماماً با کنترل از راه دور کار
+      می‌کرد. آن اپ فقط یک شهر ثابت را نشان می‌داد، چون تلویزیون در یک اتاق
+      می‌ماند.
+    </p>
+    <p>
+      نسخهٔ اندروید رنگ‌ها، نمادهای هوا و شیوهٔ انتخاب روزِ همان اپ را نگه داشته و
+      موتور پیمایش با دکمه‌های جهت‌دار را که صفحهٔ لمسی به آن نیازی ندارد کنار
+      گذاشته است. چیزی که افزوده، همان است که یک گوشی واقعاً لازم دارد: جایی برای
+      گذاشتن یک مکان.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>دریافت</h2>
+  <p class="sub">اندروید ۸٫۰ یا بالاتر. فایل APK امضا شده و به هر انتشار پیوست است.</p>
+  <div class="cta">
+    <a class="btn btn-primary" href="https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk">دریافت APK</a>
+    <a class="btn btn-ghost" href="https://github.com/cocodedk/weather-android">خواندن کد</a>
+  </div>
+  <pre><code>git clone https://github.com/cocodedk/weather-android.git
+cd weather-android
+./gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk</code></pre>
+</section>
+
+</main>
+
+<footer>
+  <p>Apache-2.0 &nbsp;|&nbsp; © ۱۴۰۵ <a href="https://cocode.dk" target="_blank" rel="noreferrer">Cocode</a> &nbsp;|&nbsp; ساخته شده توسط <a href="https://linkedin.com/in/babakbandpey" target="_blank" rel="noreferrer">بابک بندپی</a></p>
+  <p>پیش‌بینی‌ها از <a href="https://open-meteo.com" target="_blank" rel="noreferrer">Open-Meteo</a>.</p>
+</footer>
+
+</div>
+
+<script src="../js/sprite.js"></script>
+<script src="../js/i18n/fa.js"></script>
+<script src="../js/wx.js"></script>
+<script src="../js/live.js"></script>
+</body>
+</html>
