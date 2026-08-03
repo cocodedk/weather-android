@@ -78,16 +78,18 @@ jobs:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > release.keystore
           # Gradle decides at *configuration* time whether a signing config exists, so a
-          # truncated or wrong-password keystore is not an error there — it silently
-          # produces app-release-unsigned.apk and the staging step below then dies with
+          # corrupt keystore is not an error there — it silently produces
+          # app-release-unsigned.apk and the staging step below then dies with
           # "cp: cannot stat app-release.apk", minutes later and nowhere near the cause.
-          # keytool exits non-zero on either fault, so fail here instead.
+          # This covers the file, the store password and the alias. It deliberately does
+          # not pass -keypass: setup-signing.sh writes a PKCS12 keystore, which has no
+          # separate key password, and keytool ignores the flag with a warning. The
+          # apksigner step below is what actually proves the signature.
           keytool -list -keystore release.keystore -alias "$KEY_ALIAS" \
-              -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" >/dev/null
+              -storepass "$KEYSTORE_PASSWORD" >/dev/null
 
       - name: Build signed release APK
         env:
@@ -103,6 +105,17 @@ jobs:
           # A fixed name is what makes releases/latest/download/Weather.apk work.
           cp app/build/outputs/apk/release/app-release.apk Weather.apk
           ls -la Weather.apk
+
+      - name: Verify the APK is signed
+        run: |
+          # The check that proves what we are about to publish. An unsigned APK uploads
+          # exactly as cleanly as a signed one, and the site tells visitors every release
+          # is signed — so assert it rather than infer it from a green build. This also
+          # covers the one fault the keystore pre-flight cannot see, a key password that
+          # does not match the store password.
+          APKSIGNER=$(ls "${ANDROID_HOME:-$ANDROID_SDK_ROOT}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          [ -n "$APKSIGNER" ] || { echo "apksigner not found in the Android SDK" >&2; exit 1; }
+          "$APKSIGNER" verify --print-certs Weather.apk
 
       - name: Remove keystore from the runner
         if: always()
