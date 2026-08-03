@@ -21,5 +21,5 @@ labels: bug
 
 **Environment**
 - Device / Android version:
-- App version (Settings → the version shown on the release you installed):
+- App version (Android Settings → Apps → Weather → App details, or the release you downloaded):
 - Network available at the time: yes / no
