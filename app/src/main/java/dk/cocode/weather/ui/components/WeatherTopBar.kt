@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Thermostat
+import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -23,10 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dk.cocode.weather.data.WeatherStore
 import dk.cocode.weather.ui.WeatherUiState
 import dk.cocode.weather.ui.theme.LocalPalette
+import dk.cocode.weather.widget.WeatherWidgetProvider
 
 /**
  * Place header plus the two controls. The app draws edge to edge, so this insets
@@ -39,6 +42,7 @@ fun WeatherTopBar(
     onToggleUnits: () -> Unit,
     onCycleTheme: () -> Unit,
     onRefresh: () -> Unit,
+    onAddWidget: () -> Unit,
 ) {
     val palette = LocalPalette.current
     var menuOpen by remember { mutableStateOf(false) }
@@ -81,6 +85,15 @@ fun WeatherTopBar(
                     leadingIcon = { Icon(Icons.Default.Refresh, null) },
                     onClick = { onRefresh(); menuOpen = false },
                 )
+                // Only offered where the launcher can actually honour it; on the rest,
+                // the widget is still available from the long-press widget drawer.
+                if (WeatherWidgetProvider.canPin(LocalContext.current)) {
+                    DropdownMenuItem(
+                        text = { Text("Add widget to home screen") },
+                        leadingIcon = { Icon(Icons.Default.Widgets, null) },
+                        onClick = { onAddWidget(); menuOpen = false },
+                    )
+                }
             }
         }
     }

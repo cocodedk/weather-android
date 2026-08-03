@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Night palette, selected from the *location's* is_day rather than the phone's
+     theme — a clear night in Sydney should look like night at noon in Copenhagen. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="20dp" />
+    <gradient
+        android:type="linear"
+        android:angle="290"
+        android:startColor="#060C22"
+        android:endColor="#1B2A5E" />
+</shape>

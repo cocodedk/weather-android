@@ -29,14 +29,19 @@ fun WeatherIconView(
             translate(dx, dy)
             scale(s, s, pivot = Offset.Zero)
         }) {
-            drawIcon(icon, tint)
+            drawWeatherIcon(icon, tint)
         }
     }
 }
 
-private const val VIEW_BOX = 64f
+internal const val VIEW_BOX = 64f
 
-private fun DrawScope.drawIcon(icon: WeatherIcon, c: Color) = when (icon) {
+/**
+ * Internal rather than private so the home screen widget can render the very same
+ * geometry into a Bitmap — a widget cannot host a Composable, but it can host the
+ * pixels this produces. See `widget/WidgetIcons.kt`.
+ */
+internal fun DrawScope.drawWeatherIcon(icon: WeatherIcon, c: Color) = when (icon) {
     WeatherIcon.CLEAR -> {
         dot(c, 32f, 32f, 12f)
         sunRays(c, 32f, 32f, inner = 20f, outer = 28f, width = 4f)

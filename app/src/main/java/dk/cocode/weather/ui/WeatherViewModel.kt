@@ -9,6 +9,7 @@ import dk.cocode.weather.data.ForecastRepository
 import dk.cocode.weather.data.LocationPermissionMissing
 import dk.cocode.weather.data.Place
 import dk.cocode.weather.data.WeatherStore
+import dk.cocode.weather.widget.WeatherWidgetProvider
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -92,9 +93,22 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
         // dayIndex resets: "Wednesday" in the old city is not the row the user wants
         // to keep staring at after switching to a new one.
         _state.update { it.copy(selected = place, forecast = null, dayIndex = 0, stale = false) }
-        viewModelScope.launch { store.saveSelected(place.key) }
+        viewModelScope.launch {
+            // Notify only after the write commits — the widget re-reads the store,
+            // and poking it first would just make it redraw the old place.
+            store.saveSelected(place.key)
+            notifyWidgets()
+        }
         refresh()
     }
+
+    /**
+     * The widget follows the app's selected place and unit preference, so anything
+     * that changes either has to poke it — otherwise it shows the old city until
+     * its next half-hourly tick.
+     */
+    private fun notifyWidgets() =
+        WeatherWidgetProvider.notifyDataChanged(getApplication())
 
     /** Adds a searched place (if new), selects it, and persists the list. */
     fun addPlace(place: Place) {
@@ -163,7 +177,10 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
     fun toggleUnits() {
         val imperial = !_state.value.imperial
         _state.update { it.copy(imperial = imperial) }
-        viewModelScope.launch { store.saveImperial(imperial) }
+        viewModelScope.launch {
+            store.saveImperial(imperial)
+            notifyWidgets()   // after the write, or the widget re-reads the old value
+        }
     }
 
     fun cycleTheme() {

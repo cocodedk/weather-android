@@ -51,7 +51,10 @@ case "$KSPASS" in
 esac
 echo ""
 
-printf "Key password (Enter = same as keystore password): "
+# keytool writes PKCS12 on JDK 17+, and PKCS12 has no separate key password. A different
+# one here is ignored by keytool, sails through the verification below, and then fails
+# inside the release build — so press Enter.
+printf "Key password (press Enter — PKCS12 requires it to match the keystore password): "
 stty -echo 2>/dev/null || true
 read -r KEYPASS
 restore_tty
@@ -68,12 +71,20 @@ echo ""
 # ── Verify ───────────────────────────────────────────────────────────────────
 echo "Verifying keystore..."
 keytool -list -keystore "$KEYSTORE" -alias "$ALIAS" \
-    -storepass "$KSPASS" -keypass "$KEYPASS" >/dev/null 2>&1 || {
+    -storepass "$KSPASS" >/dev/null 2>&1 || {
     echo ""
-    echo "ERROR: Wrong password or alias. Nothing was uploaded."
+    echo "ERROR: Wrong keystore password or alias. Nothing was uploaded."
     exit 1
 }
-echo "✓ Keystore valid"
+echo "✓ Keystore password and alias verified"
+
+if [ "$KEYPASS" != "$KSPASS" ]; then
+    echo ""
+    echo "ERROR: The key password differs from the keystore password. A PKCS12 keystore"
+    echo "       cannot store the two separately, so the release build would fail to"
+    echo "       sign. Re-run and press Enter at the key password prompt."
+    exit 1
+fi
 
 # ── Upload secrets ────────────────────────────────────────────────────────────
 KEYSTORE_B64=$(base64 "$KEYSTORE" | tr -d '\n')
@@ -95,6 +106,10 @@ echo ""
 echo "IMPORTANT: $KEYSTORE is gitignored — back it up somewhere secure."
 echo "           If you lose it, you cannot update the app on any store."
 echo ""
-echo "To trigger your first release: merge the PR → push lands on main"
-echo "→ release-apk.yml fires → Weather.apk appears at:"
+echo "The release workflow is manual — nothing fires on a merge to main."
+echo "To cut a release:"
+echo ""
+echo "    gh workflow run release-apk.yml -f bump=minor   # or patch / major"
+echo ""
+echo "Weather.apk is then attached to the release, and served from:"
 echo "  https://github.com/$REPO/releases/latest/download/Weather.apk"
