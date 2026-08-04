@@ -28,10 +28,14 @@ val hasSigningConfig = keystoreFile != null && keystorePassword != null &&
 
 android {
     namespace = "dk.cocode.weather"
-    // 37 is a floor, not a preference: androidx.core 1.19.0 and lifecycle 2.11.0 both
-    // declare minCompileSdk=37 in their AAR metadata and the build will not resolve
-    // below it. targetSdk deliberately stays at 35 — compiling against a newer API is
-    // safe, opting into its runtime behaviour changes is a separate decision.
+    // 37 is a floor, not a preference. The androidx.core and lifecycle upgrades still
+    // waiting in Dependabot (1.19.0 and 2.11.0 — not yet applied below) declare
+    // minCompileSdk=37 in their AAR metadata, and nothing resolves under it. Raising
+    // this is what unblocks them.
+    // targetSdk deliberately stays at 35: compiling against a newer API is safe,
+    // opting into its runtime behaviour changes is a separate decision. Note AGP 9
+    // defaults targetSdk to compileSdk, so leaving it unset here would silently move
+    // the app to 37.
     compileSdk = 37
 
     defaultConfig {
