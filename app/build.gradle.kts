@@ -1,6 +1,8 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
+    // No kotlin.android plugin: AGP 9 provides Kotlin support itself and rejects it.
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
@@ -26,7 +28,15 @@ val hasSigningConfig = keystoreFile != null && keystorePassword != null &&
 
 android {
     namespace = "dk.cocode.weather"
-    compileSdk = 35
+    // 37 is a floor, not a preference. The androidx.core and lifecycle upgrades still
+    // waiting in Dependabot (1.19.0 and 2.11.0 — not yet applied below) declare
+    // minCompileSdk=37 in their AAR metadata, and nothing resolves under it. Raising
+    // this is what unblocks them.
+    // targetSdk deliberately stays at 35: compiling against a newer API is safe,
+    // opting into its runtime behaviour changes is a separate decision. Note AGP 9
+    // defaults targetSdk to compileSdk, so leaving it unset here would silently move
+    // the app to 37.
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "dk.cocode.weather"
@@ -72,12 +82,15 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         compose = true
+    }
+}
+
+// AGP 9 removed android.kotlinOptions; the Kotlin plugin's own block replaces it.
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
     }
 }
 

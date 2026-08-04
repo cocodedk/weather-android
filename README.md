@@ -46,7 +46,7 @@ anything.
 
 ## Build from source
 
-Requires JDK 17 and the Android SDK (platform 35, build-tools 35).
+Requires JDK 17 and the Android SDK (platform 37, build-tools 36).
 
 ```bash
 git clone https://github.com/cocodedk/weather-android.git

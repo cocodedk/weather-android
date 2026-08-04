@@ -2,7 +2,9 @@
 
 ## Local setup
 
-1. Install **JDK 17** and the **Android SDK** (platform 35, build-tools 35).
+1. Install **JDK 17** and the **Android SDK** (platform 37, build-tools 36).
+   Platform 37 is not optional — `compileSdk` is 37 and the build will not
+   configure without it.
 2. Point the build at them:
    ```bash
    export JAVA_HOME=/path/to/jdk-17

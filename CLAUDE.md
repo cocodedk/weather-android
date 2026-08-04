@@ -10,7 +10,7 @@ icon set, the stat tiles and the day-selection model all come from there; the
 location picker, the GPS path and the touch layout are new.
 
 - **Language**: Kotlin, Jetpack Compose (Material 3)
-- **Platform**: Android 8.0+ (minSdk 26), compiled and targeted at SDK 35
+- **Platform**: Android 8.0+ (minSdk 26), compiled against SDK 37, targeting SDK 35
 - **Data**: Open-Meteo forecast + geocoding, no API key, CORS-open
 - **Application id**: `dk.cocode.weather` (`.debug` suffix on debug builds)
 - **Repo**: `cocodedk/weather-android` · site at `cocodedk.github.io/weather-android/`
