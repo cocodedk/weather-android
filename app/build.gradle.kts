@@ -101,7 +101,7 @@ kotlin {
 // and LocationManager all ship with Android, which keeps the dependency surface
 // (and the APK) small enough that the whole build resolves from the local cache.
 dependencies {
-    val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
+    val composeBom = platform("androidx.compose:compose-bom:2026.08.00")
     implementation(composeBom)
 
     implementation("androidx.core:core-ktx:1.19.0")
