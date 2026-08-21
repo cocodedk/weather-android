@@ -1,0 +1,14 @@
+<p>Weather shows current conditions, the next 24 hours, and a 7-day forecast for any location on Earth. Search for a city by name or use your device's GPS — no account, no API key, no ads, no analytics.</p>
+
+<ul>
+<li><b>Any location.</b> Type-ahead search over Open-Meteo's geocoder, with country and region shown so same-named places stay tellable apart.</li>
+<li><b>Device GPS.</b> One tap resolves your coordinates and reverse-geocodes them to a place name.</li>
+<li><b>Saved locations.</b> Switch between them; the list persists on your device only.</li>
+<li><b>The right local time.</b> Each location shows its own wall clock and day/night icons from the API's UTC offset — Tokyo reads as Tokyo even from Denmark.</li>
+<li><b>Seven days, selectable.</b> Tap a day and every panel retargets to it.</li>
+<li><b>Home screen widget</b> for the selected location, refreshing every half hour.</li>
+<li><b>Metric or imperial</b>, converted on the client.</li>
+<li><b>Works offline.</b> The last forecast is cached per location and marked stale when offline.</li>
+</ul>
+
+<p>Data from <a href="https://open-meteo.com">Open-Meteo</a>, used under their free non-commercial terms. The app makes plain HTTPS GET requests and stores nothing outside your device.</p>

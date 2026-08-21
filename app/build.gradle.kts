@@ -7,8 +7,11 @@ plugins {
 }
 
 // The release workflow computes the version from the latest git tag and passes it
-// in; a local build with no env var just gets 0.0.0 and never pretends otherwise.
-val appVersionName: String = System.getenv("VERSION_NAME")?.takeIf { it.isNotBlank() } ?: "0.0.0"
+// in; F-Droid passes it as a Gradle property (gradleprops in the build recipe).
+// A local build with neither just gets 0.0.0 and never pretends otherwise.
+val appVersionName: String = providers.gradleProperty("VERSION_NAME").orNull?.takeIf { it.isNotBlank() }
+    ?: System.getenv("VERSION_NAME")?.takeIf { it.isNotBlank() }
+    ?: "0.0.0"
 val semver = appVersionName.split(".")
 val vMajor = semver.getOrNull(0)?.toIntOrNull() ?: 0
 val vMinor = semver.getOrNull(1)?.toIntOrNull() ?: 0
