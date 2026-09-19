@@ -62,7 +62,10 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            // R8 shrinks and optimises the release build. Nothing here uses reflection: PlaceJson
+            // serialises by hand and org.json ships with Android, so no keep rules are needed yet.
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             if (hasSigningConfig) {
                 signingConfig = signingConfigs.getByName("release")
