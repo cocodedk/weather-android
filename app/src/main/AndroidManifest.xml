@@ -4,11 +4,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- Coarse is enough for a city-level forecast; fine is requested alongside so
-         the user can grant precise location if they want, but the app works with
-         either. Both are optional at runtime — search always remains available. -->
+    <!-- Coarse only: a city-level forecast gains nothing from a precise fix. Android 11+
+         serves the GPS provider to coarse-only apps (fuzzed); on 8-10 GPS needs fine, so
+         there the fix comes from the network provider. Optional either way — search
+         always remains available. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature android:name="android.hardware.location" android:required="false" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />

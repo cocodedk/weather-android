@@ -30,22 +30,14 @@ class MainActivity : ComponentActivity() {
             val needsPermission by vm.permissionRequest.collectAsStateWithLifecycle()
 
             val permissionLauncher = rememberLauncherForActivityResult(
-                ActivityResultContracts.RequestMultiplePermissions()
-            ) { grants ->
-                // Coarse is enough for a city forecast, so either grant counts.
-                vm.onPermissionResult(grants.values.any { it })
-            }
+                ActivityResultContracts.RequestPermission()
+            ) { granted -> vm.onPermissionResult(granted) }
 
             // The ViewModel cannot show a system dialog, so it raises a flag and the
             // Activity — which owns the result contract — launches it.
             LaunchedEffect(needsPermission) {
                 if (needsPermission) {
-                    permissionLauncher.launch(
-                        arrayOf(
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                        )
-                    )
+                    permissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
                 }
             }
 
