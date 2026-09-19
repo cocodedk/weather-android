@@ -88,6 +88,14 @@ android {
     buildFeatures {
         compose = true
     }
+
+    // AGP otherwise adds a "Dependency metadata" block to the APK signing block,
+    // encrypted with a key only Google Play holds. F-Droid rejects APKs that carry
+    // it, and it lands in the published release APK that F-Droid verifies against.
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
 }
 
 // AGP 9 removed android.kotlinOptions; the Kotlin plugin's own block replaces it.
