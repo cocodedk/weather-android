@@ -191,6 +191,7 @@ $ADB exec-out screencap -p > shot.png   # verify visually — do this
 
 python3 -m http.server -d website 8099  # the site, at localhost:8099
 ./scripts/install-hooks.sh              # once per clone; hooks are not committed
+gh workflow run release-apk.yml         # after a PR bumps VERSION_NAME/VERSION_CODE in gradle.properties
 ```
 
 Re-render the OG image after any change to `website/og-image.html`:
@@ -207,7 +208,7 @@ google-chrome-stable --headless --disable-gpu --no-sandbox \
 |------|---------|
 | `CLAUDE.md` | This file — conventions and session startup |
 | `.github/workflows/ci.yml` | `buildSmoke` on every PR and branch; job name `verify` |
-| `.github/workflows/release-apk.yml` | Manual signed release; version comes from the latest `v*` tag |
+| `.github/workflows/release-apk.yml` | Manual signed release of the version in `gradle.properties`; refuses one already tagged |
 | `.github/workflows/deploy-pages.yml` | Deploys `website/` on push to main |
 | `.githooks/pre-push` | Owner-lock to `cocodedk`, force-push guard, full `buildSmoke` |
 | `scripts/setup-repo.sh` | Branch protection — run once after the first CI run |
