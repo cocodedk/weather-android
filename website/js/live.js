@@ -189,16 +189,23 @@
   function showResults(list) {
     results = list;
     if (!list.length) { showMessage(t.noMatch); return; }
-    var html = '<ul role="listbox">';
+    /* Place names are the geocoder's text, not ours: they go in as text, never as
+       markup. Built as a string, a name like '<img onerror=…>' ran its script. */
+    var ul = document.createElement('ul');
+    ul.setAttribute('role', 'listbox');
     for (var i = 0; i < list.length; i++) {
-      html += '<li><button type="button" role="option" data-i="' + i + '">' +
-        '<strong>' + list[i].name + '</strong>' +
-        '<span>' + [list[i].admin1, list[i].country].filter(Boolean).join(', ') + '</span>' +
-        '</button></li>';
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('role', 'option');
+      btn.setAttribute('data-i', i);
+      btn.appendChild(document.createElement('strong')).textContent = list[i].name;
+      btn.appendChild(document.createElement('span')).textContent =
+        [list[i].admin1, list[i].country].filter(Boolean).join(', ');
+      ul.appendChild(document.createElement('li')).appendChild(btn);
     }
-    html += '</ul>';
     var box = $('wx-results');
-    box.innerHTML = html;
+    box.textContent = '';
+    box.appendChild(ul);
     box.hidden = false;
     $('wx-search').setAttribute('aria-expanded', 'true');
   }
