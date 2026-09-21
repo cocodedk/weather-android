@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cocodedk.github.io/weather-android/sitemap.xml
+Sitemap: https://weather.cocode.dk/sitemap.xml
