@@ -40,6 +40,6 @@ Two design rules govern most of the code and are the usual source of confusion:
 
 ## Optional
 
-- [Website — English](https://cocodedk.github.io/weather-android/)
-- [Website — Dansk](https://cocodedk.github.io/weather-android/da/)
-- [Website — فارسی](https://cocodedk.github.io/weather-android/fa/)
+- [Website — English](https://weather.cocode.dk/)
+- [Website — Dansk](https://weather.cocode.dk/da/)
+- [Website — فارسی](https://weather.cocode.dk/fa/)

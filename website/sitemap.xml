@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://cocodedk.github.io/weather-android/</loc>
+    <loc>https://weather.cocode.dk/</loc>
     <lastmod>2026-07-27</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://cocodedk.github.io/weather-android/"/>
-    <xhtml:link rel="alternate" hreflang="da" href="https://cocodedk.github.io/weather-android/da/"/>
-    <xhtml:link rel="alternate" hreflang="fa" href="https://cocodedk.github.io/weather-android/fa/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://cocodedk.github.io/weather-android/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://weather.cocode.dk/"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://weather.cocode.dk/da/"/>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://weather.cocode.dk/fa/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://weather.cocode.dk/"/>
   </url>
   <url>
-    <loc>https://cocodedk.github.io/weather-android/da/</loc>
+    <loc>https://weather.cocode.dk/da/</loc>
     <lastmod>2026-07-27</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://cocodedk.github.io/weather-android/"/>
-    <xhtml:link rel="alternate" hreflang="da" href="https://cocodedk.github.io/weather-android/da/"/>
-    <xhtml:link rel="alternate" hreflang="fa" href="https://cocodedk.github.io/weather-android/fa/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://cocodedk.github.io/weather-android/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://weather.cocode.dk/"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://weather.cocode.dk/da/"/>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://weather.cocode.dk/fa/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://weather.cocode.dk/"/>
   </url>
   <url>
-    <loc>https://cocodedk.github.io/weather-android/fa/</loc>
+    <loc>https://weather.cocode.dk/fa/</loc>
     <lastmod>2026-07-27</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://cocodedk.github.io/weather-android/"/>
-    <xhtml:link rel="alternate" hreflang="da" href="https://cocodedk.github.io/weather-android/da/"/>
-    <xhtml:link rel="alternate" hreflang="fa" href="https://cocodedk.github.io/weather-android/fa/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://cocodedk.github.io/weather-android/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://weather.cocode.dk/"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://weather.cocode.dk/da/"/>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://weather.cocode.dk/fa/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://weather.cocode.dk/"/>
   </url>
 </urlset>

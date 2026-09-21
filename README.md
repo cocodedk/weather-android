@@ -10,9 +10,9 @@ things a phone needs: arbitrary locations and GPS.
 
 ## Website
 
-- [English](https://cocodedk.github.io/weather-android/)
-- [Dansk](https://cocodedk.github.io/weather-android/da/)
-- [فارسی (Persian)](https://cocodedk.github.io/weather-android/fa/)
+- [English](https://weather.cocode.dk/)
+- [Dansk](https://weather.cocode.dk/da/)
+- [فارسی (Persian)](https://weather.cocode.dk/fa/)
 
 All three pages carry a live forecast panel with a working location search — the
 same Open-Meteo data the app uses, so you can try the idea before installing
