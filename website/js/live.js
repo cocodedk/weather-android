@@ -99,6 +99,10 @@
     var root = document.documentElement;
     root.style.setProperty('--glow', GLOW[iconId] || '#ffd257');
     root.classList.toggle('is-night', !c.is_day);
+    if (window.SKY) {
+      window.SKY.set({ kind: iconId.replace('-night', ''), day: c.is_day, wind: c.wind_speed_10m,
+                       windDir: c.wind_direction_10m, precip: c.precipitation });
+    }
 
     setUse($('wx-icon'), iconId);
     $('wx-temp').innerHTML = WX.temp(c.temperature_2m) + '<span>' + WX.tempUnit() + '</span>';
