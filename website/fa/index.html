@@ -39,6 +39,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="https://brand.cocode.dk/v1.css">
+<script type="module" src="https://brand.cocode.dk/v1.js"></script>
 
 <script type="application/ld+json">
 {
@@ -65,19 +67,16 @@
 </head>
 <body>
 
-<div class="shell">
+<!-- The cocode.dk family frame. Without JavaScript its children show instead: a way home
+     and the language links. -->
+<cocode-head project="Weather" accent="#ffd257" on-accent="#17457f" dark>
+  <a href="https://cocode.dk">cocode.dk</a>
+  <a href="../" hreflang="en">EN</a>
+  <a href="../da/" hreflang="da">DA</a>
+  <span class="on">FA</span>
+</cocode-head>
 
-<nav class="nav">
-  <a class="brand" href="./">
-    <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-partly"/></svg>
-    Weather
-  </a>
-  <div class="langs">
-    <a href="../" hreflang="en">EN</a>
-    <a href="../da/" hreflang="da">DA</a>
-    <span class="on">FA</span>
-  </div>
-</nav>
+<div class="shell">
 
 <div class="hero-grid">
 
@@ -218,11 +217,14 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk</code></pre>
 </main>
 
 <footer>
-  <p>Apache-2.0 &nbsp;|&nbsp; © ۱۴۰۵ <a href="https://cocode.dk" target="_blank" rel="noreferrer">Cocode</a> &nbsp;|&nbsp; ساخته شده توسط <a href="https://linkedin.com/in/babakbandpey" target="_blank" rel="noreferrer">بابک بندپی</a></p>
   <p>پیش‌بینی‌ها از <a href="https://open-meteo.com" target="_blank" rel="noreferrer">Open-Meteo</a>.</p>
 </footer>
 
 </div>
+
+<cocode-foot repo="cocodedk/weather-android" dark>
+  <a href="https://cocode.dk">cocode.dk</a>
+</cocode-foot>
 
 <script src="../js/sprite.js"></script>
 <script src="../js/i18n/fa.js"></script>

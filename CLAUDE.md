@@ -147,6 +147,9 @@ tools/selftest.html  runs wx.js against the live API — not deployed
 scripts/             install-hooks.sh, setup-repo.sh, setup-signing.sh
 ```
 
+The site's header and footer are the cocode.dk family frame (`<cocode-head>`/`<cocode-foot>`),
+loaded from brand.cocode.dk (repo `cocodedk/brand`); styles.css only lines it up with the column.
+
 **The site's signature behaviour**: the background gradient follows the searched
 location's day/night and the accent glow follows its condition. It is the product's
 claim made literal, so keep it — a change that makes the page static loses the
