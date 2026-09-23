@@ -25,7 +25,6 @@
     W = document.documentElement.clientWidth; H = document.documentElement.clientHeight;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    measure();
   }
 
   /* The panel is shelter: near drops splash on its top edge, and nothing falls inside it. */
@@ -67,9 +66,7 @@
   }
 
   function splash(x, y) {
-    for (var i = 0; i < 3 && splashes.length < 240; i++) {
-      splashes.push({ x: x, y: y, vx: rand(-70, 70), vy: rand(-150, -60), life: rand(0.22, 0.38) });
-    }
+    for (var i = 0; i < 3 && splashes.length < 240; i++) splashes.push({ x: x, y: y, vx: rand(-70, 70), vy: rand(-150, -60), life: rand(0.22, 0.38) });
   }
 
   /* A jagged path by midpoint displacement, halving the roughness each level. */
@@ -91,8 +88,7 @@
     var wx = windX(), i, d, f, s;
     for (i = 0; i < drops.length; i++) {
       d = drops[i];
-      var py = d.y;
-      d.y += d.vy * dt; d.x += d.vx * dt;
+      var py = d.y; d.y += d.vy * dt; d.x += d.vx * dt;
       if (panel && d.z === 1 && py < panel.y && d.y >= panel.y && d.x > panel.x0 && d.x < panel.x1) {
         splash(d.x, panel.y); drop(d, false);
       } else if (d.y - d.len > H) { drop(d, false); }
@@ -159,6 +155,7 @@
   }
 
   function frame(now) {
+    measure();  /* the panel grows as it fills and as fonts load */
     step(Math.min(0.05, (now - (last || now)) / 1000), now);
     last = now; draw();
     raf = window.requestAnimationFrame(frame);
@@ -169,7 +166,7 @@
     stop();
     if (!active()) { if (cv) { cv.hidden = true; g.clearRect(0, 0, W, H); } return; }
     cv.hidden = false;
-    if (still && still.matches) { nextStrike = 0; draw(); return; }
+    if (still && still.matches) { nextStrike = 0; window.requestAnimationFrame(function () { measure(); draw(); }); return; }
     if (!document.hidden) raf = window.requestAnimationFrame(frame);
   }
 
@@ -186,12 +183,15 @@
         var w = W; size();
         if (W !== w) { populate(); start(); } else if (!raf) { start(); }
       });
-      window.addEventListener('scroll', measure, { passive: true });
+      /* A running loop re-measures every frame; the still frame has to be redrawn. */
+      window.addEventListener('scroll', function () { if (!raf && !cv.hidden) { measure(); draw(); } }, { passive: true });
       document.addEventListener('visibilitychange', start);
       if (still && still.addEventListener) still.addEventListener('change', start);
     }
-    cfg = { kind: o.kind, day: o.day, wind: o.wind || 0, windDir: o.windDir == null ? 270 : o.windDir, precip: o.precip || 0 };
-    measure();
+    var next = { kind: o.kind, day: o.day, wind: o.wind || 0, windDir: o.windDir == null ? 270 : o.windDir, precip: o.precip || 0 };
+    /* live.js re-renders every ten minutes; an unchanged sky keeps its drops and its timing. */
+    if (JSON.stringify(next) === JSON.stringify(cfg)) return;
+    cfg = next;
     populate();
     start();
   }
