@@ -141,6 +141,7 @@ website/           GitHub Pages site — plain HTML/CSS/JS, no build step
   js/wx.js           JS mirror of domain/ + the API clients — see rule 5
   js/live.js         the live panel, location search, and page atmosphere
   js/sprite.js       the icon sprite, injected so one copy serves every page
+  js/sky.js          the condition drawn behind the page: rain, snow, fog, lightning
   js/i18n/{da,fa}.js translated strings; English is what wx.js already speaks
 
 tools/selftest.html  runs wx.js against the live API — not deployed

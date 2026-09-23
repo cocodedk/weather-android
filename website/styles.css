@@ -80,6 +80,10 @@ h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.1; ma
 .shell { width: 100%; max-width: var(--shell); margin: 0 auto; padding: 0 20px; }
 /* The cocode.dk frame (brand.cocode.dk) lines up with this column; keep the gutters in step. */
 cocode-head, cocode-foot { --cocode-max: var(--shell); --cocode-gutter: 20px; }
+/* The weather itself, drawn by sky.js. It sits over the body's gradient and under
+   everything else, which is why the page's three top-level blocks are positioned. */
+.wx-sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.shell, cocode-head, cocode-foot { position: relative; z-index: 1; }
 
 .visually-hidden {
   position: absolute; width: 1px; height: 1px; margin: -1px;
