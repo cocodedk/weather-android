@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://weather.cocode.dk/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Weather app showing 18 degrees and partly cloudy for Copenhagen, beside a seven-day forecast.">
+<meta property="og:image:alt" content="Weather illustration showing temperatures and local times for Copenhagen, Tokyo and Lima.">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="da_DK">
 
@@ -69,12 +69,13 @@
     <p>Weather has no account, no ads and no analytics (tools that track how people use an app). There is no server of ours behind it. Cocode, who makes the app, receives nothing from it.</p>
     <p>To show a forecast, the app asks Open-Meteo, a free weather service run by someone else. So Open-Meteo learns which places you view and search for.</p>
     <p>Using your location is optional. If you tap "Use my current location", the app also gives an approximate position to a place-name service built into your phone.</p>
+    <p>The About screen has buttons that open web pages in your browser. A page opens only when you tap its button.</p>
     <p>Everything else stays on your phone.</p>
   </section>
 
   <section>
     <h2>What is collected</h2>
-    <p>Cocode collects no personal data through the app. The app has no sign-up, and no server of ours to send anything to. The only web addresses it calls are the two Open-Meteo ones in the next section. This is what the app sends or uses:</p>
+    <p>Cocode collects no personal data through the app. The app has no sign-up, and no server of ours to send anything to. The only web addresses the app calls itself are the two Open-Meteo ones in the next section. This is what the app sends or uses:</p>
     <ul>
       <li><strong>What you type in the search box.</strong> Once you have typed two characters, the app sends the text to Open-Meteo to find matching places. This is the only time the app sends anything you type.</li>
       <li><strong>The coordinates of the place you are viewing.</strong> Coordinates are two numbers, latitude and longitude, that mark a point on the map. The place can be one you searched for, one you saved, or one found from your location. The app sends its coordinates to Open-Meteo, rounded to four decimals, to get its forecast.</li>
@@ -87,12 +88,12 @@
 
   <section>
     <h2>Servers the app contacts</h2>
-    <p>The app contacts two servers. Both are run by Open-Meteo, and both use HTTPS, an encrypted connection. The app contacts no other server and opens no links.</p>
+    <p>The app contacts two servers. Both are run by Open-Meteo, and both use HTTPS, an encrypted connection. The app itself contacts no other server. Its About screen also has links that open web pages in your browser, described at the end of this section.</p>
 
     <h3>api.open-meteo.com: forecasts</h3>
     <p>This server sends back the current weather, the hour-by-hour outlook and the seven-day forecast.</p>
     <p>The app sends the latitude and longitude of the selected place, rounded to four decimals, and a list of the weather values it wants, such as temperature, wind and precipitation. It also sends a User-Agent, a short label that says which app is asking: <code>dk.cocode.weather/1.0 (Android)</code>. Open-Meteo asks apps to send one.</p>
-    <p>The app asks for a forecast when it starts, when you pick a place, and when you choose Refresh. To find Refresh, tap the "More" icon at the top of the screen.</p>
+    <p>The app asks for a forecast when it starts, when you pick a place, and when you choose Refresh. To find Refresh, tap the "More" icon at the top of the screen. If the forecast could not load, the error screen has a refresh icon that asks again.</p>
     <p>If you have added the Weather widget to your home screen (a small panel that shows the weather without opening the app), the widget asks too. It asks about every 30 minutes, when you tap its refresh icon, and when you change the place or the units in the app. Android decides the exact timing of the 30-minute updates.</p>
 
     <h3>geocoding-api.open-meteo.com: place search</h3>
@@ -105,6 +106,10 @@
     <h3>Android's place-name service (not a server of the app)</h3>
     <p>When you use your current location, the app gives your position to Geocoder. Geocoder is a service built into Android that turns a position into a place name. It belongs to your phone, not to the app.</p>
     <p>The app cannot tell which company's service your phone uses, or where that service sends the position. Some phones have none. If the service is missing or fails, the app shows the coordinates instead of a name.</p>
+
+    <h3>Links on the About screen</h3>
+    <p>The About screen has buttons that open web pages: the Weather website, this privacy policy, the source code on GitHub, the issue tracker on GitHub, and the page with the latest version (the F-Droid page once the app is listed there, otherwise the latest release on GitHub).</p>
+    <p>The app opens no link by itself. When you tap a button, the app hands the web address to your phone, and your phone opens it, normally in your browser. Your browser, not the app, then contacts that page, so the site that serves it (GitHub Pages or GitHub) can see your visit, as any website can. The app never checks for updates by itself.</p>
   </section>
 
   <section>
@@ -135,7 +140,7 @@
     </ol>
     <p>The delete icon appears only while you have more than one place saved. The app does not delete the saved forecast of a place you remove.</p>
     <p>To erase everything the app keeps, clear the app's data in Android's settings, or uninstall the app. Either one removes all your saved places and settings.</p>
-    <p>Android can back up your phone's data. The app allows this for its own files and excludes nothing. If backup is switched on for your phone, these files can be part of it. Your phone, not the app, decides where that backup is stored.</p>
+    <p>Your saved places and settings are kept on your phone. If backup is switched on for your phone, Android can include them in that backup, and your phone decides where the backup is stored. The app excludes nothing from backup, so the saved forecasts can be included too.</p>
   </section>
 
   <section>
