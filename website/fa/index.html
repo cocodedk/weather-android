@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://weather.cocode.dk/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="اپ Weather دمای ۱۸ درجه و هوای نیمه‌ابری کپنهاگ را کنار پیش‌بینی هفت‌روزه نشان می‌دهد.">
+<meta property="og:image:alt" content="تصویری از Weather با دما و ساعت محلی کپنهاگ، توکیو و لیما.">
 <meta property="og:locale" content="fa_IR">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:locale:alternate" content="da_DK">
@@ -31,7 +31,7 @@
 <meta name="twitter:title" content="Weather — اپ هواشناسی اندروید برای هر نقطه‌ای">
 <meta name="twitter:description" content="هر شهری روی زمین را جست‌وجو کنید یا از GPS گوشی استفاده کنید. هر پیش‌بینی به وقت محلی همان‌جا خوانده می‌شود.">
 <meta name="twitter:image" content="https://weather.cocode.dk/og.png">
-<meta name="twitter:image:alt" content="اپ Weather وضعیت کنونی هوا و پیش‌بینی هفت‌روزه را نشان می‌دهد.">
+<meta name="twitter:image:alt" content="تصویری از Weather با دما و ساعت محلی کپنهاگ، توکیو و لیما.">
 
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 
@@ -52,7 +52,7 @@
   "downloadUrl": "https://github.com/cocodedk/weather-android/releases/latest",
   "applicationCategory": "WeatherApplication",
   "operatingSystem": "Android 8.0+",
-  "inLanguage": "fa",
+  "inLanguage": ["en", "da"],
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "author": {
     "@type": "Person",
@@ -133,39 +133,40 @@
 <section>
   <h2>چه کاری می‌کند</h2>
   <p class="sub">
-    همان شش سنجه، همان نوار ۲۴ ساعته و همان هفت روزی که نسخهٔ تلویزیونی نشان
-    می‌داد — این بار برای هر نقطه‌ای، روی صفحه‌ای که همراه توست.
+    وضعیت کنونی هوا، پیش‌بینی ساعتی برای ۲۴ ساعت آینده و پیش‌بینی هفت‌روزه را
+    برای هر مکانی که انتخاب می‌کنید ببینید.
   </p>
   <ul class="feats">
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-clear"/></svg>
       <h3>هر نقطه‌ای</h3>
-      <p>جست‌وجوی هم‌زمان با تایپ، روی geocoder سرویس Open-Meteo. نام کشور و استان
-         هم می‌آید تا دوازده شهر هم‌نام از هم بازشناخته شوند.</p>
+      <p>با نوشتن نام شهر، پیشنهادها نمایش داده می‌شوند. نام کشور و استان کمک
+         می‌کند شهرهای هم‌نام را از هم تشخیص دهید.</p>
     </li>
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-gauge"/></svg>
-      <h3>GPS دستگاه</h3>
-      <p>یک ضربه، مختصات شما را پیدا می‌کند و نامش را درمی‌آورد. اجازه‌دادن
-         اختیاری است — اگر ندهید، جست‌وجو همچنان کار می‌کند.</p>
+      <h3>موقعیت دستگاه</h3>
+      <p>موقعیت دستگاه و، در صورت امکان، نام مکان را پیدا کنید. اگر نام مکان در
+         دسترس نباشد، مختصات نمایش داده می‌شود. دسترسی به موقعیت اختیاری است و
+         اگر اجازه ندهید، جست‌وجو همچنان کار می‌کند.</p>
     </li>
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-sunrise"/></svg>
       <h3>وقت محلیِ درست</h3>
-      <p>هر مکان ساعت خودش و نمادهای روز و شب خودش را نشان می‌دهد، بر پایهٔ اختلاف
-         وقت جهانی که API می‌دهد، نه ساعت گوشی شما.</p>
+      <p>هر مکان ساعت محلی خودش و نمادهای هوا متناسب با روز یا شب همان‌جا را نشان
+         می‌دهد، نه ساعت گوشی شما.</p>
     </li>
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-thermo"/></svg>
       <h3>هفت روز، قابل انتخاب</h3>
-      <p>روی یک روز بزنید تا تیتر، شش کاشی سنجه و نوار ساعتی همگی به همان روز
-         بروند.</p>
+      <p>روی یک روز بزنید تا خلاصهٔ وضعیت هوا، جزئیات و پیش‌بینی ساعتی همان روز
+         را ببینید.</p>
     </li>
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-drop"/></svg>
-      <h3>آفلاین هم کار می‌کند</h3>
-      <p>آخرین پاسخ درست برای هر مکان جداگانه ذخیره می‌شود و وقتی شبکه نیست، با
-         نشانهٔ «قدیمی» نشان داده می‌شود.</p>
+      <h3>بدون اتصال هم کار می‌کند</h3>
+      <p>اگر پیش‌بینی به‌روز نشود، اپ آخرین پیش‌بینی ذخیره‌شده برای آن مکان را نشان
+         می‌دهد و می‌گوید مربوط به چه زمانی است.</p>
     </li>
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-partly"/></svg>
@@ -193,19 +194,21 @@
       می‌ماند.
     </p>
     <p>
-      نسخهٔ اندروید رنگ‌ها، نمادهای هوا و شیوهٔ انتخاب روزِ همان اپ را نگه داشته و
-      موتور پیمایش با دکمه‌های جهت‌دار را که صفحهٔ لمسی به آن نیازی ندارد کنار
-      گذاشته است. چیزی که افزوده، همان است که یک گوشی واقعاً لازم دارد: جایی برای
-      گذاشتن یک مکان.
+      نسخهٔ اندروید رنگ‌ها و نمادهای هوا را حفظ کرده و امکان کار با لمس، جست‌وجوی
+      مکان و استفاده از موقعیت دستگاه را اضافه کرده است.
     </p>
   </div>
 </section>
 
 <section>
   <h2>دریافت</h2>
-  <p class="sub">اندروید ۸٫۰ یا بالاتر. فایل APK امضا شده و به هر انتشار پیوست است.</p>
+  <p class="sub">اندروید ۸٫۰ یا بالاتر. اپ فقط انگلیسی و دانمارکی دارد و از زبان گوشی پیروی می‌کند. فارسی ندارد. فایل APK امضا شده و به هر انتشار پیوست است.</p>
+  <ul class="install" role="list">
+    <li><p class="fdroid-soon">به‌زودی در F-Droid</p></li>
+    <li><a href="https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk">دریافت فایل نصب اندروید (APK) از GitHub</a></li>
+    <li><a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cocodedk/weather-android">افزودن اپ به Obtainium، برنامه‌ای که اپ را به‌روز نگه می‌دارد</a></li>
+  </ul>
   <div class="cta">
-    <a class="btn btn-primary" href="https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk">دریافت APK</a>
     <a class="btn btn-ghost" href="https://github.com/cocodedk/weather-android">خواندن کد</a>
   </div>
   <pre><code>git clone https://github.com/cocodedk/weather-android.git

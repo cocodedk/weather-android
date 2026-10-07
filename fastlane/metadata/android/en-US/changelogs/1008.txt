@@ -1,0 +1,1 @@
+The app's built-in library files (.so) are now left exactly as supplied, so anyone can rebuild the app and get an identical copy without installing a particular Android toolkit (the NDK). The APK is a few kB larger. Nothing changes in how Weather looks or works.

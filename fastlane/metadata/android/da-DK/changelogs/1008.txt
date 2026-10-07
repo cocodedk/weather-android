@@ -1,0 +1,1 @@
+Appens indbyggede biblioteksfiler (.so) bliver nu liggende præcis, som de leveres, så alle kan bygge appen igen og få en identisk kopi uden at installere et bestemt Android-værktøj (NDK'et). APK-filen er et par kB større. Intet ændrer sig i, hvordan Weather ser ud eller virker.

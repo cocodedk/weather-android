@@ -11,7 +11,7 @@ class AboutLinksTest {
     fun updateButtonOpensTheLatestGithubReleaseUntilLiveOnFdroid() {
         assertEquals(
             "https://github.com/cocodedk/weather-android/releases/latest",
-            aboutUrl(AboutLink.Updates, liveOnFdroid = false, privacyUrl = null),
+            aboutUrl(AboutLink.Updates, "en", liveOnFdroid = false, privacyUrl = null),
         )
     }
 
@@ -19,34 +19,52 @@ class AboutLinksTest {
     fun updateButtonOpensTheFdroidPageOnceLive() {
         assertEquals(
             "https://f-droid.org/packages/dk.cocode.weather/",
-            aboutUrl(AboutLink.Updates, liveOnFdroid = true, privacyUrl = null),
+            aboutUrl(AboutLink.Updates, "en", liveOnFdroid = true, privacyUrl = null),
         )
     }
 
     @Test
     fun privacyLinkIsPresentOnlyWhenThereIsAPolicyPage() {
-        assertEquals(privacy, aboutUrl(AboutLink.Privacy, liveOnFdroid = false, privacyUrl = privacy))
-        assertNull(aboutUrl(AboutLink.Privacy, liveOnFdroid = false, privacyUrl = null))
+        assertEquals(privacy, aboutUrl(AboutLink.Privacy, "en", liveOnFdroid = false, privacyUrl = privacy))
+        assertNull(aboutUrl(AboutLink.Privacy, "en", liveOnFdroid = false, privacyUrl = null))
     }
 
     @Test
-    fun theAppShipsWithTheSitesPrivacyPage() {
-        assertEquals(privacy, aboutUrl(AboutLink.Privacy))
+    fun englishOpensTheEnglishPages() {
+        assertEquals("https://weather.cocode.dk/", aboutUrl(AboutLink.Website, "en"))
+        assertEquals(privacy, aboutUrl(AboutLink.Privacy, "en"))
     }
 
     @Test
-    fun websiteSourceAndIssuesDoNotDependOnTheOtherSettings() {
-        for (live in listOf(false, true)) {
-            for (policy in listOf(null, privacy)) {
-                assertEquals("https://weather.cocode.dk/", aboutUrl(AboutLink.Website, live, policy))
-                assertEquals(
-                    "https://github.com/cocodedk/weather-android",
-                    aboutUrl(AboutLink.Source, live, policy),
-                )
-                assertEquals(
-                    "https://github.com/cocodedk/weather-android/issues",
-                    aboutUrl(AboutLink.Issues, live, policy),
-                )
+    fun danishOpensTheDanishPages() {
+        assertEquals("https://weather.cocode.dk/da/", aboutUrl(AboutLink.Website, "da"))
+        assertEquals("https://weather.cocode.dk/da/privacy/", aboutUrl(AboutLink.Privacy, "da"))
+    }
+
+    @Test
+    fun aLanguageTheSiteLacksOpensTheEnglishPages() {
+        // The site has a Persian home page but no Persian privacy page, so Persian stays on English;
+        // German has no pages at all.
+        for (language in listOf("fa", "de")) {
+            assertEquals("https://weather.cocode.dk/", aboutUrl(AboutLink.Website, language))
+            assertEquals(privacy, aboutUrl(AboutLink.Privacy, language))
+        }
+    }
+
+    @Test
+    fun sourceAndIssuesDoNotDependOnTheOtherSettings() {
+        for (language in listOf("en", "da", "fa")) {
+            for (live in listOf(false, true)) {
+                for (policy in listOf(null, privacy)) {
+                    assertEquals(
+                        "https://github.com/cocodedk/weather-android",
+                        aboutUrl(AboutLink.Source, language, live, policy),
+                    )
+                    assertEquals(
+                        "https://github.com/cocodedk/weather-android/issues",
+                        aboutUrl(AboutLink.Issues, language, live, policy),
+                    )
+                }
             }
         }
     }

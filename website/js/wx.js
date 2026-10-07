@@ -40,19 +40,22 @@
     86: ['Heavy snow showers', 'snow'],
     95: ['Thunderstorm',       'thunder'],
     96: ['Thunderstorm, hail', 'thunder'],
+    97: ['Heavy thunderstorm', 'thunder'],
     99: ['Thunderstorm, hail', 'thunder']
   };
 
   var NIGHT = { clear: 'clear-night', partly: 'partly-night' };
 
   var labels = null;  /* set by setLabels() on the Danish and Persian pages */
+  var unknown = 'Unknown';  /* the page's word for a code this table lacks */
 
   function setLabels(map) { labels = map || null; }
+  function setUnknown(text) { if (text) { unknown = text; } }
 
   function label(code) {
     if (labels && labels[code]) { return labels[code]; }
     var e = CODES[code];
-    return e ? e[0] : 'Unknown';
+    return e ? e[0] : unknown;
   }
 
   function icon(code, isDay) {
@@ -232,7 +235,7 @@
   }
 
   global.WX = {
-    label: label, icon: icon, setLabels: setLabels, setLocale: setLocale,
+    label: label, icon: icon, setLabels: setLabels, setUnknown: setUnknown, setLocale: setLocale,
     temp: temp, tempUnit: tempUnit, tempFull: tempFull,
     wind: wind, precip: precip, percent: percent, tr: tr,
     parseLocal: parseLocal, pad2: pad2, clock: clock, hourLabel: hourLabel,

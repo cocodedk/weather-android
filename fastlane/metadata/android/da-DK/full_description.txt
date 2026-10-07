@@ -1,0 +1,14 @@
+<p>Weather viser vejret lige nu, de næste 24 timer og en prognose for de næste 7 dage for ethvert sted på Jorden. Søg efter en by ved navn, eller lad appen bruge telefonens placering. Der er ingen konto, ingen API-nøgle, ingen reklamer og ingen indsamling af brugsstatistik.</p>
+
+<ul>
+<li><b>Ethvert sted.</b> Begynd at skrive et bynavn for at se forslag. Land og region vises, så du kan skelne mellem steder med samme navn.</li>
+<li><b>Din placering.</b> Tryk på "Brug min nuværende placering", så viser appen stedets navn, når den kan, og ellers koordinaterne. Det er valgfrit at give adgang til placering, og søgningen virker også uden.</li>
+<li><b>Gemte steder.</b> Gem flere steder, og skift mellem dem. De bliver på din telefon, og Android kan tage dem med i en sikkerhedskopi af telefonen.</li>
+<li><b>Den rigtige lokale tid.</b> Hvert sted viser sin egen lokale tid, og vejrikonerne viser dag eller nat på stedet. Tokyo viser Tokyo-tid, også når du er i Danmark.</li>
+<li><b>Syv dage at vælge imellem.</b> Tryk på en dag for at se dens vejroversigt, detaljer og timeprognose.</li>
+<li><b>Widget til hjemmeskærmen</b> for det sted, du har valgt. Den opdateres cirka hver halve time.</li>
+<li><b>Metrisk eller imperial.</b> Vælg °C, m/s og mm, eller °F, mph og tommer.</li>
+<li><b>Virker uden forbindelse.</b> Hvis prognosen ikke kan opdateres, viser appen den senest gemte prognose for stedet og siger, hvornår den er fra.</li>
+</ul>
+
+<p>Prognoser og stedsøgning kommer fra <a href="https://open-meteo.com">Open-Meteo</a>, brugt på deres gratis vilkår for ikke-kommerciel brug. Weather har ingen egen server. Når du bruger din placering, hjælper telefonens egne tjenester til placering og stednavne med at finde og navngive stedet.</p>

@@ -1,14 +1,14 @@
-<p>Weather shows current conditions, the next 24 hours, and a 7-day forecast for any location on Earth. Search for a city by name or use your device's GPS — no account, no API key, no ads, no analytics.</p>
+<p>Weather shows the current conditions, the next 24 hours and a 7-day forecast for any place on Earth. Search for a city by name, or let the app use your phone's location. There is no account, no API key, no ads and no analytics.</p>
 
 <ul>
-<li><b>Any location.</b> Type-ahead search over Open-Meteo's geocoder, with country and region shown so same-named places stay tellable apart.</li>
-<li><b>Device GPS.</b> One tap resolves your coordinates and reverse-geocodes them to a place name.</li>
-<li><b>Saved locations.</b> Switch between them; the list persists on your device only.</li>
-<li><b>The right local time.</b> Each location shows its own wall clock and day/night icons from the API's UTC offset — Tokyo reads as Tokyo even from Denmark.</li>
-<li><b>Seven days, selectable.</b> Tap a day and every panel retargets to it.</li>
-<li><b>Home screen widget</b> for the selected location, refreshing every half hour.</li>
-<li><b>Metric or imperial</b>, converted on the client.</li>
-<li><b>Works offline.</b> The last forecast is cached per location and marked stale when offline.</li>
+<li><b>Any place.</b> Start typing a city name to see matching places. Country and region are shown, so you can tell places with the same name apart.</li>
+<li><b>Your location.</b> Tap "Use my current location" and the app shows the place name when it can, or the coordinates when it cannot. Location access is optional, and search works without it.</li>
+<li><b>Saved places.</b> Keep several places and switch between them. They stay on your phone, and Android may include them in a backup of your phone.</li>
+<li><b>The right local time.</b> Each place shows its own local time, and its weather icons show daytime or nighttime there. Tokyo shows Tokyo time, even when you are in Denmark.</li>
+<li><b>Seven days to choose from.</b> Tap a day to see its weather summary, details and hour-by-hour forecast.</li>
+<li><b>Home screen widget</b> for the place you selected. It refreshes about every half hour.</li>
+<li><b>Metric or imperial.</b> Choose °C, m/s and mm, or °F, mph and inches.</li>
+<li><b>Works without a connection.</b> If the forecast cannot be updated, the app shows the last forecast it saved for that place and says when that forecast is from.</li>
 </ul>
 
-<p>Data from <a href="https://open-meteo.com">Open-Meteo</a>, used under their free non-commercial terms. The app makes plain HTTPS GET requests and stores nothing outside your device.</p>
+<p>Forecasts and place search come from <a href="https://open-meteo.com">Open-Meteo</a>, used under their free non-commercial terms. Weather has no server of its own. When you use your location, your phone's own location and place-naming services help find and name the place.</p>

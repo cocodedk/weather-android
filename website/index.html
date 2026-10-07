@@ -11,7 +11,7 @@
 -->
 
 <title>Weather: an Android forecast app for any location</title>
-<meta name="description" content="A free, open-source Android weather app. Search any city on Earth or use your phone's GPS, and read every forecast in that place's own local time. No API key, no account, no tracking.">
+<meta name="description" content="A free, open-source Android weather app. Search any city on Earth or use your phone's location, and read every forecast in that place's own local time. No API key, no account, no tracking.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://weather.cocode.dk/">
 
@@ -23,21 +23,21 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Weather for Android">
 <meta property="og:title" content="Weather: an Android forecast app for any location">
-<meta property="og:description" content="Search any city on Earth or use your phone's GPS. Every forecast reads in that place's own local time. Free, open source, no API key.">
+<meta property="og:description" content="Search any city on Earth or use your phone's location. Every forecast shows that place's own local time. Free, open source, no API key.">
 <meta property="og:url" content="https://weather.cocode.dk/">
 <meta property="og:image" content="https://weather.cocode.dk/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Weather app showing 18 degrees and partly cloudy for Copenhagen, beside a seven-day forecast.">
+<meta property="og:image:alt" content="Weather illustration showing temperatures and local times for Copenhagen, Tokyo and Lima.">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="da_DK">
 <meta property="og:locale:alternate" content="fa_IR">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Weather: an Android forecast app for any location">
-<meta name="twitter:description" content="Search any city on Earth or use your phone's GPS. Every forecast reads in that place's own local time.">
+<meta name="twitter:description" content="Search any city on Earth or use your phone's location. Every forecast shows that place's own local time.">
 <meta name="twitter:image" content="https://weather.cocode.dk/og.png">
-<meta name="twitter:image:alt" content="The Weather app showing current conditions and a seven-day forecast.">
+<meta name="twitter:image:alt" content="Weather illustration showing temperatures and local times for Copenhagen, Tokyo and Lima.">
 
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
@@ -53,12 +53,12 @@
   "@context": "https://schema.org",
   "@type": "MobileApplication",
   "name": "Weather",
-  "description": "A free, open-source Android weather app that shows current conditions, a 24-hour outlook and a 7-day forecast for any location, found by search or by device GPS.",
+  "description": "A free, open-source Android weather app that shows current conditions, the next 24 hours and a 7-day forecast for any location, found by search or by device location.",
   "url": "https://weather.cocode.dk/",
   "downloadUrl": "https://github.com/cocodedk/weather-android/releases/latest",
   "applicationCategory": "WeatherApplication",
   "operatingSystem": "Android 8.0+",
-  "inLanguage": "en",
+  "inLanguage": ["en", "da"],
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "author": {
     "@type": "Person",
@@ -92,6 +92,8 @@
   <a class="brand" href="/" data-nav="home" aria-current="page"><img src="/img/icon.png" alt="" width="32" height="32">Weather</a>
   <a href="/#how" data-nav="how">How it works</a>
   <a href="/#install" data-nav="install">Install</a>
+  <a href="/privacy/" data-nav="privacy">Privacy</a>
+  <a href="/da/" hreflang="da" lang="da" data-nav="lang">Dansk</a>
   <a href="https://cocode.dk/" data-nav="more">More apps</a>
 </nav>
 <!-- cocode-apps:nav:end -->
@@ -105,8 +107,8 @@
     <p class="eyebrow">Android · Open-Meteo · no API key</p>
     <h1>Weather, wherever you point it.</h1>
     <p class="lede">
-      Search any city on Earth, or hand it your phone's GPS. Every forecast reads
-      in that place's own local time, not yours.
+      Search any city on Earth, or let the app use your phone's location. Every
+      forecast shows that place's own local time, not yours.
     </p>
 
     <div class="wx-search">
@@ -152,39 +154,39 @@
 <section id="how">
   <h2>What it does</h2>
   <p class="sub">
-    The same six readings, the same 24-hour strip and the same seven days the TV
-    version showed. Now for anywhere, on a screen you carry.
+    See the current conditions, an hour-by-hour forecast for the next 24 hours and
+    a seven-day forecast, for any place you choose.
   </p>
   <ul class="feats">
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-clear"/></svg>
       <h3>Any location</h3>
-      <p>Type-ahead search over Open-Meteo's geocoder. Country and region are shown,
-         so you can tell the twelve places called Springfield apart.</p>
+      <p>Start typing a city name to see matching places. Country and region are
+         shown, so you can tell places with the same name apart.</p>
     </li>
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-gauge"/></svg>
-      <h3>Device GPS</h3>
-      <p>One tap finds your coordinates and names the place. Permission is optional.
-         Search keeps working if you say no.</p>
+      <h3>Your location</h3>
+      <p>One tap finds your location and, when it can, the name of the place.
+         Otherwise the app shows the coordinates. Permission is optional, and
+         search keeps working if you say no.</p>
     </li>
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-sunrise"/></svg>
       <h3>The right local time</h3>
-      <p>Each place shows its own wall clock and its own day and night icons, taken
-         from the API's UTC offset rather than your phone's.</p>
+      <p>Each place shows its own local time, with weather icons that show daytime
+         or nighttime there, whatever time it is on your phone.</p>
     </li>
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-thermo"/></svg>
       <h3>Seven days, selectable</h3>
-      <p>Tap a day and the headline, the six stat tiles and the hourly strip all
-         switch to it.</p>
+      <p>Tap a day to see its weather summary, details and hour-by-hour forecast.</p>
     </li>
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-drop"/></svg>
-      <h3>Works offline</h3>
-      <p>The last good response is cached per location and shown with a stale
-         marker when the network is gone.</p>
+      <h3>Works without a connection</h3>
+      <p>If the forecast cannot be updated, the app shows the last forecast it saved
+         for that place and says when that forecast is from.</p>
     </li>
     <li class="feat">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-partly"/></svg>
@@ -211,22 +213,21 @@
       hardcoded city, because a television sits in one room.
     </p>
     <p>
-      The Android version keeps that app's palette, its weather icons and its
-      day-selection model, and drops the D-pad focus engine that a touchscreen has
-      no use for. What it adds is the thing a phone actually needs: somewhere to
-      put a location.
+      The Android version keeps that app's colours, weather icons and way of choosing
+      a day. It adds touch controls, and it lets you search for places or use your
+      phone's location.
     </p>
   </div>
 </section>
 
 <section id="install">
   <h2>Get it</h2>
-  <p class="sub">Android 8.0 or newer. The APK is signed and attached to every release.</p>
+  <p class="sub">Android 8.0 or newer. The app is in English and Danish and follows your phone's language. The APK is signed and attached to every release.</p>
   <!-- cocode-apps:install:start -->
 <ul class="install" role="list">
   <li><p class="fdroid-soon">Coming to F-Droid</p></li>
-  <li><a href="https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk">Download the APK from GitHub</a></li>
-  <li><a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cocodedk/weather-android">Auto-update the GitHub APK with Obtainium</a></li>
+  <li><a href="https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk">Download the Android installation file (APK) from GitHub</a></li>
+  <li><a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cocodedk/weather-android">Add the app to Obtainium, an app that keeps it up to date</a></li>
 </ul>
 <!-- cocode-apps:install:end -->
   <div class="cta">
@@ -245,6 +246,7 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk</code></pre>
   <!-- cocode-apps:footer:start -->
 <footer class="cocode-footer">
   <a href="https://github.com/cocodedk/weather-android">Source code</a> ·
+  <a href="/privacy/">Privacy</a> ·
   License: Apache-2.0 ·
   <a href="https://cocode.dk/">Made by Cocode (cocode.dk)</a>
 </footer>

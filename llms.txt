@@ -1,8 +1,9 @@
 # Weather
 
-> A free, open-source Android weather app that shows current conditions, a
-> 24-hour outlook and a 7-day forecast for any location — found by search or by
-> device GPS. Kotlin and Jetpack Compose, no API key, no account, no tracking.
+> A free, open-source Android weather app that shows current conditions, the next
+> 24 hours and a 7-day forecast for any location, found by search or by the
+> phone's location. In English and Danish. Kotlin and Jetpack Compose, no API
+> key, no account, no tracking.
 > Ported from a Samsung Tizen TV app that showed one hardcoded city.
 
 Built by Babak Bandpey (Cocode, https://cocode.dk). Apache-2.0.

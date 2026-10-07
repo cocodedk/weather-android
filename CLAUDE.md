@@ -204,7 +204,7 @@ $ADB shell am start -n dk.cocode.weather.debug/dk.cocode.weather.MainActivity
 $ADB exec-out screencap -p > shot.png   # verify visually — do this
 
 python3 -m http.server -d website 8099  # the site, at localhost:8099
-./scripts/install-hooks.sh              # once per clone; hooks are not committed
+./scripts/install-hooks.sh              # once per clone; the hook files are committed, but each clone must activate them
 gh workflow run release-apk.yml         # after a PR bumps VERSION_NAME/VERSION_CODE in gradle.properties
 ```
 
