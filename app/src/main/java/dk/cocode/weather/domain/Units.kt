@@ -140,6 +140,12 @@ class Units(
             "${d.month.getDisplayName(TextStyle.SHORT, locale)} ${d.year}"
     }
 
+    /** "7 Oct, 14:20": the date and clock time of a reading, at the place it belongs to. */
+    fun dateTime(iso: String?): String {
+        val date = dateLabel(iso)
+        return if (date.isEmpty()) clock(iso) else "$date, ${clock(iso)}"
+    }
+
     /** Stable yyyy-MM-dd key for grouping hourly rows into days. */
     fun dayKey(iso: String?): String {
         val t = parseLocal(iso) ?: return ""

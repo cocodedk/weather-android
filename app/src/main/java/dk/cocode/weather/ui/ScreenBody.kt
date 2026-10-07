@@ -64,7 +64,14 @@ fun ScreenBody(
         state.error != null -> Centered {
             Text(stringResource(R.string.error_title), color = palette.fg, fontSize = 17.sp)
             Spacer(Modifier.height(6.dp))
-            Text(state.error, color = palette.fgDim, fontSize = 13.sp, textAlign = TextAlign.Center)
+            // The system's own error text (state.error) is kept in the state for debugging but
+            // is not shown: "HTTP 500: {...}" tells a customer nothing they can act on.
+            Text(
+                stringResource(R.string.error_detail),
+                color = palette.fgDim,
+                fontSize = 13.sp,
+                textAlign = TextAlign.Center,
+            )
             Spacer(Modifier.height(14.dp))
             IconButton(onClick = onRefresh) {
                 Icon(Icons.Default.Refresh, stringResource(R.string.error_retry), tint = palette.accent)
@@ -77,11 +84,13 @@ fun ScreenBody(
 private fun StatusLine(state: WeatherUiState, units: Units) {
     val palette = LocalPalette.current
     val forecast = state.forecast ?: return
-    val clock = units.clock(forecast.current.time)
+    val time = forecast.current.time
     val text = if (state.stale) {
-        stringResource(R.string.status_not_updated, clock)
+        // The date matters here: saved data can be days old, and a bare clock time would
+        // look recent.
+        stringResource(R.string.status_not_updated, units.dateTime(time))
     } else {
-        stringResource(R.string.status_updated, clock)
+        stringResource(R.string.status_updated, units.clock(time))
     }
     Text(
         text = text,

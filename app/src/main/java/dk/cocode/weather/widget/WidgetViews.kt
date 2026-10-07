@@ -82,10 +82,8 @@ object WidgetViews {
         )
         views.setTextViewText(
             R.id.widget_status,
-            context.getString(
-                if (stale) R.string.widget_not_updated else R.string.widget_updated,
-                units.clock(current.time),
-            ),
+            if (stale) context.getString(R.string.widget_not_updated, units.dateTime(current.time))
+            else context.getString(R.string.widget_updated, units.clock(current.time)),
         )
 
         wireClicks(context, views)

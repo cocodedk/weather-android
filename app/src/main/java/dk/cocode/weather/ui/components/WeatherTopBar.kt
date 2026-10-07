@@ -88,7 +88,7 @@ fun WeatherTopBar(
                     onClick = { onToggleUnits(); menuOpen = false },
                 )
                 DropdownMenuItem(
-                    text = { Text(stringResource(R.string.menu_theme, stringResource(themeLabel(state.theme)))) },
+                    text = { Text(stringResource(nextThemeLabel(state.theme))) },
                     leadingIcon = { Icon(Icons.Default.Brightness4, null) },
                     onClick = { onCycleTheme(); menuOpen = false },
                 )
@@ -116,9 +116,10 @@ fun WeatherTopBar(
     }
 }
 
+/** Each tap cycles Auto -> Day -> Night -> Auto (see WeatherViewModel.cycleTheme); name the next one. */
 @StringRes
-private fun themeLabel(theme: String) = when (theme) {
-    WeatherStore.THEME_DAY -> R.string.theme_day
-    WeatherStore.THEME_NIGHT -> R.string.theme_night
-    else -> R.string.theme_auto
+private fun nextThemeLabel(theme: String) = when (theme) {
+    WeatherStore.THEME_AUTO -> R.string.menu_theme_day
+    WeatherStore.THEME_DAY -> R.string.menu_theme_night
+    else -> R.string.menu_theme_auto
 }

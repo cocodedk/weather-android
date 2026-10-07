@@ -21,7 +21,7 @@ enum class Condition {
     LIGHT_RAIN, RAIN, HEAVY_RAIN, FREEZING_RAIN,
     LIGHT_SNOW, SNOW, HEAVY_SNOW, SNOW_GRAINS,
     LIGHT_SHOWERS, SHOWERS, VIOLENT_SHOWERS, SNOW_SHOWERS, HEAVY_SNOW_SHOWERS,
-    THUNDERSTORM, THUNDERSTORM_HAIL, UNKNOWN
+    THUNDERSTORM, HEAVY_THUNDERSTORM, THUNDERSTORM_HAIL, UNKNOWN
 }
 
 /** The risk band a UV index falls in. */
@@ -56,6 +56,7 @@ object Wmo {
         85 to (Condition.SNOW_SHOWERS to WeatherIcon.SNOW),
         86 to (Condition.HEAVY_SNOW_SHOWERS to WeatherIcon.SNOW),
         95 to (Condition.THUNDERSTORM to WeatherIcon.THUNDER),
+        97 to (Condition.HEAVY_THUNDERSTORM to WeatherIcon.THUNDER),
         96 to (Condition.THUNDERSTORM_HAIL to WeatherIcon.THUNDER),
         99 to (Condition.THUNDERSTORM_HAIL to WeatherIcon.THUNDER),
     )

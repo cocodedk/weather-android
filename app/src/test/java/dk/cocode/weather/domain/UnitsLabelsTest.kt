@@ -36,6 +36,13 @@ class UnitsLabelsTest {
     }
 
     @Test
+    fun dateTimeNamesTheDayBecauseSavedDataCanBeOld() {
+        assertEquals("7 Oct, 13:30", metric24.dateTime("2026-10-07T13:30"))
+        assertEquals("7 Oct, 1:30 pm", metric12.dateTime("2026-10-07T13:30"))
+        assertEquals("--:--", metric24.dateTime(null))
+    }
+
+    @Test
     fun twentyFourHourClockHasNoSuffix() {
         assertEquals("13:30", metric24.clock("2026-10-07T13:30"))
         assertEquals("--:--", metric24.clock(null))
@@ -47,6 +54,8 @@ class UnitsLabelsTest {
         assertEquals(Condition.THUNDERSTORM_HAIL, Wmo.condition(96))
         assertEquals(Condition.THUNDERSTORM_HAIL, Wmo.condition(99))
         assertEquals(Condition.FREEZING_DRIZZLE, Wmo.condition(57))
+        assertEquals(Condition.HEAVY_THUNDERSTORM, Wmo.condition(97))
+        assertEquals(WeatherIcon.THUNDER, Wmo.icon(97, isDay = true))
         assertEquals(Condition.UNKNOWN, Wmo.condition(1234))
         assertEquals(Condition.UNKNOWN, Wmo.condition(null))
     }

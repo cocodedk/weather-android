@@ -116,10 +116,10 @@ private fun rangeLine(forecast: Forecast, dayIndex: Int, units: Units): String {
     }
 
     val sum = day.precipitationSum
-    val wet = if (sum != null && sum > 0) {
-        stringResource(R.string.hero_precip_today, units.precip(sum))
-    } else {
-        stringResource(R.string.hero_dry_day)
+    val wet = when {
+        sum == null -> stringResource(R.string.hero_precip_unknown)
+        sum > 0 -> stringResource(R.string.hero_precip_today, units.precip(sum))
+        else -> stringResource(R.string.hero_dry_day)
     }
     return stringResource(R.string.hero_range_today, highLow, wet)
 }

@@ -42,6 +42,7 @@ fun Condition.labelRes(): Int = when (this) {
     Condition.SNOW_SHOWERS -> R.string.wmo_snow_showers
     Condition.HEAVY_SNOW_SHOWERS -> R.string.wmo_heavy_snow_showers
     Condition.THUNDERSTORM -> R.string.wmo_thunderstorm
+    Condition.HEAVY_THUNDERSTORM -> R.string.wmo_heavy_thunderstorm
     Condition.THUNDERSTORM_HAIL -> R.string.wmo_thunderstorm_hail
     Condition.UNKNOWN -> R.string.wmo_unknown
 }

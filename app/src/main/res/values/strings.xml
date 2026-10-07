@@ -13,14 +13,17 @@
     <!-- Two lines: today's high, then today's low. -->
     <string name="widget_range">H %1$s°\nL %2$s°</string>
     <!-- %1$s is a clock time at the place. -->
-    <string name="widget_updated">Updated %1$s</string>
-    <string name="widget_not_updated">Could not update · %1$s</string>
+    <string name="widget_updated">Conditions as of %1$s</string>
+    <!-- %1$s is a date and clock time at the place, such as "7 Oct, 14:20". -->
+    <string name="widget_not_updated">Not updated · %1$s</string>
 
     <!-- Forecast screen -->
     <string name="error_title">Could not load the forecast</string>
+    <string name="error_detail">Check that your phone is online, then tap the refresh icon below to try again.</string>
     <string name="error_retry">Retry</string>
     <!-- %1$s is a clock time at the place. -->
-    <string name="status_updated">Updated %1$s · Open-Meteo</string>
+    <string name="status_updated">Conditions as of %1$s · Open-Meteo</string>
+    <!-- %1$s is a date and clock time at the place, such as "7 Oct, 14:20". -->
     <string name="status_not_updated">Could not update. Showing the forecast from %1$s.</string>
 
     <!-- Top bar and menu -->
@@ -28,10 +31,10 @@
     <string name="cd_more">More</string>
     <string name="menu_units_metric">Use °C and m/s</string>
     <string name="menu_units_imperial">Use °F and mph</string>
-    <string name="menu_theme">Theme: %1$s</string>
-    <string name="theme_auto">Auto</string>
-    <string name="theme_day">Day</string>
-    <string name="theme_night">Night</string>
+    <!-- Each tap moves to the next theme, so the label names the theme it switches to. -->
+    <string name="menu_theme_day">Use day theme</string>
+    <string name="menu_theme_night">Use night theme</string>
+    <string name="menu_theme_auto">Match theme to day and night</string>
     <string name="menu_refresh">Refresh</string>
     <string name="menu_add_widget">Add widget to home screen</string>
     <string name="device_location">Device location</string>
@@ -64,6 +67,7 @@
     <string name="hero_range_day">%1$s %2$s · %3$s</string>
     <string name="hero_precip_today">%1$s today</string>
     <string name="hero_dry_day">Dry day</string>
+    <string name="hero_precip_unknown">Precipitation not available</string>
 
     <!-- Hour by hour and the daily list -->
     <string name="hourly_title">Hour by hour</string>
@@ -86,7 +90,7 @@
     <string name="stat_humidity_note">Relative</string>
     <string name="stat_precip">Precipitation</string>
     <!-- %1$s is a percentage. -->
-    <string name="stat_precip_note">Last hour · %1$s chance</string>
+    <string name="stat_precip_note">Last 15 min · %1$s chance</string>
     <string name="stat_precip_day_note">Total for the day</string>
     <string name="stat_pressure">Pressure</string>
     <string name="stat_pressure_note">At ground level</string>
@@ -94,8 +98,8 @@
     <string name="stat_sunrise_note">Sunset %1$s</string>
     <string name="stat_high_low">High / low</string>
     <string name="stat_high_low_note">Daily range</string>
-    <string name="stat_rain_chance">Chance of rain</string>
-    <string name="stat_rain_chance_note">Peak for the day</string>
+    <string name="stat_rain_chance">Rain or snow</string>
+    <string name="stat_rain_chance_note">Highest chance</string>
     <string name="stat_uv">UV index</string>
 
     <!-- UV risk bands, as the World Health Organization names them -->
@@ -131,6 +135,7 @@
     <string name="wmo_heavy_snow_showers">Heavy snow showers</string>
     <string name="wmo_thunderstorm">Thunderstorm</string>
     <string name="wmo_thunderstorm_hail">Thunderstorm, hail</string>
+    <string name="wmo_heavy_thunderstorm">Heavy thunderstorm</string>
     <string name="wmo_unknown">Unknown</string>
 
     <!-- Wind direction, 16 points from north, clockwise -->
