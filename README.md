@@ -22,8 +22,8 @@ anything.
 
 <!-- cocode-apps:install:start -->
 - Coming to F-Droid
-- [Download the APK from GitHub](https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk)
-- [Auto-update the GitHub APK with Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cocodedk/weather-android)
+- [Download the Android installation file (APK) from GitHub](https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk)
+- [Add the app to Obtainium, an app that keeps it up to date](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cocodedk/weather-android)
 <!-- cocode-apps:install:end -->
 
 Android 8.0 (API 26) or newer.
