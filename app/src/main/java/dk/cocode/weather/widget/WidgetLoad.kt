@@ -39,18 +39,20 @@ sealed interface WidgetLoad {
 
 /**
  * Loads the forecast for the place the app has selected. [readPrefs] reads the saved choice. A fetch
- * that has not finished within [deadlineMs] is given up on, and the saved forecast (or "unavailable")
- * is what comes back, so the widget never stays on "loading".
+ * that has not finished by [fetchDeadlineNanos] (a System.nanoTime() value) is given up on, and the
+ * saved forecast (or "unavailable") is what comes back, so the widget never stays on "loading". The
+ * time left is worked out after the saved choice has been read, because that read can be slow too.
  */
 suspend fun loadForWidget(
     readPrefs: suspend () -> WeatherStore.Prefs,
     repo: ForecastRepository,
-    deadlineMs: Long = WIDGET_FETCH_MS,
+    fetchDeadlineNanos: Long = System.nanoTime() + WIDGET_FETCH_MS * 1_000_000,
 ): WidgetLoad {
     val prefs = readPrefs()
     val place = prefs.selected ?: return WidgetLoad.NoPlace
+    val fetchMs = maxOf(0L, (fetchDeadlineNanos - System.nanoTime()) / 1_000_000)
     val loaded = try {
-        withTimeoutOrNull(deadlineMs) { repo.load(place) } ?: repo.cached(place)
+        withTimeoutOrNull(fetchMs) { repo.load(place) } ?: repo.cached(place)
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
@@ -62,6 +64,9 @@ suspend fun loadForWidget(
 /** Where a refresh draws. [V] is what the platform draws with (RemoteViews in the app). */
 interface WidgetSurface<V> {
     fun build(found: WidgetLoad): V
+
+    /** What a widget shows while a refresh works on it. */
+    fun loading(): V
 
     /** Every widget on the home screen now, not just the ones a refresh was asked about. */
     fun allIds(): IntArray
@@ -96,21 +101,43 @@ class WidgetPublisher(private val lock: Mutex = Mutex()) {
         surface: WidgetSurface<V>,
         deadlineNanos: Long? = null,
     ): Boolean = lock.withLock {
-        fun timeIsUp() = deadlineNanos != null && System.nanoTime() - deadlineNanos > 0
-        if (ticket != newest.get() || readPrefs().selected != found.place || timeIsUp()) return@withLock false
+        if (ticket != newest.get() || readPrefs().selected != found.place || timeIsUp(deadlineNanos)) {
+            return@withLock false
+        }
         val views = surface.build(found)
         for (id in surface.allIds()) {
-            if (timeIsUp()) return@withLock false
+            if (timeIsUp(deadlineNanos)) return@withLock false
             surface.update(id, views)
         }
         true
     }
+
+    /**
+     * Shows the "loading" views on [ids] while a refresh works, unless a newer refresh has started
+     * (its result, or its own "loading", must not be overwritten by an older one that is late) or
+     * the time is up. Looks at both before each widget, under the same lock as [publish].
+     */
+    suspend fun <V> showLoading(
+        ticket: Long,
+        ids: IntArray,
+        surface: WidgetSurface<V>,
+        deadlineNanos: Long? = null,
+    ) = lock.withLock {
+        val views = surface.loading()
+        for (id in ids) {
+            if (ticket != newest.get() || timeIsUp(deadlineNanos)) return@withLock
+            surface.update(id, views)
+        }
+    }
+
+    private fun timeIsUp(deadlineNanos: Long?) = deadlineNanos != null && System.nanoTime() - deadlineNanos > 0
 }
 
 /**
  * One whole refresh, from loading to drawing, against a clock that [startedNanos] (a
  * System.nanoTime() value taken when the broadcast was handed over) started: the fetch gets until
  * [fetchMs] on it, the whole refresh until [overallMs]. When time is up it draws nothing more.
+ * It first shows "loading" on [requestedIds], the widgets the refresh was asked about.
  */
 suspend fun <V> refreshWidget(
     ticket: Long,
@@ -118,13 +145,15 @@ suspend fun <V> refreshWidget(
     readPrefs: suspend () -> WeatherStore.Prefs,
     repo: ForecastRepository,
     surface: WidgetSurface<V>,
+    requestedIds: IntArray = IntArray(0),
     startedNanos: Long = System.nanoTime(),
     overallMs: Long = WIDGET_REFRESH_MS,
     fetchMs: Long = WIDGET_FETCH_MS,
 ) {
-    fun elapsedMs() = (System.nanoTime() - startedNanos) / 1_000_000
-    withTimeoutOrNull(overallMs - elapsedMs()) {
-        val found = loadForWidget(readPrefs, repo, maxOf(0L, fetchMs - elapsedMs()))
-        publisher.publish(ticket, found, readPrefs, surface, deadlineNanos = startedNanos + overallMs * 1_000_000)
+    val deadline = startedNanos + overallMs * 1_000_000
+    withTimeoutOrNull(maxOf(0L, (deadline - System.nanoTime()) / 1_000_000)) {
+        publisher.showLoading(ticket, requestedIds, surface, deadline)
+        val found = loadForWidget(readPrefs, repo, startedNanos + fetchMs * 1_000_000)
+        publisher.publish(ticket, found, readPrefs, surface, deadline)
     }
 }

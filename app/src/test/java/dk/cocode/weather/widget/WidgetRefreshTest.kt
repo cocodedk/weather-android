@@ -11,6 +11,7 @@ import dk.cocode.weather.data.WeatherStore
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertEquals
@@ -72,6 +73,75 @@ class WidgetRefreshTest {
             assertTrue("took $tookMs ms", tookMs < 3_500)
             assertTrue("the connection was left open", server.awaitClientGone(1_000))
         }
+    }
+
+    @Test
+    fun aSlowPrefsReadLeavesTheFetchOnlyWhatIsLeftOfItsBudget() = runBlocking {
+        SlowServer(SlowServer.Mode.TRICKLE).use { server ->
+            val reads = AtomicInteger()
+            val slowPrefs: suspend () -> WeatherStore.Prefs = {
+                if (reads.getAndIncrement() == 0) delay(3_000) // the first read, which finds the selected place
+                prefs()
+            }
+            val surface = FakeSurface(intArrayOf(7))
+            val publisher = WidgetPublisher()
+            val started = System.nanoTime()
+
+            // The fetch may run until 3.5 s, so after a 3 s read it has half a second, and the saved
+            // forecast is drawn well before the overall 5 s. A fetch budget worked out before the
+            // read would run until 6.5 s, past the overall deadline, and nothing would be drawn.
+            refreshWidget(
+                publisher.begin(), publisher, slowPrefs, trickling(server, forecast), surface,
+                overallMs = 5_000, fetchMs = 3_500,
+            )
+            val tookMs = (System.nanoTime() - started) / 1_000_000
+
+            assertEquals(listOf(7 to "Copenhagen (saved)"), surface.updates)
+            assertTrue("took $tookMs ms", tookMs < 4_500)
+            assertTrue("the request never reached the server", server.awaitRequest(0))
+            assertTrue("the connection was left open", server.awaitClientGone(1_000))
+        }
+    }
+
+    @Test
+    fun aRefreshShowsLoadingOnTheWidgetsItWasAskedAboutThenTheForecastOnAll() = runBlocking {
+        val surface = FakeSurface(intArrayOf(1, 2))
+        val publisher = WidgetPublisher()
+
+        refreshWidget(
+            publisher.begin(), publisher, { prefs() }, ForecastRepository(SavedCache(null)) { forecast to "{}" },
+            surface, requestedIds = intArrayOf(1),
+        )
+
+        assertEquals(listOf(1 to "loading", 1 to "Copenhagen", 2 to "Copenhagen"), surface.updates)
+    }
+
+    @Test
+    fun anOlderRefreshDoesNotShowLoadingOverANewerOnesResult() = runBlocking {
+        val surface = FakeSurface(intArrayOf(1))
+        val publisher = WidgetPublisher()
+        val older = publisher.begin()
+        val newer = publisher.begin()
+        val ready = WidgetLoad.Ready(copenhagen, ForecastRepository.Loaded(forecast, stale = false), imperial = false)
+        publisher.publish(newer, ready, { prefs() }, surface)
+
+        publisher.showLoading(older, intArrayOf(1), surface) // the older refresh is late
+
+        assertEquals(listOf(1 to "Copenhagen"), surface.updates)
+    }
+
+    @Test
+    fun showingLoadingStopsAtTheDeadlineWidgetByWidget() = runBlocking {
+        val calls = AtomicInteger()
+        val surface = FakeSurface(intArrayOf(1, 2, 3), beforeUpdate = { if (calls.getAndIncrement() == 0) Thread.sleep(600) })
+        val publisher = WidgetPublisher()
+
+        refreshWidget(
+            publisher.begin(), publisher, { prefs() }, ForecastRepository(SavedCache(null)) { forecast to "{}" },
+            surface, requestedIds = intArrayOf(1, 2, 3), overallMs = 300,
+        )
+
+        assertEquals(listOf(1 to "loading"), surface.updates)
     }
 
     @Test

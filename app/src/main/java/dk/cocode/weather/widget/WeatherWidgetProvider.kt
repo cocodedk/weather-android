@@ -51,7 +51,6 @@ class WeatherWidgetProvider : AppWidgetProvider() {
         val startedNanos = System.nanoTime()
         val pending = goAsync()
         val ticket = publisher.begin()
-        requested.forEach { manager.updateAppWidget(it, WidgetViews.loading(context)) }
 
         val appContext = context.applicationContext
         CoroutineScope(SupervisorJob()).launch {
@@ -77,11 +76,15 @@ class WeatherWidgetProvider : AppWidgetProvider() {
                         )
                     }
 
+                    override fun loading(): RemoteViews = WidgetViews.loading(appContext)
+
                     override fun allIds(): IntArray = ids(appContext, manager)
 
                     override fun update(id: Int, views: RemoteViews) = manager.updateAppWidget(id, views)
                 }
-                refreshWidget(ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface, startedNanos)
+                refreshWidget(
+                    ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface, requested, startedNanos,
+                )
             } finally {
                 pending.finish()
             }
