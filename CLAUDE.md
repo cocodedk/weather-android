@@ -181,6 +181,9 @@ point of the page.
       deliberate decision — the build currently resolves offline.
 - [ ] DRY / SOLID / KISS / YAGNI. Delete dead code immediately.
 - [ ] Never widen the permission set. Coarse location is enough for a forecast.
+- [ ] A `catch (e: Exception)` around a suspend call rethrows `CancellationException` first.
+      Cancelling a request is not a failure, and `Http.getString` only notices the
+      cancel when the response arrives, so the error would land on top of the newer result.
 
 ---
 

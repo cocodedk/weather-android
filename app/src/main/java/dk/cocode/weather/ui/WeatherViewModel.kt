@@ -12,6 +12,7 @@ import dk.cocode.weather.data.LocationPermissionMissing
 import dk.cocode.weather.data.Place
 import dk.cocode.weather.data.WeatherStore
 import dk.cocode.weather.widget.WeatherWidgetProvider
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -65,6 +66,8 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 val loaded = repo.load(place)
                 _state.update { it.withForecast(loaded.forecast, loaded.stale) }
+            } catch (e: CancellationException) {
+                throw e // replaced by a newer refresh: its result, not an error, is what to show
             } catch (e: Exception) {
                 _state.update {
                     it.copy(loading = false, error = e.message ?: text(R.string.error_title))
@@ -81,7 +84,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
     // ---------- places ----------
 
     fun selectPlace(place: Place) {
-        if (place.key == _state.value.selected?.key) return
+        if (_state.value.isShowing(place)) return
         _state.update { it.withSelectedPlace(place) }
         viewModelScope.launch {
             // Notify only after the write commits — the widget re-reads the store,
@@ -140,6 +143,8 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
             } catch (e: LocationPermissionMissing) {
                 _state.update { it.copy(locating = false) }
                 _permissionRequest.value = true
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 _state.update { it.copy(locating = false, message = text(locationFailureMessage(e))) }
             }

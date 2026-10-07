@@ -11,6 +11,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class WeatherStateChangesTest {
@@ -63,6 +64,24 @@ class WeatherStateChangesTest {
         assertNull(after.forecast)
         assertEquals(0, after.dayIndex)
         assertFalse(after.stale)
+    }
+
+    @Test
+    fun aNewDeviceFixIsADifferentPlaceEvenThoughItsKeyIsTheSame() {
+        val moved = device.copy(name = "There", latitude = 10.0, longitude = 20.0)
+        assertEquals(device.key, moved.key)
+
+        val showing = WeatherUiState(selected = device, forecast = forecast(7))
+        assertFalse(showing.isShowing(moved))
+        assertNull(showing.withSelectedPlace(moved).forecast)
+        assertEquals(moved, showing.withSelectedPlace(moved).selected)
+    }
+
+    @Test
+    fun pickingThePlaceAlreadyShownIsLeftAlone() {
+        assertTrue(WeatherUiState(selected = copenhagen).isShowing(copenhagen))
+        assertFalse(WeatherUiState(selected = copenhagen).isShowing(tokyo))
+        assertFalse(WeatherUiState().isShowing(copenhagen))
     }
 
     @Test

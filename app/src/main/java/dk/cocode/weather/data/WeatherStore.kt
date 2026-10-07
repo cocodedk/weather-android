@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore by preferencesDataStore(name = "weather")
 
 /** Persisted preferences, the saved-places list, and the offline forecast cache. */
-class WeatherStore(private val context: Context) {
+class WeatherStore(private val context: Context) : ForecastCache {
 
     data class Prefs(
         val places: List<Place>,
@@ -50,11 +50,11 @@ class WeatherStore(private val context: Context) {
      * The last successful response body, kept per place so switching back to a
      * city shows its own last-known reading rather than another city's.
      */
-    suspend fun cacheForecast(placeKey: String, body: String) {
+    override suspend fun cacheForecast(placeKey: String, body: String) {
         context.dataStore.edit { it[cacheKey(placeKey)] = body }
     }
 
-    suspend fun cachedForecast(placeKey: String): Forecast? {
+    override suspend fun cachedForecast(placeKey: String): Forecast? {
         val body = context.dataStore.data.first()[cacheKey(placeKey)]
         if (body.isNullOrBlank()) return null
         return runCatching { ForecastApi.parse(body) }.getOrNull()

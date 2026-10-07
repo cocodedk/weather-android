@@ -26,6 +26,13 @@ fun WeatherUiState.withForecast(forecast: Forecast, stale: Boolean): WeatherUiSt
 )
 
 /**
+ * True when the screen already shows exactly [place]. The whole place is compared, not its key:
+ * the device-location entry always has the key "device", so a new fix for it is a different
+ * place that must reload the forecast, while picking the same saved place again does nothing.
+ */
+fun WeatherUiState.isShowing(place: Place): Boolean = selected == place
+
+/**
  * The state right after picking [place]. dayIndex resets: "Wednesday" in the old city is not
  * the row the user wants to keep staring at after switching to a new one.
  */
