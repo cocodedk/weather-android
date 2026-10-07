@@ -47,20 +47,30 @@ class WeatherStore(private val context: Context) : ForecastCache {
     }
 
     /**
-     * The last successful response body, kept per place so switching back to a
-     * city shows its own last-known reading rather than another city's.
+     * The last successful response body, kept per place ([Place.cacheKey]) so switching back to
+     * a city shows its own last-known reading rather than another city's.
      */
-    override suspend fun cacheForecast(placeKey: String, body: String) {
-        context.dataStore.edit { it[cacheKey(placeKey)] = body }
+    override suspend fun cacheForecast(cacheKey: String, body: String) {
+        context.dataStore.edit { prefs ->
+            // The device entry gets a new key at every new spot; keep the latest one only, so
+            // moving around does not leave a forecast behind per place (this also drops the
+            // plain "device" entry older versions wrote).
+            if (cacheKey.startsWith(Place.DEVICE_KEY)) {
+                prefs.asMap().keys
+                    .filter { it.name.startsWith(cachePref(Place.DEVICE_KEY).name) }
+                    .forEach { prefs.remove(it) }
+            }
+            prefs[cachePref(cacheKey)] = body
+        }
     }
 
-    override suspend fun cachedForecast(placeKey: String): Forecast? {
-        val body = context.dataStore.data.first()[cacheKey(placeKey)]
+    override suspend fun cachedForecast(cacheKey: String): Forecast? {
+        val body = context.dataStore.data.first()[cachePref(cacheKey)]
         if (body.isNullOrBlank()) return null
         return runCatching { ForecastApi.parse(body) }.getOrNull()
     }
 
-    private fun cacheKey(placeKey: String) = stringPreferencesKey("cache.$placeKey")
+    private fun cachePref(cacheKey: String) = stringPreferencesKey("cache.$cacheKey")
 
     companion object {
         const val THEME_AUTO = "auto"

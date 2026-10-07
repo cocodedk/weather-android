@@ -4,8 +4,8 @@ import kotlinx.coroutines.CancellationException
 
 /** Where the last good response per place is kept; [WeatherStore] in the app, a fake in tests. */
 interface ForecastCache {
-    suspend fun cacheForecast(placeKey: String, body: String)
-    suspend fun cachedForecast(placeKey: String): Forecast?
+    suspend fun cacheForecast(cacheKey: String, body: String)
+    suspend fun cachedForecast(cacheKey: String): Forecast?
 }
 
 /**
@@ -22,14 +22,14 @@ class ForecastRepository(
     suspend fun load(place: Place): Loaded {
         return try {
             val (forecast, body) = fetch(place)
-            cache.cacheForecast(place.key, body)
+            cache.cacheForecast(place.cacheKey, body)
             Loaded(forecast, stale = false)
         } catch (e: CancellationException) {
             // Cancelled because the user picked another place: not a network failure, so
             // do not hand back this place's cached forecast as if it were the answer.
             throw e
         } catch (e: Exception) {
-            val cached = cache.cachedForecast(place.key)
+            val cached = cache.cachedForecast(place.cacheKey)
                 ?: throw e // nothing to show — let the caller surface the real cause
             Loaded(cached, stale = true)
         }

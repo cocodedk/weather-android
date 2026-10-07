@@ -31,8 +31,19 @@ class ForecastRepositoryTest {
     )
 
     private class FakeCache(private val cached: Forecast?) : ForecastCache {
-        override suspend fun cacheForecast(placeKey: String, body: String) {}
-        override suspend fun cachedForecast(placeKey: String): Forecast? = cached
+        override suspend fun cacheForecast(cacheKey: String, body: String) {}
+        override suspend fun cachedForecast(cacheKey: String): Forecast? = cached
+    }
+
+    /** Remembers what was cached under each key, like the real store (the body names the forecast). */
+    private class KeyedCache(private val byBody: Map<String, Forecast>) : ForecastCache {
+        val keys = mutableListOf<String>()
+        private val stored = mutableMapOf<String, Forecast>()
+        override suspend fun cacheForecast(cacheKey: String, body: String) {
+            keys += cacheKey
+            stored[cacheKey] = byBody.getValue(body)
+        }
+        override suspend fun cachedForecast(cacheKey: String): Forecast? = stored[cacheKey]
     }
 
     @Test
@@ -75,5 +86,42 @@ class ForecastRepositoryTest {
         } catch (e: IOException) {
             assertEquals("offline", e.message)
         }
+    }
+
+    // The device entry has the key "device" whichever fix it holds, so its cache must tell fixes apart.
+    private val spotA = Place(name = "Here", latitude = 55.68, longitude = 12.57, isDeviceLocation = true)
+    private val spotB = spotA.copy(name = "There", latitude = 35.68, longitude = 139.69)
+    private val forecastA = forecast.copy(fetchedAt = 1L)
+
+    @Test
+    fun aForecastCachedForOneDeviceFixIsNotShownForAnotherWhenTheFetchFails() = runBlocking {
+        val cache = KeyedCache(mapOf("A" to forecastA))
+        ForecastRepository(cache) { forecastA to "A" }.load(spotA)
+
+        val offline = ForecastRepository(cache) { throw IOException("offline") }
+        try {
+            offline.load(spotB)
+            fail("the forecast for the old spot must not stand in for the new one")
+        } catch (e: IOException) {
+            assertEquals("offline", e.message)
+        }
+    }
+
+    @Test
+    fun aForecastCachedForTheDeviceSpotIsStillShownOfflineNearTheSameSpot() = runBlocking {
+        val cache = KeyedCache(mapOf("A" to forecastA))
+        ForecastRepository(cache) { forecastA to "A" }.load(spotA)
+
+        val nearby = spotA.copy(latitude = 55.6805, longitude = 12.5702) // GPS jitter, same ~1 km
+        val loaded = ForecastRepository(cache) { throw IOException("offline") }.load(nearby)
+        assertSame(forecastA, loaded.forecast)
+        assertTrue(loaded.stale)
+    }
+
+    @Test
+    fun theSavedPlacesCacheKeyStaysItsCoordinates() {
+        assertEquals("55.68,12.57", place.cacheKey)
+        assertEquals("device@55.68,12.57", spotA.cacheKey)
+        assertEquals("device", spotA.key)
     }
 }
