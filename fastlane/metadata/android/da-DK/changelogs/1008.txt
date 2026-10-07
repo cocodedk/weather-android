@@ -1,0 +1,1 @@
+Biblioteksfilerne (.so) i APK-filen beholdes nu præcis, som de leveres. Så kan enhver bygge dem identisk uden en bestemt NDK. APK-filen bliver et par kB større.

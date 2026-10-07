@@ -1,0 +1,14 @@
+<p>Weather viser vejret lige nu, de næste 24 timer og en syvdagsprognose for ethvert sted på Jorden. Søg efter en by ved navn, eller brug enhedens GPS. Ingen konto, ingen API-nøgle, ingen reklamer og ingen statistik.</p>
+
+<ul>
+<li><b>Ethvert sted.</b> Søgningen foreslår steder, mens du skriver, via Open-Meteos geokoder. Land og region vises, så steder med samme navn ikke forveksles.</li>
+<li><b>Enhedens GPS.</b> Ét tryk finder dine koordinater og giver dem et stednavn.</li>
+<li><b>Gemte steder.</b> Skift mellem dem. Listen bliver kun på din enhed.</li>
+<li><b>Den rigtige lokale tid.</b> Hvert sted viser sit eget klokkeslæt og sine egne dag- og nat-ikoner ud fra API'ets UTC-forskydning. Tokyo viser Tokyo-tid, også når du er i Danmark.</li>
+<li><b>Syv dage, du kan vælge imellem.</b> Tryk på en dag, så skifter alle felterne til den.</li>
+<li><b>Widget til hjemmeskærmen</b> for det valgte sted. Den opdateres hver halve time.</li>
+<li><b>Metrisk eller imperial</b>, omregnet i appen.</li>
+<li><b>Virker offline.</b> Den seneste prognose gemmes for hvert sted og markeres som forældet, når du er offline.</li>
+</ul>
+
+<p>Data fra <a href="https://open-meteo.com">Open-Meteo</a>, brugt på deres gratis vilkår for ikke-kommerciel brug. Appen sender almindelige HTTPS GET-forespørgsler og gemmer intet uden for din enhed.</p>
