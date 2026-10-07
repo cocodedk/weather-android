@@ -80,7 +80,7 @@
     <string name="stat_humidity">Luftfugtighed</string>
     <string name="stat_humidity_note">Relativ</string>
     <string name="stat_precip">Nedbør</string>
-    <string name="stat_precip_note">Seneste 15 min\n%1$s chance i timen</string>
+    <string name="stat_precip_note">Seneste 15 min\n%1$s chance nu</string>
     <string name="stat_precip_day_note">I alt for dagen</string>
     <string name="stat_pressure">Lufttryk</string>
     <string name="stat_pressure_note">Ved jordoverfladen</string>
@@ -109,11 +109,11 @@
     <string name="wmo_light_drizzle">Let støvregn</string>
     <string name="wmo_drizzle">Støvregn</string>
     <string name="wmo_dense_drizzle">Tæt støvregn</string>
-    <string name="wmo_freezing_drizzle">Frysende støvregn</string>
+    <string name="wmo_freezing_drizzle">Underafkølet støvregn</string>
     <string name="wmo_light_rain">Let regn</string>
     <string name="wmo_rain">Regn</string>
     <string name="wmo_heavy_rain">Kraftig regn</string>
-    <string name="wmo_freezing_rain">Frysende regn</string>
+    <string name="wmo_freezing_rain">Underafkølet regn</string>
     <string name="wmo_light_snow">Let sne</string>
     <string name="wmo_snow">Sne</string>
     <string name="wmo_heavy_snow">Kraftig sne</string>
