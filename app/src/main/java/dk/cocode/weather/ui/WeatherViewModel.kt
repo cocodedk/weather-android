@@ -1,12 +1,15 @@
 package dk.cocode.weather.ui
 
 import android.app.Application
+import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dk.cocode.weather.data.DeviceLocation
 import dk.cocode.weather.data.ForecastRepository
+import dk.cocode.weather.R
 import dk.cocode.weather.data.LocationPermissionMissing
+import dk.cocode.weather.data.LocationUnavailable
 import dk.cocode.weather.data.Place
 import dk.cocode.weather.data.WeatherStore
 import dk.cocode.weather.widget.WeatherWidgetProvider
@@ -75,7 +78,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
                 }
             } catch (e: Exception) {
                 _state.update {
-                    it.copy(loading = false, error = e.message ?: "Could not load the forecast")
+                    it.copy(loading = false, error = e.message ?: text(R.string.error_title))
                 }
             }
         }
@@ -125,7 +128,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
         val places = _state.value.places.filterNot { it.key == place.key }
         // Never leave the app with nothing to show.
         if (places.isEmpty()) {
-            _state.update { it.copy(message = "Keep at least one location") }
+            _state.update { it.copy(message = text(R.string.msg_keep_one_location)) }
             return
         }
         _state.update { it.copy(places = places) }
@@ -155,9 +158,9 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
                 _state.update { it.copy(locating = false) }
                 _permissionRequest.value = true
             } catch (e: Exception) {
-                _state.update {
-                    it.copy(locating = false, message = e.message ?: "Could not get your location")
-                }
+                val message = if (e is LocationUnavailable) text(e.messageRes)
+                else text(R.string.msg_location_failed)
+                _state.update { it.copy(locating = false, message = message) }
             }
         }
     }
@@ -165,7 +168,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
     fun onPermissionResult(granted: Boolean) {
         _permissionRequest.value = false
         if (granted) useDeviceLocation()
-        else _state.update { it.copy(message = "Location permission denied") }
+        else _state.update { it.copy(message = text(R.string.msg_location_denied)) }
     }
 
     // ---------- search ----------
@@ -192,6 +195,8 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(theme = next) }
         viewModelScope.launch { store.saveTheme(next) }
     }
+
+    private fun text(@StringRes id: Int): String = getApplication<Application>().getString(id)
 
     fun consumeMessage() = _state.update { it.copy(message = null) }
 

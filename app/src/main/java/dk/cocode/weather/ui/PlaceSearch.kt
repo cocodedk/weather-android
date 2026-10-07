@@ -22,7 +22,7 @@ class PlaceSearch(private val scope: CoroutineScope) {
     private var job: Job? = null
 
     fun onQueryChange(query: String) {
-        _state.update { it.copy(query = query, error = null) }
+        _state.update { it.copy(query = query, failed = false) }
         job?.cancel()
 
         if (query.trim().length < MIN_QUERY) {
@@ -38,7 +38,7 @@ class PlaceSearch(private val scope: CoroutineScope) {
                 _state.update { it.copy(results = results, searching = false) }
             } catch (e: Exception) {
                 _state.update {
-                    it.copy(searching = false, results = emptyList(), error = "Search failed")
+                    it.copy(searching = false, results = emptyList(), failed = true)
                 }
             }
         }

@@ -8,7 +8,9 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
 import android.os.Looper
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import dk.cocode.weather.R
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
@@ -21,8 +23,11 @@ import kotlin.coroutines.resume
 /** Raised when the caller must ask for (or the user has refused) location access. */
 class LocationPermissionMissing : Exception("Location permission not granted")
 
-/** Raised when permission exists but no usable fix could be obtained. */
-class LocationUnavailable(message: String) : Exception(message)
+/**
+ * Raised when permission exists but no usable fix could be obtained. [messageRes] is
+ * the sentence to show the user, so the wording lives in strings.xml.
+ */
+class LocationUnavailable(@StringRes val messageRes: Int) : Exception()
 
 /**
  * Device GPS via the platform LocationManager.
@@ -50,7 +55,7 @@ object DeviceLocation {
         if (!hasPermission(context)) throw LocationPermissionMissing()
 
         val lm = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
-            ?: throw LocationUnavailable("Location service unavailable")
+            ?: throw LocationUnavailable(R.string.msg_location_service_missing)
 
         val cached = lastKnown(lm)
         if (cached != null && System.currentTimeMillis() - cached.time < FRESH_ENOUGH_MS) {
@@ -66,7 +71,7 @@ object DeviceLocation {
         // A stale fix still beats no forecast — the user moved at most a little
         // since, and the alternative is an error screen.
         val best = fresh ?: cached
-            ?: throw LocationUnavailable("Could not get a location fix. Is location turned on?")
+            ?: throw LocationUnavailable(R.string.msg_location_no_fix)
         return toPlace(context, best)
     }
 

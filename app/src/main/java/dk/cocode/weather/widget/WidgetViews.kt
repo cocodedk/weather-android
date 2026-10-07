@@ -12,6 +12,7 @@ import dk.cocode.weather.data.Place
 import dk.cocode.weather.domain.Units
 import dk.cocode.weather.domain.WeatherIcon
 import dk.cocode.weather.domain.Wmo
+import dk.cocode.weather.ui.labelRes
 
 /** Builds the widget's RemoteViews. Pure presentation — no IO, no state. */
 object WidgetViews {
@@ -35,7 +36,7 @@ object WidgetViews {
     fun empty(context: Context, message: String? = null): RemoteViews =
         RemoteViews(context.packageName, R.layout.widget_weather).apply {
             setTextViewText(R.id.widget_place, context.getString(R.string.app_name))
-            setTextViewText(R.id.widget_temp, "--°")
+            setTextViewText(R.id.widget_temp, context.getString(R.string.temp_placeholder))
             setTextViewText(R.id.widget_cond, message ?: context.getString(R.string.widget_no_data))
             setTextViewText(R.id.widget_status, "")
             setTextViewText(R.id.widget_range, "")
@@ -67,16 +68,24 @@ object WidgetViews {
 
         views.setTextViewText(R.id.widget_place, place.name)
         views.setTextViewText(R.id.widget_temp, units.temp(current.temperature) + units.tempUnit())
-        views.setTextViewText(R.id.widget_cond, Wmo.label(current.weatherCode))
+        views.setTextViewText(
+            R.id.widget_cond,
+            context.getString(Wmo.condition(current.weatherCode).labelRes()),
+        )
         views.setTextViewText(
             R.id.widget_range,
-            if (today == null) "" else
-                "H ${units.temp(today.temperatureMax)}°\nL ${units.temp(today.temperatureMin)}°",
+            if (today == null) "" else context.getString(
+                R.string.widget_range,
+                units.temp(today.temperatureMax),
+                units.temp(today.temperatureMin),
+            ),
         )
         views.setTextViewText(
             R.id.widget_status,
-            if (stale) "Offline · ${units.clock(current.time)}"
-            else "Updated ${units.clock(current.time)}",
+            context.getString(
+                if (stale) R.string.widget_not_updated else R.string.widget_updated,
+                units.clock(current.time),
+            ),
         )
 
         wireClicks(context, views)

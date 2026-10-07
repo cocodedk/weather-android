@@ -6,6 +6,12 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 /**
+ * The words [Units] needs, read from string resources at the UI edge so this class
+ * stays free of Android imports. [compass] lists 16 points, north first, clockwise.
+ */
+data class UnitLabels(val compass: List<String>, val am: String, val pm: String)
+
+/**
  * Unit conversion + formatting, ported from the Tizen app's js/units.js.
  *
  * Metric is the source of truth (Open-Meteo is asked for degC and m/s); imperial
@@ -15,6 +21,7 @@ import kotlin.math.roundToInt
  * class stays free of Android imports.
  */
 class Units(
+    private val labels: UnitLabels,
     val imperial: Boolean = false,
     private val use24Hour: Boolean = true,
     private val locale: Locale = Locale.getDefault(),
@@ -45,7 +52,7 @@ class Units(
 
     fun bearing(deg: Double?): String {
         if (deg == null) return ""
-        return COMPASS[((deg / 22.5).roundToInt()) % 16]
+        return labels.compass[((deg / 22.5).roundToInt()) % 16]
     }
 
     // --- precipitation: the API gives mm ---
@@ -97,7 +104,7 @@ class Units(
 
     private fun formatTime(h: Int, mi: Int): String {
         if (use24Hour) return "${pad2(h)}:${pad2(mi)}"
-        val suffix = if (h < 12) "am" else "pm"
+        val suffix = if (h < 12) labels.am else labels.pm
         val h12 = when {
             h % 12 == 0 -> 12
             else -> h % 12
@@ -106,7 +113,7 @@ class Units(
     }
 
     private fun shortHour12(h: Int): String {
-        val suffix = if (h < 12) "am" else "pm"
+        val suffix = if (h < 12) labels.am else labels.pm
         val h12 = if (h % 12 == 0) 12 else h % 12
         return "$h12$suffix"
     }
@@ -140,10 +147,6 @@ class Units(
     }
 
     companion object {
-        private val COMPASS = listOf(
-            "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
-            "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW",
-        )
         private val ISO = Regex("""^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?""")
     }
 }

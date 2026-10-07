@@ -15,15 +15,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dk.cocode.weather.R
 import dk.cocode.weather.data.Forecast
 import dk.cocode.weather.domain.Units
 import dk.cocode.weather.domain.WeatherIcon
 import dk.cocode.weather.domain.Wmo
 import dk.cocode.weather.ui.icons.WeatherIconView
+import dk.cocode.weather.ui.labelRes
 import dk.cocode.weather.ui.theme.LocalPalette
 
 private data class Stat(
@@ -102,40 +105,57 @@ private fun StatTile(stat: Stat, modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
 private fun todayStats(f: Forecast, u: Units): List<Stat> {
     val c = f.current
     val d0 = f.daily.firstOrNull()
     val hNow = f.hourly.getOrNull(nowIndex(f))
     return listOf(
-        Stat(WeatherIcon.THERMO, "Feels like", u.tempFull(c.apparentTemperature),
-            "Actual ${u.tempFull(c.temperature)}"),
-        Stat(WeatherIcon.WIND, "Wind", u.wind(c.windSpeed),
-            "From ${u.bearing(c.windDirection)} · max ${u.wind(d0?.windSpeedMax)}"),
-        Stat(WeatherIcon.DROP, "Humidity", u.percent(c.humidity), "Relative"),
-        Stat(WeatherIcon.RAIN, "Precipitation", u.precip(c.precipitation),
-            "Last hour · ${u.percent(hNow?.precipitationProbability)} chance"),
-        Stat(WeatherIcon.GAUGE, "Pressure", u.pressure(c.pressure), "At surface"),
-        Stat(WeatherIcon.SUNRISE, "Sunrise", u.clock(d0?.sunrise), "Sunset ${u.clock(d0?.sunset)}"),
+        Stat(WeatherIcon.THERMO, stringResource(R.string.stat_feels_like),
+            u.tempFull(c.apparentTemperature),
+            stringResource(R.string.stat_feels_like_note, u.tempFull(c.temperature))),
+        Stat(WeatherIcon.WIND, stringResource(R.string.stat_wind), u.wind(c.windSpeed),
+            stringResource(
+                R.string.stat_wind_note, u.bearing(c.windDirection), u.wind(d0?.windSpeedMax),
+            )),
+        Stat(WeatherIcon.DROP, stringResource(R.string.stat_humidity), u.percent(c.humidity),
+            stringResource(R.string.stat_humidity_note)),
+        Stat(WeatherIcon.RAIN, stringResource(R.string.stat_precip), u.precip(c.precipitation),
+            stringResource(
+                R.string.stat_precip_note, u.percent(hNow?.precipitationProbability),
+            )),
+        Stat(WeatherIcon.GAUGE, stringResource(R.string.stat_pressure), u.pressure(c.pressure),
+            stringResource(R.string.stat_pressure_note)),
+        sunStat(u, d0?.sunrise, d0?.sunset),
     )
 }
 
+@Composable
 private fun dayStats(f: Forecast, dayIndex: Int, u: Units): List<Stat> {
     val d = f.daily.getOrNull(dayIndex)
     val uv = d?.uvIndexMax
     return listOf(
-        Stat(WeatherIcon.THERMO, "High / low",
+        Stat(WeatherIcon.THERMO, stringResource(R.string.stat_high_low),
             "${u.temp(d?.temperatureMax)} / ${u.temp(d?.temperatureMin)}${u.tempUnit()}",
-            "Daily range"),
-        Stat(WeatherIcon.WIND, "Wind", u.wind(d?.windSpeedMax), "Strongest of the day"),
-        Stat(WeatherIcon.DROP, "Chance of rain", u.percent(d?.precipitationProbabilityMax),
-            "Peak for the day"),
-        Stat(WeatherIcon.RAIN, "Precipitation", u.precip(d?.precipitationSum), "Total for the day"),
-        Stat(WeatherIcon.UV, "UV index",
+            stringResource(R.string.stat_high_low_note)),
+        Stat(WeatherIcon.WIND, stringResource(R.string.stat_wind), u.wind(d?.windSpeedMax),
+            stringResource(R.string.stat_wind_day_note)),
+        Stat(WeatherIcon.DROP, stringResource(R.string.stat_rain_chance),
+            u.percent(d?.precipitationProbabilityMax),
+            stringResource(R.string.stat_rain_chance_note)),
+        Stat(WeatherIcon.RAIN, stringResource(R.string.stat_precip), u.precip(d?.precipitationSum),
+            stringResource(R.string.stat_precip_day_note)),
+        Stat(WeatherIcon.UV, stringResource(R.string.stat_uv),
             if (uv == null) "--" else String.format(java.util.Locale.US, "%.1f", uv),
-            Wmo.uvBand(uv)),
-        Stat(WeatherIcon.SUNRISE, "Sunrise", u.clock(d?.sunrise), "Sunset ${u.clock(d?.sunset)}"),
+            Wmo.uvBand(uv)?.let { stringResource(it.labelRes()) }.orEmpty()),
+        sunStat(u, d?.sunrise, d?.sunset),
     )
 }
+
+@Composable
+private fun sunStat(u: Units, sunrise: String?, sunset: String?) =
+    Stat(WeatherIcon.SUNRISE, stringResource(R.string.stat_sunrise), u.clock(sunrise),
+        stringResource(R.string.stat_sunrise_note, u.clock(sunset)))
 
 /**
  * Index of the hourly row covering the current wall-clock hour.

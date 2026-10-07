@@ -11,15 +11,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dk.cocode.weather.R
 import dk.cocode.weather.data.Forecast
 import dk.cocode.weather.domain.Units
 import dk.cocode.weather.domain.WeatherIcon
 import dk.cocode.weather.domain.Wmo
 import dk.cocode.weather.ui.icons.WeatherIconView
+import dk.cocode.weather.ui.labelRes
 import dk.cocode.weather.ui.theme.LocalPalette
 
 /**
@@ -38,7 +41,9 @@ fun Hero(forecast: Forecast, dayIndex: Int, units: Units, modifier: Modifier = M
         Wmo.icon(day?.weatherCode, isDay = true)
     }
     val bigTemp = if (today) forecast.current.temperature else day?.temperatureMax
-    val condition = Wmo.label(if (today) forecast.current.weatherCode else day?.weatherCode)
+    val condition = stringResource(
+        Wmo.condition(if (today) forecast.current.weatherCode else day?.weatherCode).labelRes(),
+    )
 
     Row(
         modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp),
@@ -95,17 +100,26 @@ private val SKY_ICONS = setOf(
 )
 
 /** "High 21° · Low 12° · 2.4 mm today" — the `#hero-range` line. */
+@Composable
 private fun rangeLine(forecast: Forecast, dayIndex: Int, units: Units): String {
     val day = forecast.daily.getOrNull(dayIndex) ?: return ""
-    val hi = units.temp(day.temperatureMax)
-    val lo = units.temp(day.temperatureMin)
+    val highLow = stringResource(
+        R.string.hero_high_low,
+        units.temp(day.temperatureMax),
+        units.temp(day.temperatureMin),
+    )
 
     if (dayIndex != 0) {
-        return "${units.weekday(day.time)} ${units.dateLabel(day.time)} · " +
-            "High $hi° · Low $lo°"
+        return stringResource(
+            R.string.hero_range_day, units.weekday(day.time), units.dateLabel(day.time), highLow,
+        )
     }
 
     val sum = day.precipitationSum
-    val wet = if (sum != null && sum > 0) "${units.precip(sum)} today" else "Dry day"
-    return "High $hi° · Low $lo° · $wet"
+    val wet = if (sum != null && sum > 0) {
+        stringResource(R.string.hero_precip_today, units.precip(sum))
+    } else {
+        stringResource(R.string.hero_dry_day)
+    }
+    return stringResource(R.string.hero_range_today, highLow, wet)
 }

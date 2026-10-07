@@ -18,9 +18,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dk.cocode.weather.R
 import dk.cocode.weather.data.Forecast
 import dk.cocode.weather.data.HourRow
 import dk.cocode.weather.domain.Units
@@ -29,7 +31,12 @@ import dk.cocode.weather.ui.icons.WeatherIconView
 import dk.cocode.weather.ui.theme.LocalPalette
 
 /** The rows to show for a given day, plus which one (if any) is "Now". */
-data class HourWindow(val rows: List<HourRow>, val nowAt: Int, val note: String)
+data class HourWindow(
+    val rows: List<HourRow>,
+    val nowAt: Int,
+    /** The chosen day's date, or null for today's rolling "next 24 hours" window. */
+    val dateNote: String?,
+)
 
 /**
  * Today means the next 24 hours rolling from the current hour; any other day means
@@ -41,7 +48,7 @@ fun hoursForDay(forecast: Forecast, dayIndex: Int, units: Units): HourWindow {
         return HourWindow(
             rows = forecast.hourly.drop(start).take(24),
             nowAt = 0,
-            note = "next 24 hours",
+            dateNote = null,
         )
     }
     val day = forecast.daily.getOrNull(dayIndex) ?: return HourWindow(emptyList(), -1, "")
@@ -49,7 +56,7 @@ fun hoursForDay(forecast: Forecast, dayIndex: Int, units: Units): HourWindow {
     return HourWindow(
         rows = forecast.hourly.filter { units.dayKey(it.time) == key },
         nowAt = -1,
-        note = units.longDate(day.time),
+        dateNote = units.longDate(day.time),
     )
 }
 
@@ -69,7 +76,10 @@ fun HourlyStrip(
     LaunchedEffect(dayIndex) { listState.scrollToItem(0) }
 
     Column(modifier) {
-        SectionTitle("Hour by hour", window.note)
+        SectionTitle(
+            stringResource(R.string.hourly_title),
+            window.dateNote ?: stringResource(R.string.hourly_next_24),
+        )
         LazyRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = 20.dp),
@@ -90,7 +100,7 @@ fun HourlyStrip(
                         .padding(vertical = 10.dp),
                 ) {
                     Text(
-                        text = if (isNow) "Now" else units.hourLabel(h.time),
+                        text = if (isNow) stringResource(R.string.hourly_now) else units.hourLabel(h.time),
                         color = if (isNow) palette.fg else palette.fgDim,
                         fontSize = 12.sp,
                         fontWeight = if (isNow) FontWeight.Bold else FontWeight.Normal,

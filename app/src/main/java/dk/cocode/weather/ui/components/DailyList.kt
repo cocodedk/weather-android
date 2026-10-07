@@ -16,10 +16,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dk.cocode.weather.R
 import dk.cocode.weather.data.Forecast
 import dk.cocode.weather.domain.Units
 import dk.cocode.weather.domain.Wmo
@@ -45,7 +48,9 @@ fun DailyList(
     val palette = LocalPalette.current
 
     Column(modifier) {
-        SectionTitle("Next ${forecast.daily.size} days")
+        SectionTitle(
+            pluralStringResource(R.plurals.daily_title, forecast.daily.size, forecast.daily.size),
+        )
         Column(Modifier.padding(horizontal = 20.dp)) {
             forecast.daily.forEachIndexed { i, d ->
                 val selected = i == dayIndex
@@ -68,7 +73,7 @@ fun DailyList(
                 ) {
                     Column(Modifier.width(96.dp)) {
                         Text(
-                            text = if (i == 0) "Today" else units.weekday(d.time),
+                            text = if (i == 0) stringResource(R.string.daily_today) else units.weekday(d.time),
                             color = palette.fg,
                             fontSize = 15.sp,
                             fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,

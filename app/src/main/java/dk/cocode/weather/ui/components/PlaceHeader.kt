@@ -20,10 +20,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dk.cocode.weather.R
 import dk.cocode.weather.data.Place
 import dk.cocode.weather.ui.theme.LocalPalette
 import kotlinx.coroutines.delay
@@ -77,13 +79,14 @@ fun PlaceHeader(
                     Spacer(Modifier.width(6.dp))
                     Icon(
                         Icons.Default.MyLocation,
-                        contentDescription = "Device location",
+                        contentDescription = stringResource(R.string.device_location),
                         tint = palette.accent,
                         modifier = Modifier.size(15.dp),
                     )
                 }
             }
-            val sub = place.region.ifBlank { if (place.isDeviceLocation) "Device location" else "" }
+            val deviceLocation = stringResource(R.string.device_location)
+            val sub = place.region.ifBlank { if (place.isDeviceLocation) deviceLocation else "" }
             if (sub.isNotBlank()) {
                 Text(sub, color = palette.fgDim, fontSize = 13.sp, maxLines = 1,
                     overflow = TextOverflow.Ellipsis)

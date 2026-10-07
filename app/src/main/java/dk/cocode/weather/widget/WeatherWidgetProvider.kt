@@ -6,9 +6,10 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.text.format.DateFormat
+import dk.cocode.weather.R
 import dk.cocode.weather.data.ForecastRepository
 import dk.cocode.weather.data.WeatherStore
-import dk.cocode.weather.domain.Units
+import dk.cocode.weather.ui.unitsFor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
@@ -59,7 +60,8 @@ class WeatherWidgetProvider : AppWidgetProvider() {
                 val views = if (place == null) {
                     WidgetViews.empty(appContext)
                 } else {
-                    val units = Units(
+                    val units = unitsFor(
+                        appContext.resources,
                         imperial = prefs.imperial,
                         use24Hour = DateFormat.is24HourFormat(appContext),
                     )
@@ -69,7 +71,7 @@ class WeatherWidgetProvider : AppWidgetProvider() {
                     } catch (e: Exception) {
                         // No network and no cache for this place. Say so rather than
                         // leaving a spinner on the home screen forever.
-                        WidgetViews.empty(appContext, "Forecast unavailable")
+                        WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
                     }
                 }
                 ids.forEach { manager.updateAppWidget(it, views) }
