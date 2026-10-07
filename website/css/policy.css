@@ -11,7 +11,7 @@
 .policy h3 { margin: 18px 0 4px; font-size: 1.05rem; }
 .policy p, .policy li { max-width: 68ch; color: var(--ink); }
 .policy p { margin: 10px 0 0; }
-.policy ul { margin: 10px 0 0; padding-inline-start: 1.3em; }
+.policy ul, .policy ol { margin: 10px 0 0; padding-inline-start: 1.3em; }
 .policy li { margin-bottom: 8px; }
 .policy strong { font-weight: 600; }
 .policy code { overflow-wrap: anywhere; }

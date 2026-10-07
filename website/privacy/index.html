@@ -62,85 +62,103 @@
 
 <main id="main" class="policy" tabindex="-1">
   <h1>Privacy policy: Weather</h1>
-  <p class="meta">Effective <time datetime="2026-10-07">7 October 2026</time>. This policy covers the Weather app for Android (<code>dk.cocode.weather</code>).</p>
+  <p class="meta">Effective <time datetime="2026-10-07">7 October 2026</time>. This policy covers the Weather app for Android (app ID <code>dk.cocode.weather</code>).</p>
 
   <section>
     <h2>Summary</h2>
-    <p>Weather has no account, no ads, no analytics and no server run by us. Cocode, who makes the app, receives nothing from it. The app asks a free weather service, Open-Meteo, for forecasts and for places that match what you type, so the places you view and search for reach Open-Meteo. If you choose to use your current location, the app also hands an approximate position to Android's own place-name service on your phone. Everything else stays on the phone.</p>
+    <p>Weather has no account, no ads and no analytics (tools that track how people use an app). There is no server of ours behind it. Cocode, who makes the app, receives nothing from it.</p>
+    <p>To show a forecast, the app asks Open-Meteo, a free weather service run by someone else. So Open-Meteo learns which places you view and search for.</p>
+    <p>Using your location is optional. If you tap "Use my current location", the app also gives an approximate position to a place-name service built into your phone.</p>
+    <p>Everything else stays on your phone.</p>
   </section>
 
   <section>
     <h2>What is collected</h2>
-    <p>Cocode collects no personal data through the app. The app has no sign-up and no server of ours to send anything to; the only web addresses it calls are the two Open-Meteo ones listed below. This is what the app handles:</p>
+    <p>Cocode collects no personal data through the app. The app has no sign-up, and no server of ours to send anything to. The only web addresses it calls are the two Open-Meteo ones in the next section. This is what the app sends or uses:</p>
     <ul>
-      <li><strong>The text you type in the search box.</strong> From two characters on, it is sent to Open-Meteo to find matching places. Searching is the only reason the app sends your typing anywhere.</li>
-      <li><strong>The coordinates of the place you are viewing.</strong> A place you searched for, a place you saved, or the place found from your location. They go to Open-Meteo, to four decimals, to get its forecast.</li>
-      <li><strong>Your approximate location, only if you ask for it.</strong> Used once per tap, to find your place. See Permissions.</li>
-      <li><strong>Your phone's language code,</strong> for example <code>en</code> or <code>da</code>. It goes along with a search so the place names come back in your language.</li>
-      <li><strong>Your IP address and the time of each request.</strong> The app connects straight to Open-Meteo, so Open-Meteo sees them, as any website you visit would.</li>
+      <li><strong>What you type in the search box.</strong> Once you have typed two characters, the app sends the text to Open-Meteo to find matching places. This is the only time the app sends anything you type.</li>
+      <li><strong>The coordinates of the place you are viewing.</strong> Coordinates are two numbers, latitude and longitude, that mark a point on the map. The place can be one you searched for, one you saved, or one found from your location. The app sends its coordinates to Open-Meteo, rounded to four decimals, to get its forecast.</li>
+      <li><strong>Your approximate location, only if you ask.</strong> The app uses it once each time you tap "Use my current location", to find your place. See Permissions.</li>
+      <li><strong>Your phone's language code,</strong> such as <code>en</code> or <code>da</code>. It goes along with a search, so place names come back in your language.</li>
+      <li><strong>Your IP address and the time of each request.</strong> An IP address is a number that identifies your internet connection. The app connects straight to Open-Meteo, so Open-Meteo can see both, as any website you visit can.</li>
     </ul>
-    <p>The app adds no account, key or device identifier to any request.</p>
+    <p>The app adds no account, key or device identifier (a number that identifies your phone) to any request.</p>
   </section>
 
   <section>
     <h2>Servers the app contacts</h2>
-    <p>Two, both run by Open-Meteo, and both over HTTPS. The app contacts no other server and opens no links.</p>
+    <p>The app contacts two servers. Both are run by Open-Meteo, and both use HTTPS, an encrypted connection. The app contacts no other server and opens no links.</p>
 
     <h3>api.open-meteo.com: forecasts</h3>
-    <p>Gets the current conditions, the hourly outlook and the seven-day forecast. The request carries the latitude and longitude of the selected place, to four decimals, and the list of weather values the app wants, such as temperature, wind and precipitation. It also carries a User-Agent header, <code>dk.cocode.weather/1.0 (Android)</code>, because Open-Meteo asks apps to identify themselves.</p>
-    <p>The app asks when it starts, when you pick a place and when you choose Refresh. If you have put the Weather widget on your home screen, the widget asks too: about every 30 minutes (Android decides the exact timing), when you tap its refresh icon, and when you change place or units in the app.</p>
+    <p>This server sends back the current weather, the hour-by-hour outlook and the seven-day forecast.</p>
+    <p>The app sends the latitude and longitude of the selected place, rounded to four decimals, and a list of the weather values it wants, such as temperature, wind and precipitation. It also sends a User-Agent, a short label that says which app is asking: <code>dk.cocode.weather/1.0 (Android)</code>. Open-Meteo asks apps to send one.</p>
+    <p>The app asks for a forecast when it starts, when you pick a place, and when you choose Refresh. To find Refresh, tap the "More" icon at the top of the screen.</p>
+    <p>If you have added the Weather widget to your home screen (a small panel that shows the weather without opening the app), the widget asks too. It asks about every 30 minutes, when you tap its refresh icon, and when you change the place or the units in the app. Android decides the exact timing of the 30-minute updates.</p>
 
     <h3>geocoding-api.open-meteo.com: place search</h3>
-    <p>Finds places by name. The request carries the text you typed, sent when you pause for a moment, and your phone's language code. Nothing from a search is saved unless you pick a place from the results, which adds it to your saved places.</p>
+    <p>This server finds places by name. The app sends the text you typed, once you pause typing for a moment, and your phone's language code.</p>
+    <p>Nothing from a search is saved unless you pick a place from the results. Picking one adds it to your saved places.</p>
 
     <h3>What Open-Meteo does with it</h3>
-    <p>Open-Meteo is an independent service and the app cannot see or control what it keeps. Its own terms and privacy notice are at <a href="https://open-meteo.com/en/terms">open-meteo.com/en/terms</a>.</p>
+    <p>Open-Meteo is an independent service. The app cannot see or control what Open-Meteo keeps. Its terms and privacy notice are at <a href="https://open-meteo.com/en/terms">open-meteo.com/en/terms</a>.</p>
 
     <h3>Android's place-name service (not a server of the app)</h3>
-    <p>When you use your current location, the app passes your position to Android's built-in Geocoder to turn it into a place name. That service belongs to your phone. The app cannot tell which company's service your phone uses or where it sends the position, and some phones have none. If it is missing or fails, the app shows the coordinates as the place name.</p>
+    <p>When you use your current location, the app gives your position to Geocoder. Geocoder is a service built into Android that turns a position into a place name. It belongs to your phone, not to the app.</p>
+    <p>The app cannot tell which company's service your phone uses, or where that service sends the position. Some phones have none. If the service is missing or fails, the app shows the coordinates instead of a name.</p>
   </section>
 
   <section>
     <h2>Permissions</h2>
+    <p>A permission lets an app use a feature of your phone. The app asks for three:</p>
     <ul>
-      <li><strong>Internet.</strong> To reach the two Open-Meteo servers above.</li>
-      <li><strong>Network state.</strong> The app lists this permission, but its own code does not use it.</li>
-      <li><strong>Approximate location.</strong> Optional, and asked for only when you tap "Use my current location". The app asks for approximate location, not precise location, and never for location in the background. If you say no, search keeps working. With a yes, the app asks Android for a single position each time you tap, either a recent one Android already has or a fresh one, and then stops asking. The widget and the app's other forecast requests never read your location: they reuse the place saved at your last tap.</li>
+      <li><strong>Internet.</strong> Lets the app reach the two Open-Meteo servers above.</li>
+      <li><strong>Network state.</strong> Lets an app see whether the phone is online. The app lists this permission, but its own code does not use it.</li>
+      <li><strong>Approximate location.</strong> Optional. The app asks for it only when you tap "Use my current location". It asks for approximate location, not precise location, and never for location while you are not using the app.</li>
     </ul>
+    <p>If you say no to location, search still works. If you say yes, each tap makes the app ask Android for a single position: a recent one Android already has, or a fresh one. Then the app stops asking.</p>
+    <p>The widget and the app's other forecast requests never read your location. They use the place saved the last time you tapped.</p>
     <p>The app asks for no other permissions.</p>
   </section>
 
   <section>
     <h2>What stays on the phone</h2>
-    <p>The app keeps these in its own private storage on the phone:</p>
+    <p>The app keeps the following in its own private storage on your phone:</p>
     <ul>
-      <li>Your saved places: name, country, region, coordinates and time zone. This includes every place you pick from a search. The app starts with Copenhagen saved. A place found from your location is saved with its coordinates and replaced by the next one, not stacked.</li>
-      <li>Which place is selected, your choice of metric or imperial units, and your theme.</li>
+      <li>Your saved places: name, country, region, coordinates and time zone. Every place you pick from a search is saved. The app starts with Copenhagen saved. A place found from your location is saved with its coordinates and replaced by the next one, so they do not pile up.</li>
+      <li>Which place is selected, whether you use metric or imperial units, and your theme (day, night or automatic).</li>
       <li>The last forecast the app received for each place, so it can show something when you are offline.</li>
     </ul>
-    <p>To remove a saved place, tap its delete icon in the Locations list. The icon appears only while you have more than one place saved, and the app does not delete a removed place's cached forecast. Clearing the app's data in Android's settings, or uninstalling the app, removes everything the app keeps.</p>
-    <p>The app allows Android's own backup of its data, and sets no exclusions. If backup is switched on for your phone, these files can be part of it. Where that backup is stored is decided by your phone, not by the app.</p>
+    <p>To remove a saved place:</p>
+    <ol>
+      <li>Tap the place name at the top of the screen, or the "Change location" icon. The Locations list opens.</li>
+      <li>Tap the delete icon (a bin) next to the place. The place disappears from the list.</li>
+    </ol>
+    <p>The delete icon appears only while you have more than one place saved. The app does not delete the saved forecast of a place you remove.</p>
+    <p>To erase everything the app keeps, clear the app's data in Android's settings, or uninstall the app. Either one removes all your saved places and settings.</p>
+    <p>Android can back up your phone's data. The app allows this for its own files and excludes nothing. If backup is switched on for your phone, these files can be part of it. Your phone, not the app, decides where that backup is stored.</p>
   </section>
 
   <section>
     <h2>Third parties</h2>
+    <p>A third party is a company or service other than you and Cocode. Two are involved:</p>
     <ul>
       <li><strong>Open-Meteo</strong> provides the forecasts and the place search, as described above.</li>
-      <li><strong>Android's Geocoder</strong> names your location, as described above, and is part of your phone.</li>
+      <li><strong>Android's Geocoder</strong> names your location, as described above. It is part of your phone.</li>
     </ul>
-    <p>The app has no analytics, no ads and no crash reporting, and does not use Google Play services; its build lists none of them. Its libraries are AndroidX libraries for the screen, the lifecycle and local storage. The app makes its requests with the HTTP code that comes with Android, not with a networking library.</p>
-    <p><strong>The website is separate.</strong> This policy is about the app. On weather.cocode.dk, the live forecast panel sends what you search for and the coordinates of the place it shows to Open-Meteo from your browser, and keeps the last forecast in your browser's local storage. The pages also load fonts from Google Fonts and the shared cocode.dk header and footer from brand.cocode.dk, and are served by GitHub Pages.</p>
+    <p>The app has no analytics, no ads and no crash reporting (automatic error reports), and it does not use Google Play services. Its build file lists none of them. Its libraries (ready-made code from others) are AndroidX libraries for drawing the screen, handling the app starting and stopping, and storing data on the phone. The app sends its requests with the web-request code that comes with Android, not with a separate networking library.</p>
+    <p><strong>The website is separate.</strong> This policy is about the app. On weather.cocode.dk, the live forecast panel sends what you search for, and the coordinates of the place it shows, to Open-Meteo from your browser. It also keeps the last forecast in your browser's local storage. The pages load fonts from Google Fonts and the shared cocode.dk header and footer from brand.cocode.dk, and GitHub Pages serves them.</p>
   </section>
 
   <section>
     <h2>Your rights</h2>
-    <p>Under the General Data Protection Regulation (GDPR) you can ask for access to, correction of and deletion of your data, and ask us to limit its use. The app sends nothing to Cocode, so Cocode holds no personal data about you from the app, and there is nothing for us to give you, correct or delete. What the app keeps on your phone is yours to remove, as described above.</p>
-    <p>Data that reached Open-Meteo is held by Open-Meteo, and you take up those rights with it. You can also complain to the Danish Data Protection Agency, <a href="https://www.datatilsynet.dk/english">Datatilsynet</a>.</p>
+    <p>The General Data Protection Regulation (GDPR) is the European privacy law. Under it you can ask to see your data, ask for it to be corrected or deleted, and ask us to limit how it is used.</p>
+    <p>The app sends nothing to Cocode, so Cocode holds no personal data about you from the app. There is nothing for us to show, correct or delete. You can remove what the app keeps on your phone yourself, as described above.</p>
+    <p>Open-Meteo holds the data that reached it, so you take up these rights with Open-Meteo. You can also complain to the Danish Data Protection Agency, <a href="https://www.datatilsynet.dk/english">Datatilsynet</a>.</p>
   </section>
 
   <section>
     <h2>Contact</h2>
-    <p>Cocode (Babak Bandpey), <a href="mailto:bb@cocode.dk">bb@cocode.dk</a>. Questions about the app or this policy can also go to <a href="https://github.com/cocodedk/weather-android/issues">GitHub issues</a>.</p>
+    <p>Write to Cocode (Babak Bandpey) at <a href="mailto:bb@cocode.dk">bb@cocode.dk</a>. You can also open an issue on <a href="https://github.com/cocodedk/weather-android/issues">GitHub</a>. Issues there are public, so leave personal details out of them.</p>
   </section>
 
   <section>

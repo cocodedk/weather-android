@@ -62,85 +62,103 @@
 
 <main id="main" class="policy" tabindex="-1">
   <h1>Privatlivspolitik: Weather</h1>
-  <p class="meta">Gældende fra <time datetime="2026-10-07">7. oktober 2026</time>. Politikken gælder Weather-appen til Android (<code>dk.cocode.weather</code>).</p>
+  <p class="meta">Gældende fra <time datetime="2026-10-07">7. oktober 2026</time>. Politikken gælder Weather-appen til Android (app-id <code>dk.cocode.weather</code>).</p>
 
   <section>
     <h2>Resumé</h2>
-    <p>Weather har ingen konto, ingen reklamer, ingen analyse og ingen server, som vi driver. Cocode, der har lavet appen, modtager ingenting fra den. Appen henter prognoser og stednavne hos en gratis vejrtjeneste, Open-Meteo, så de steder, du ser på og søger efter, når frem til Open-Meteo. Bruger du din nuværende position, giver appen også en omtrentlig position videre til Androids egen tjeneste til stednavne på telefonen. Alt andet bliver på telefonen.</p>
+    <p>Weather har ingen konto, ingen reklamer og ingen analyse (værktøjer, der følger med i, hvordan folk bruger en app). Der er ingen server hos os bag appen. Cocode, der har lavet appen, modtager ingenting fra den.</p>
+    <p>For at vise en prognose spørger appen Open-Meteo, en gratis vejrtjeneste, som en anden driver. Derfor ved Open-Meteo, hvilke steder du ser på og søger efter.</p>
+    <p>Det er valgfrit at bruge din placering. Trykker du på "Use my current location" (appens knapper og tekster er på engelsk), giver appen også en omtrentlig position videre til en tjeneste til stednavne, som er bygget ind i telefonen.</p>
+    <p>Alt andet bliver på din telefon.</p>
   </section>
 
   <section>
     <h2>Hvad der indsamles</h2>
-    <p>Cocode indsamler ingen personoplysninger gennem appen. Den har ingen tilmelding og ingen server hos os at sende noget til. De eneste webadresser, den kalder, er de to hos Open-Meteo, som står længere nede. Det her håndterer appen:</p>
+    <p>Cocode indsamler ingen personoplysninger gennem appen. Den har ingen tilmelding og ingen server hos os at sende noget til. De eneste webadresser, den kalder, er de to hos Open-Meteo i næste afsnit. Det her sender eller bruger appen:</p>
     <ul>
-      <li><strong>Den tekst, du skriver i søgefeltet.</strong> Fra to tegn og opefter sendes den til Open-Meteo, så tjenesten kan finde steder, der passer. Søgning er den eneste grund til, at appen sender det, du skriver, nogen steder hen.</li>
-      <li><strong>Koordinaterne for det sted, du ser på.</strong> Det kan være et sted, du har søgt efter, et sted, du har gemt, eller det sted, der er fundet ud fra din position. De sendes med fire decimaler til Open-Meteo, så appen kan hente prognosen.</li>
-      <li><strong>Din omtrentlige position, kun hvis du beder om det.</strong> Den bruges én gang pr. tryk til at finde dit sted. Se Tilladelser.</li>
+      <li><strong>Det, du skriver i søgefeltet.</strong> Når du har skrevet to tegn, sender appen teksten til Open-Meteo for at finde steder, der passer. Det er den eneste gang, appen sender noget af det, du skriver.</li>
+      <li><strong>Koordinaterne for det sted, du ser på.</strong> Koordinater er to tal, breddegrad og længdegrad, der peger på et punkt på kortet. Stedet kan være et, du har søgt efter, et, du har gemt, eller et, der er fundet ud fra din placering. Appen sender stedets koordinater til Open-Meteo, afrundet til fire decimaler, for at hente prognosen.</li>
+      <li><strong>Din omtrentlige placering, kun hvis du beder om det.</strong> Appen bruger den én gang, hver gang du trykker på "Use my current location", til at finde dit sted. Se Tilladelser.</li>
       <li><strong>Telefonens sprogkode,</strong> for eksempel <code>en</code> eller <code>da</code>. Den følger med en søgning, så stednavnene kommer tilbage på dit sprog.</li>
-      <li><strong>Din IP-adresse og tidspunktet for hver forespørgsel.</strong> Appen forbinder direkte til Open-Meteo, så Open-Meteo kan se dem, ligesom ethvert websted, du besøger.</li>
+      <li><strong>Din IP-adresse og tidspunktet for hver forespørgsel.</strong> En IP-adresse er et tal, der peger på din internetforbindelse. Appen forbinder direkte til Open-Meteo, så Open-Meteo kan se begge dele, ligesom ethvert websted, du besøger.</li>
     </ul>
-    <p>Appen sender hverken konto, nøgle eller enheds-id med nogen forespørgsel.</p>
+    <p>Appen sender hverken konto, nøgle eller enheds-id (et tal, der peger på din telefon) med nogen forespørgsel.</p>
   </section>
 
   <section>
     <h2>Servere appen kontakter</h2>
-    <p>To, begge drevet af Open-Meteo, og begge over HTTPS. Appen kontakter ingen andre servere og åbner ingen links.</p>
+    <p>Appen kontakter to servere. Begge drives af Open-Meteo, og begge bruger HTTPS, en krypteret forbindelse. Appen kontakter ingen andre servere og åbner ingen links.</p>
 
     <h3>api.open-meteo.com: prognoser</h3>
-    <p>Henter de aktuelle forhold, prognosen time for time og prognosen for de næste syv dage. Forespørgslen indeholder det valgte steds breddegrad og længdegrad med fire decimaler og en liste over de vejrværdier, appen vil have, for eksempel temperatur, vind og nedbør. Den har også en User-Agent-header, <code>dk.cocode.weather/1.0 (Android)</code>, fordi Open-Meteo beder apps om at sige, hvem de er.</p>
-    <p>Appen spørger, når den starter, når du vælger et sted, og når du vælger Refresh. Har du lagt Weather-widgetten på startskærmen, spørger den også: cirka hver halve time (Android bestemmer det nøjagtige tidspunkt), når du trykker på dens opdateringsikon, og når du skifter sted eller enheder i appen.</p>
+    <p>Serveren sender det aktuelle vejr tilbage, prognosen time for time og prognosen for de næste syv dage.</p>
+    <p>Appen sender breddegrad og længdegrad for det valgte sted, afrundet til fire decimaler, og en liste over de vejrværdier, den vil have, for eksempel temperatur, vind og nedbør. Den sender også en User-Agent, en kort etiket, der fortæller, hvilken app der spørger: <code>dk.cocode.weather/1.0 (Android)</code>. Open-Meteo beder apps om at sende en.</p>
+    <p>Appen henter en prognose, når den starter, når du vælger et sted, og når du vælger Refresh. Du finder Refresh ved at trykke på ikonet "More" øverst på skærmen.</p>
+    <p>Har du lagt Weather-widgetten på startskærmen (et lille felt, der viser vejret uden at åbne appen), henter den også en prognose. Det sker cirka hver halve time, når du trykker på dens opdateringsikon, og når du skifter sted eller enheder i appen. Android bestemmer det nøjagtige tidspunkt for opdateringerne hver halve time.</p>
 
     <h3>geocoding-api.open-meteo.com: stedsøgning</h3>
-    <p>Finder steder ud fra navn. Forespørgslen indeholder den tekst, du har skrevet, sendt når du holder en kort pause, og telefonens sprogkode. Intet fra en søgning bliver gemt, medmindre du vælger et sted blandt resultaterne. Så kommer det på din liste over gemte steder.</p>
+    <p>Serveren finder steder ud fra navn. Appen sender den tekst, du har skrevet, når du holder en kort pause, og telefonens sprogkode.</p>
+    <p>Intet fra en søgning bliver gemt, medmindre du vælger et sted blandt resultaterne. Vælger du et, kommer det på din liste over gemte steder.</p>
 
     <h3>Hvad Open-Meteo gør med det</h3>
-    <p>Open-Meteo er en uafhængig tjeneste, og appen kan hverken se eller styre, hvad den gemmer. Dens egne vilkår og oplysninger om privatliv står på <a href="https://open-meteo.com/en/terms">open-meteo.com/en/terms</a>.</p>
+    <p>Open-Meteo er en uafhængig tjeneste. Appen kan hverken se eller styre, hvad Open-Meteo gemmer. Tjenestens vilkår og oplysninger om privatliv står på <a href="https://open-meteo.com/en/terms">open-meteo.com/en/terms</a>.</p>
 
     <h3>Androids tjeneste til stednavne (ikke en server i appen)</h3>
-    <p>Når du bruger din nuværende position, giver appen positionen til Androids indbyggede Geocoder, som gør den om til et stednavn. Tjenesten hører til din telefon. Appen kan ikke se, hvilket firmas tjeneste telefonen bruger, eller hvor den sender positionen hen, og nogle telefoner har ingen. Mangler den eller fejler den, viser appen koordinaterne i stedet for et navn.</p>
+    <p>Når du bruger din nuværende placering, giver appen din position til Geocoder. Geocoder er en tjeneste i Android, der gør en position om til et stednavn. Den hører til din telefon, ikke til appen.</p>
+    <p>Appen kan ikke se, hvilket firmas tjeneste telefonen bruger, eller hvor tjenesten sender positionen hen. Nogle telefoner har ingen. Mangler tjenesten, eller fejler den, viser appen koordinaterne i stedet for et navn.</p>
   </section>
 
   <section>
     <h2>Tilladelser</h2>
+    <p>En tilladelse lader en app bruge en funktion på din telefon. Appen beder om tre:</p>
     <ul>
-      <li><strong>Internet.</strong> Til at nå de to Open-Meteo-servere ovenfor.</li>
-      <li><strong>Netværksstatus.</strong> Appen angiver tilladelsen, men bruger den ikke i sin egen kode.</li>
-      <li><strong>Omtrentlig placering.</strong> Valgfri, og appen spørger kun, når du trykker på "Use my current location" (appens egne tekster er på engelsk). Den beder om omtrentlig placering, ikke præcis, og aldrig om placering i baggrunden. Siger du nej, virker søgningen stadig. Siger du ja, beder appen Android om én position, hver gang du trykker, enten en nylig, som Android allerede har, eller en ny, og holder så op med at spørge. Widgetten og appens andre prognoseforespørgsler læser aldrig din placering. De bruger det sted, der blev gemt, sidste gang du trykkede.</li>
+      <li><strong>Internet.</strong> Lader appen nå de to Open-Meteo-servere ovenfor.</li>
+      <li><strong>Netværksstatus.</strong> Lader en app se, om telefonen er online. Appen angiver tilladelsen, men bruger den ikke i sin egen kode.</li>
+      <li><strong>Omtrentlig placering.</strong> Valgfri. Appen spørger kun, når du trykker på "Use my current location". Den beder om omtrentlig placering, ikke præcis, og aldrig om placering, mens du ikke bruger appen.</li>
     </ul>
+    <p>Siger du nej til placering, virker søgningen stadig. Siger du ja, får hvert tryk appen til at bede Android om én position: en nylig, som Android allerede har, eller en ny. Derefter holder appen op med at spørge.</p>
+    <p>Widgetten og appens andre prognoseforespørgsler læser aldrig din placering. De bruger det sted, der blev gemt, sidste gang du trykkede.</p>
     <p>Appen beder ikke om andre tilladelser.</p>
   </section>
 
   <section>
     <h2>Hvad der bliver på telefonen</h2>
-    <p>Appen gemmer disse ting i sin egen private lagerplads på telefonen:</p>
+    <p>Appen gemmer følgende i sin egen private lagerplads på telefonen:</p>
     <ul>
-      <li>Dine gemte steder: navn, land, område, koordinater og tidszone. Det gælder også hvert sted, du vælger efter en søgning. Appen starter med Copenhagen gemt. Et sted, der er fundet ud fra din position, gemmes med sine koordinater og bliver erstattet af det næste, så de ikke hober sig op.</li>
-      <li>Hvilket sted der er valgt, om du bruger metriske eller imperiale enheder, og dit tema.</li>
+      <li>Dine gemte steder: navn, land, område, koordinater og tidszone. Hvert sted, du vælger efter en søgning, bliver gemt. Appen starter med Copenhagen gemt. Et sted, der er fundet ud fra din placering, gemmes med sine koordinater og erstattes af det næste, så de ikke hober sig op.</li>
+      <li>Hvilket sted der er valgt, om du bruger metriske eller imperiale enheder, og dit tema (dag, nat eller automatisk).</li>
       <li>Den seneste prognose, appen fik for hvert sted, så den kan vise noget, når du er offline.</li>
     </ul>
-    <p>Du fjerner et gemt sted ved at trykke på dets slet-ikon i listen Locations. Ikonet vises kun, når du har mere end ét sted gemt, og appen sletter ikke den mellemlagrede prognose for et fjernet sted. Rydder du appens data i Androids indstillinger, eller afinstallerer du appen, forsvinder alt, hvad den har gemt.</p>
-    <p>Appen tillader Androids egen sikkerhedskopiering af sine data og har ingen undtagelser. Er sikkerhedskopiering slået til på telefonen, kan filerne være med i den. Hvor kopien ligger, afgør telefonen, ikke appen.</p>
+    <p>Sådan fjerner du et gemt sted:</p>
+    <ol>
+      <li>Tryk på stedets navn øverst på skærmen eller på ikonet "Change location". Listen Locations åbner.</li>
+      <li>Tryk på slet-ikonet (en skraldespand) ved siden af stedet. Stedet forsvinder fra listen.</li>
+    </ol>
+    <p>Slet-ikonet vises kun, når du har mere end ét sted gemt. Appen sletter ikke den gemte prognose for et sted, du fjerner.</p>
+    <p>Vil du slette alt, hvad appen har gemt, så ryd appens data i Androids indstillinger, eller afinstaller appen. Begge dele fjerner alle dine gemte steder og indstillinger.</p>
+    <p>Android kan tage sikkerhedskopi af telefonens data. Appen tillader det for sine egne filer og undtager ingenting. Er sikkerhedskopiering slået til på telefonen, kan filerne være med i den. Det er telefonen, ikke appen, der afgør, hvor kopien ligger.</p>
   </section>
 
   <section>
     <h2>Tredjeparter</h2>
+    <p>En tredjepart er et firma eller en tjeneste ud over dig og Cocode. To indgår:</p>
     <ul>
       <li><strong>Open-Meteo</strong> leverer prognoserne og stedsøgningen, som beskrevet ovenfor.</li>
-      <li><strong>Androids Geocoder</strong> giver din position et navn, som beskrevet ovenfor, og er en del af telefonen.</li>
+      <li><strong>Androids Geocoder</strong> giver din placering et navn, som beskrevet ovenfor. Den er en del af telefonen.</li>
     </ul>
-    <p>Appen har ingen analyse, ingen reklamer og ingen fejlrapportering og bruger ikke Google Play-tjenester. Byggefilen nævner ingen af dem. Appens biblioteker er AndroidX-biblioteker til skærmen, livscyklussen og lokal lagring. Forespørgslerne sendes med den HTTP-kode, der følger med Android, ikke med et netværksbibliotek.</p>
-    <p><strong>Hjemmesiden er noget andet.</strong> Politikken handler om appen. På weather.cocode.dk sender den levende prognosevisning det, du søger efter, og koordinaterne for det sted, den viser, til Open-Meteo fra din browser, og den gemmer den seneste prognose i browserens lokale lager. Siderne henter også skrifttyper fra Google Fonts og den fælles cocode.dk-top og -bund fra brand.cocode.dk, og de leveres af GitHub Pages.</p>
+    <p>Appen har ingen analyse, ingen reklamer og ingen fejlrapportering (automatiske fejlmeldinger), og den bruger ikke Google Play-tjenester. Byggefilen nævner ingen af dem. Appens biblioteker (færdig kode fra andre) er AndroidX-biblioteker til at tegne skærmen, til at håndtere, at appen starter og stopper, og til at gemme data på telefonen. Appen sender sine forespørgsler med den kode til webforespørgsler, der følger med Android, ikke med et særskilt netværksbibliotek.</p>
+    <p><strong>Hjemmesiden er noget andet.</strong> Politikken handler om appen. På weather.cocode.dk sender den levende prognosevisning det, du søger efter, og koordinaterne for det sted, den viser, til Open-Meteo fra din browser. Den gemmer også den seneste prognose i browserens lokale lager. Siderne henter skrifttyper fra Google Fonts og den fælles cocode.dk-top og -bund fra brand.cocode.dk, og GitHub Pages leverer dem.</p>
   </section>
 
   <section>
     <h2>Dine rettigheder</h2>
-    <p>Efter databeskyttelsesforordningen (GDPR) kan du bede om indsigt i dine oplysninger og om at få dem rettet eller slettet, og du kan bede os begrænse brugen af dem. Appen sender ingenting til Cocode, så Cocode har ingen personoplysninger om dig fra appen, og der er intet, vi kan give dig indsigt i, rette eller slette. Det, appen gemmer på din telefon, kan du selv fjerne, som beskrevet ovenfor.</p>
-    <p>Oplysninger, der er nået til Open-Meteo, ligger hos Open-Meteo, og dem skal du bruge dine rettigheder over for hos dem. Du kan også klage til <a href="https://www.datatilsynet.dk/">Datatilsynet</a>.</p>
+    <p>Databeskyttelsesforordningen (GDPR) er EU's regler om privatliv. Efter dem kan du bede om indsigt i dine oplysninger, bede om at få dem rettet eller slettet og bede os begrænse, hvordan de bruges.</p>
+    <p>Appen sender ingenting til Cocode, så Cocode har ingen personoplysninger om dig fra appen. Der er intet, vi kan vise dig, rette eller slette. Det, appen gemmer på din telefon, kan du selv fjerne, som beskrevet ovenfor.</p>
+    <p>Open-Meteo har de oplysninger, der er nået dertil, så du bruger de rettigheder over for Open-Meteo. Du kan også klage til <a href="https://www.datatilsynet.dk/">Datatilsynet</a>.</p>
   </section>
 
   <section>
     <h2>Kontakt</h2>
-    <p>Cocode (Babak Bandpey), <a href="mailto:bb@cocode.dk">bb@cocode.dk</a>. Spørgsmål om appen eller politikken kan også stilles som <a href="https://github.com/cocodedk/weather-android/issues">issues på GitHub</a>.</p>
+    <p>Skriv til Cocode (Babak Bandpey) på <a href="mailto:bb@cocode.dk">bb@cocode.dk</a>. Du kan også oprette en issue på <a href="https://github.com/cocodedk/weather-android/issues">GitHub</a>. Issues er offentlige dér, så lad være med at skrive personlige oplysninger i dem.</p>
   </section>
 
   <section>
