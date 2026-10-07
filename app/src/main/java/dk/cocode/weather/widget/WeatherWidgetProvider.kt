@@ -78,6 +78,9 @@ class WeatherWidgetProvider : AppWidgetProvider() {
 
                     override fun loading(): RemoteViews = WidgetViews.loading(appContext)
 
+                    override fun unavailable(): RemoteViews =
+                        WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
+
                     override fun allIds(): IntArray = ids(appContext, manager)
 
                     override fun update(id: Int, views: RemoteViews) = manager.updateAppWidget(id, views)

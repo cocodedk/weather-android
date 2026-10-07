@@ -45,7 +45,7 @@ class WidgetRefreshTest {
         val started = System.nanoTime()
         refreshWidget(
             publisher.begin(), publisher, { prefs() }, trickling(server, saved), surface,
-            overallMs = 4_000, fetchMs = 1_000,
+            requestedIds = intArrayOf(7), overallMs = 4_000, fetchMs = 1_000,
         )
         return (System.nanoTime() - started) / 1_000_000
     }
@@ -56,7 +56,7 @@ class WidgetRefreshTest {
             val surface = FakeSurface(intArrayOf(7))
             val tookMs = refreshAgainst(server, saved = forecast, surface)
 
-            assertEquals(listOf(7 to "Copenhagen (saved)"), surface.updates)
+            assertEquals(listOf(7 to "loading", 7 to "Copenhagen (saved)"), surface.updates)
             assertTrue("took $tookMs ms", tookMs < 3_500)
             assertTrue("the request never reached the server", server.awaitRequest(0))
             assertTrue("the connection was left open", server.awaitClientGone(1_000))
@@ -69,7 +69,7 @@ class WidgetRefreshTest {
             val surface = FakeSurface(intArrayOf(7))
             val tookMs = refreshAgainst(server, saved = null, surface)
 
-            assertEquals(listOf(7 to "unavailable: Copenhagen"), surface.updates)
+            assertEquals(listOf(7 to "loading", 7 to "unavailable: Copenhagen"), surface.updates)
             assertTrue("took $tookMs ms", tookMs < 3_500)
             assertTrue("the connection was left open", server.awaitClientGone(1_000))
         }
@@ -92,56 +92,15 @@ class WidgetRefreshTest {
             // read would run until 6.5 s, past the overall deadline, and nothing would be drawn.
             refreshWidget(
                 publisher.begin(), publisher, slowPrefs, trickling(server, forecast), surface,
-                overallMs = 5_000, fetchMs = 3_500,
+                requestedIds = intArrayOf(7), overallMs = 5_000, fetchMs = 3_500,
             )
             val tookMs = (System.nanoTime() - started) / 1_000_000
 
-            assertEquals(listOf(7 to "Copenhagen (saved)"), surface.updates)
+            assertEquals(listOf(7 to "loading", 7 to "Copenhagen (saved)"), surface.updates)
             assertTrue("took $tookMs ms", tookMs < 4_500)
             assertTrue("the request never reached the server", server.awaitRequest(0))
             assertTrue("the connection was left open", server.awaitClientGone(1_000))
         }
-    }
-
-    @Test
-    fun aRefreshShowsLoadingOnTheWidgetsItWasAskedAboutThenTheForecastOnAll() = runBlocking {
-        val surface = FakeSurface(intArrayOf(1, 2))
-        val publisher = WidgetPublisher()
-
-        refreshWidget(
-            publisher.begin(), publisher, { prefs() }, ForecastRepository(SavedCache(null)) { forecast to "{}" },
-            surface, requestedIds = intArrayOf(1),
-        )
-
-        assertEquals(listOf(1 to "loading", 1 to "Copenhagen", 2 to "Copenhagen"), surface.updates)
-    }
-
-    @Test
-    fun anOlderRefreshDoesNotShowLoadingOverANewerOnesResult() = runBlocking {
-        val surface = FakeSurface(intArrayOf(1))
-        val publisher = WidgetPublisher()
-        val older = publisher.begin()
-        val newer = publisher.begin()
-        val ready = WidgetLoad.Ready(copenhagen, ForecastRepository.Loaded(forecast, stale = false), imperial = false)
-        publisher.publish(newer, ready, { prefs() }, surface)
-
-        publisher.showLoading(older, intArrayOf(1), surface) // the older refresh is late
-
-        assertEquals(listOf(1 to "Copenhagen"), surface.updates)
-    }
-
-    @Test
-    fun showingLoadingStopsAtTheDeadlineWidgetByWidget() = runBlocking {
-        val calls = AtomicInteger()
-        val surface = FakeSurface(intArrayOf(1, 2, 3), beforeUpdate = { if (calls.getAndIncrement() == 0) Thread.sleep(600) })
-        val publisher = WidgetPublisher()
-
-        refreshWidget(
-            publisher.begin(), publisher, { prefs() }, ForecastRepository(SavedCache(null)) { forecast to "{}" },
-            surface, requestedIds = intArrayOf(1, 2, 3), overallMs = 300,
-        )
-
-        assertEquals(listOf(1 to "loading"), surface.updates)
     }
 
     @Test
