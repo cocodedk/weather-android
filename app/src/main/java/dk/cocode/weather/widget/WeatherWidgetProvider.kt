@@ -47,10 +47,12 @@ class WeatherWidgetProvider : AppWidgetProvider() {
     private fun refresh(context: Context, manager: AppWidgetManager, requested: IntArray) {
         if (requested.isEmpty()) return
 
+        // The time the broadcast allows runs from here, not from when the coroutine gets going.
+        val startedNanos = System.nanoTime()
+        val pending = goAsync()
         val ticket = publisher.begin()
         requested.forEach { manager.updateAppWidget(it, WidgetViews.loading(context)) }
 
-        val pending = goAsync()
         val appContext = context.applicationContext
         CoroutineScope(SupervisorJob()).launch {
             try {
@@ -79,7 +81,7 @@ class WeatherWidgetProvider : AppWidgetProvider() {
 
                     override fun update(id: Int, views: RemoteViews) = manager.updateAppWidget(id, views)
                 }
-                refreshWidget(ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface)
+                refreshWidget(ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface, startedNanos)
             } finally {
                 pending.finish()
             }

@@ -13,6 +13,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import java.io.ByteArrayInputStream
 import java.io.IOException
 
 /**
@@ -70,6 +71,16 @@ class HttpTest {
             assertTrue("the request never reached the server", server.awaitRequest(0))
             assertTrue("the connection was left open", server.awaitClientGone(1_000))
         }
+    }
+
+    @Test
+    fun aCappedReadTakesExactlyTheCapAndNoMore() {
+        val source = ByteArrayInputStream(ByteArray(10_000) { 'x'.code.toByte() })
+
+        val text = Http.readChunks(source, { true }, Http.ERROR_BODY_BYTES)
+
+        assertEquals(Http.ERROR_BODY_BYTES, text.length)
+        assertEquals(10_000 - Http.ERROR_BODY_BYTES, source.available()) // nothing past the cap was taken
     }
 
     @Test

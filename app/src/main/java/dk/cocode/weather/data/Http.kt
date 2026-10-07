@@ -25,7 +25,7 @@ object Http {
     private const val READ_TIMEOUT_MS = 12_000
     private const val TOTAL_TIMEOUT_MS = 20_000L
     private const val CHUNK_BYTES = 8 * 1024
-    private const val ERROR_BODY_BYTES = 2 * 1024
+    internal const val ERROR_BODY_BYTES = 2 * 1024
 
     /**
      * Where the blocking work runs, apart from the caller. A blocked socket read ignores coroutine
@@ -85,13 +85,13 @@ object Http {
         return readChunks(conn.inputStream, wanted, Int.MAX_VALUE)
     }
 
-    /** Reads in chunks, stopping at [maxBytes] or as soon as [wanted] turns false. */
-    private fun readChunks(input: InputStream, wanted: () -> Boolean, maxBytes: Int): String {
+    /** Reads in chunks, stopping at exactly [maxBytes] or as soon as [wanted] turns false. */
+    internal fun readChunks(input: InputStream, wanted: () -> Boolean, maxBytes: Int): String {
         val out = ByteArrayOutputStream()
         val chunk = ByteArray(CHUNK_BYTES)
         input.use {
             while (out.size() < maxBytes) {
-                val n = it.read(chunk)
+                val n = it.read(chunk, 0, minOf(chunk.size, maxBytes - out.size()))
                 if (n < 0) break
                 out.write(chunk, 0, n)
                 if (!wanted()) throw IOException("The caller gave up")

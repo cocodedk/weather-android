@@ -17,6 +17,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicInteger
 
 /** Whole refreshes, load and draw together, against the real Http client and a badly behaved server. */
 class WidgetRefreshTest {
@@ -71,6 +72,35 @@ class WidgetRefreshTest {
             assertTrue("took $tookMs ms", tookMs < 3_500)
             assertTrue("the connection was left open", server.awaitClientGone(1_000))
         }
+    }
+
+    @Test
+    fun aPublicationThatRunsPastTheDeadlineDoesNotDrawTheRemainingWidgets() = runBlocking {
+        val calls = AtomicInteger()
+        // The first widget's update blocks for longer than the whole refresh is allowed to take.
+        val surface = FakeSurface(intArrayOf(1, 2, 3), beforeUpdate = { if (calls.getAndIncrement() == 0) Thread.sleep(600) })
+        val publisher = WidgetPublisher()
+
+        refreshWidget(
+            publisher.begin(), publisher, { prefs() }, ForecastRepository(SavedCache(null)) { forecast to "{}" },
+            surface, overallMs = 300,
+        )
+
+        assertEquals(listOf(1), surface.updates.map { it.first })
+    }
+
+    @Test
+    fun aRefreshWhoseClockStartedBeforeItWasDispatchedGivesUpAtOnce() = runBlocking {
+        val surface = FakeSurface(intArrayOf(1))
+        val publisher = WidgetPublisher()
+        val handedOver = System.nanoTime() - 20_000_000_000L // the broadcast was handed over 20 s ago
+
+        refreshWidget(
+            publisher.begin(), publisher, { prefs() }, ForecastRepository(SavedCache(null)) { forecast to "{}" },
+            surface, startedNanos = handedOver,
+        )
+
+        assertEquals(emptyList<Pair<Int, String>>(), surface.updates)
     }
 
     @Test
