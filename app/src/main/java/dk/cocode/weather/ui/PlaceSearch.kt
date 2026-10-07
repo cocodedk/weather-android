@@ -6,6 +6,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,6 +43,9 @@ class PlaceSearch(
             _state.update { it.copy(searching = true) }
             try {
                 val results = lookup(query)
+                // Each keystroke cancels the request before it, so a request that is no longer
+                // active is no longer the current one: it must not publish anything.
+                ensureActive()
                 // A good answer clears any failure an older, cancelled request left behind.
                 _state.update { it.copy(results = results, searching = false, failed = false) }
             } catch (e: CancellationException) {
@@ -49,6 +53,9 @@ class PlaceSearch(
                 // swallowing it would paint "Search failed" over the newer request's results.
                 throw e
             } catch (e: Exception) {
+                // A cancelled request can still fail with an ordinary exception once its answer
+                // arrives (an HTTP error, say), after the newer request has already shown results.
+                ensureActive()
                 _state.update {
                     it.copy(searching = false, results = emptyList(), failed = true)
                 }

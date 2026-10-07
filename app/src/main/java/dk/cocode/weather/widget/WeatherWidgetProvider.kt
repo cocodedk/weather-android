@@ -10,6 +10,7 @@ import dk.cocode.weather.R
 import dk.cocode.weather.data.ForecastRepository
 import dk.cocode.weather.data.WeatherStore
 import dk.cocode.weather.ui.unitsFor
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
@@ -68,6 +69,8 @@ class WeatherWidgetProvider : AppWidgetProvider() {
                     try {
                         val loaded = ForecastRepository(store).load(place)
                         WidgetViews.forecast(appContext, place, loaded.forecast, units, loaded.stale)
+                    } catch (e: CancellationException) {
+                        throw e
                     } catch (e: Exception) {
                         // No network and no cache for this place. Say so rather than
                         // leaving a spinner on the home screen forever.
