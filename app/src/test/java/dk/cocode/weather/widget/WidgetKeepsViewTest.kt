@@ -65,9 +65,10 @@ class WidgetKeepsViewTest {
     }
 
     @Test
-    fun aWidgetLastDrawnByAnEarlierVersionGetsThePlaceholderWhenItsRefreshTimesOut() = runBlocking {
-        // An update clears the widget's views but keeps its options: drawn at version 7, now running 8.
-        val marks = FakeSurface.versionedMarks(running = 8, drawnAt = mapOf(1 to 7L))
+    fun aWidgetLastDrawnBeforeTheAppWasInstalledAgainGetsThePlaceholderWhenItsRefreshTimesOut() = runBlocking {
+        // Installing the app (even at the same version) clears the widget's views but keeps its options:
+        // the widget was drawn when the app was installed at time 700, and the app was installed again at 800.
+        val marks = FakeSurface.stampedMarks(installedAt = 800, drawnAt = mapOf(1 to 700L))
         val surface = FakeSurface(intArrayOf(1), marks = marks)
         val publisher = WidgetPublisher()
         val stuckPrefs: suspend () -> WeatherStore.Prefs = { delay(5_000); prefs() }
@@ -75,12 +76,12 @@ class WidgetKeepsViewTest {
         refreshWidget(publisher.begin(), publisher, stuckPrefs, answering, surface, overallMs = 400)
 
         assertEquals(listOf(1 to "placeholder"), surface.updates)
-        assertTrue(marks.isDrawn(1)) // and is now marked as drawn at version 8
+        assertTrue(marks.isDrawn(1)) // and is now marked as drawn for the install at time 800
     }
 
     @Test
-    fun aWidgetDrawnAtTheRunningVersionIsLeftAloneWhenItsRefreshTimesOut() = runBlocking {
-        val marks = FakeSurface.versionedMarks(running = 8, drawnAt = mapOf(1 to 8L))
+    fun aWidgetDrawnSinceTheAppWasInstalledIsLeftAloneWhenItsRefreshTimesOut() = runBlocking {
+        val marks = FakeSurface.stampedMarks(installedAt = 800, drawnAt = mapOf(1 to 800L))
         val surface = FakeSurface(intArrayOf(1), marks = marks)
         val publisher = WidgetPublisher()
         val stuckPrefs: suspend () -> WeatherStore.Prefs = { delay(5_000); prefs() }

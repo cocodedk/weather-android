@@ -8,7 +8,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.widget.RemoteViews
-import androidx.core.content.pm.PackageInfoCompat
 import dk.cocode.weather.R
 import dk.cocode.weather.data.ForecastRepository
 import dk.cocode.weather.data.WeatherStore
@@ -58,16 +57,15 @@ class WeatherWidgetProvider : AppWidgetProvider() {
         CoroutineScope(SupervisorJob()).launch {
             try {
                 val store = WeatherStore(appContext)
-                // Kept in each widget's own options: system calls, no stored data to read. The app version
-                // is part of the mark because an update clears a widget's views but keeps its options.
-                val version = PackageInfoCompat.getLongVersionCode(
-                    appContext.packageManager.getPackageInfo(appContext.packageName, 0),
-                )
+                // Kept in each widget's own options: system calls, no stored data to read. The time of the
+                // install is part of the mark because installing the app clears a widget's views (even at
+                // the same version) but keeps its options.
+                val installedAt = appContext.packageManager.getPackageInfo(appContext.packageName, 0).lastUpdateTime
                 val marks = DrawnMarks(
-                    version,
-                    read = { id -> manager.getAppWidgetOptions(id).getLong(DRAWN_VERSION_OPTION, DrawnMarks.NEVER) },
-                    write = { id, v ->
-                        manager.updateAppWidgetOptions(id, Bundle().apply { putLong(DRAWN_VERSION_OPTION, v) })
+                    installedAt,
+                    read = { id -> manager.getAppWidgetOptions(id).getLong(DRAWN_AT_OPTION, DrawnMarks.NEVER) },
+                    write = { id, at ->
+                        manager.updateAppWidgetOptions(id, Bundle().apply { putLong(DRAWN_AT_OPTION, at) })
                     },
                 )
                 val surface = object : WidgetSurface<RemoteViews> {
@@ -115,8 +113,8 @@ class WeatherWidgetProvider : AppWidgetProvider() {
 
         const val ACTION_REFRESH = "dk.cocode.weather.widget.REFRESH"
 
-        /** Set in a widget's options to the app version (versionCode) a full view was last drawn on it at. */
-        private const val DRAWN_VERSION_OPTION = "dk.cocode.weather.drawnVersion"
+        /** Set in a widget's options to the install time (lastUpdateTime) of the app that last drew a full view on it. */
+        private const val DRAWN_AT_OPTION = "dk.cocode.weather.drawnAt"
 
         private fun ids(context: Context, manager: AppWidgetManager): IntArray =
             manager.getAppWidgetIds(ComponentName(context, WeatherWidgetProvider::class.java))
