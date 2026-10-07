@@ -175,7 +175,7 @@
     <string name="about_what_title">What the app does</string>
     <string name="about_what">Weather shows the current conditions, the next 24 hours and a 7-day forecast for any place you choose. Search for a city or town by name, or let the app use your phone\'s location. The forecasts come from Open-Meteo.</string>
     <string name="about_privacy_title">Privacy</string>
-    <string name="about_privacy">Weather has no account, no ads and no analytics, and it sends nothing to Cocode. To show a forecast, it asks Open-Meteo, a free weather service run by someone else, so Open-Meteo learns which places you view and search for. Using your location is optional, and the app asks for it only when you tap “Use my current location”. Your saved places and settings stay on your phone.</string>
+    <string name="about_privacy">Weather has no account, no ads and no analytics, and it sends nothing to Cocode. To show a forecast, it asks Open-Meteo, a free weather service run by someone else, so Open-Meteo learns which places you view and search for. Using your location is optional, and the app asks for it only when you tap “Use my current location”. Your saved places and settings are kept on your phone. If backup is switched on for your phone, Android can include them in that backup, and your phone decides where the backup is stored.</string>
     <string name="about_privacy_link">Read the privacy policy</string>
     <string name="about_links_title">Links</string>
     <string name="about_website">Open the website</string>
