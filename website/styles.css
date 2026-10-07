@@ -260,12 +260,41 @@ pre {
 }
 code { font-family: var(--mono); font-size: 0.92em; }
 
-/* Only the data credit; the frame's foot below carries the rule, the author and the source. */
-footer {
+/* The data credit, then the shared footer; the frame's foot below carries the rule, the author and the source. */
+footer:not(.cocode-footer), .site-foot {
   margin-top: 56px; padding: 0 0 22px;
   font-size: 13.5px; color: var(--ink-dim);
 }
-footer p { margin: 0; }
+footer p, .site-foot p { margin: 0; }
+
+/* ---------- the shared cocode-apps blocks, in this page's own look ---------- */
+
+main:focus { outline: 0; }
+.site-nav { padding-top: 8px; }
+.skip:focus { background: var(--gold); color: #1a2333; border-radius: 0 0 8px 0; }
+.cocode-nav { gap: 2px 6px; }
+.cocode-nav a { padding: 0 10px; border-radius: 8px; color: var(--ink-dim); text-decoration: none; }
+.cocode-nav a:hover { color: var(--ink); background: var(--tile-2); }
+.cocode-nav a[aria-current="page"]:not(.brand) { color: var(--gold); }
+.cocode-nav .brand { padding: 0; color: var(--ink); font-family: var(--display); font-weight: 700; }
+.cocode-nav .brand:hover { background: none; }
+.cocode-nav .brand img { border-radius: 8px; }
+.cocode-footer { margin-top: 2px; }
+.cocode-footer a { padding: 0 2px; }
+
+/* The install block: the F-Droid slot, the APK as the main button, then Obtainium. */
+.install { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center;
+  gap: 10px 12px; }
+.install a, .install .fdroid-soon {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 48px; margin: 0;
+  padding: 8px 22px; border-radius: 12px; font-size: 15px; font-weight: 600; text-decoration: none; text-align: center;
+}
+.install .fdroid-soon { border: 1px dashed var(--line); color: var(--ink-dim); }
+.install .fdroid { padding: 0; }
+.install li:nth-child(2) a { background: var(--gold); color: #1a2333; }
+.install li:nth-child(2) a:hover { background: #ffdf85; }
+.install li:nth-child(3) a { border: 1px solid var(--line); color: var(--ink); }
+.install li:nth-child(3) a:hover { background: var(--tile-2); }
 
 /* ---------- breakpoints ---------- */
 
