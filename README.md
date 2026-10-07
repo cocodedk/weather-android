@@ -51,12 +51,26 @@ Android 8.0 (API 26) or newer.
 
 ## Privacy
 
-Weather has no account, no analytics, no ads and no backend. Its only network
-calls are plain `GET` requests to Open-Meteo (`api.open-meteo.com` for forecasts,
-`geocoding-api.open-meteo.com` for place search). Location permission is optional;
-your coordinates leave the device only as the latitude and longitude in the
-forecast request. Saved places, the unit preference and the last forecast per place
-are stored in the app's private directory on the device.
+Weather has no account, no analytics, no ads and no server of its own. What leaves
+the phone, as the code stands:
+
+- **Forecasts.** For the selected place (searched, saved or your device location),
+  in the app and in the home screen widget, the latitude and longitude, to four
+  decimals, go in a plain HTTPS `GET` request to `api.open-meteo.com`.
+- **Search.** What you type in the search box (two characters or more) and the
+  phone's language code go to `geocoding-api.open-meteo.com`.
+- **Naming your location.** Location permission is optional and coarse only; search
+  works without it. With it, the app asks Android's location manager for a fix, then
+  passes the fix's latitude and longitude to Android's built-in `Geocoder` to get a
+  place name. That service is provided by the device, not by the app. The code notes
+  that it needs a backend service some devices and ROMs lack, and the app cannot say
+  whether or where that service sends the coordinates. If it is missing or fails, the
+  app uses the coordinates as the name.
+
+Saved places, the selected place, the unit and theme preferences and the last forecast
+per place are stored in the app's private storage on the device. The manifest allows
+Android's own device backup (`allowBackup`), so if backup is on for the phone, that data
+may be included in it.
 
 ## Build
 
