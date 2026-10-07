@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Privatlivspolitik: Weather til Android</title>
+<meta name="description" content="Privatlivspolitik for Weather til Android: ingen konto, ingen reklamer, ingen analyse og ingen server hos os. Steder, du søger efter, og koordinaterne for det sted, du ser på, går til Open-Meteo.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://weather.cocode.dk/da/privacy/">
+
+<link rel="alternate" hreflang="en" href="https://weather.cocode.dk/privacy/">
+<link rel="alternate" hreflang="da" href="https://weather.cocode.dk/da/privacy/">
+<link rel="alternate" hreflang="x-default" href="https://weather.cocode.dk/privacy/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Weather til Android">
+<meta property="og:title" content="Privatlivspolitik: Weather til Android">
+<meta property="og:description" content="Hvad Weather-appen sender, til hvem og hvorfor, og hvad der bliver på din telefon.">
+<meta property="og:url" content="https://weather.cocode.dk/da/privacy/">
+<meta property="og:image" content="https://weather.cocode.dk/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Weather-appen viser 18 grader og delvist skyet for København ved siden af en syvdagsprognose.">
+<meta property="og:locale" content="da_DK">
+<meta property="og:locale:alternate" content="en_US">
+
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../css/policy.css">
+<link rel="stylesheet" href="https://brand.cocode.dk/v1.css">
+<script type="module" src="https://brand.cocode.dk/v1.js"></script>
+</head>
+<body>
+
+<!-- The cocode.dk family frame. Without JavaScript its children show instead: a way home
+     and the language links. -->
+<cocode-head project="Weather" accent="#ffd257" on-accent="#17457f" dark>
+  <a href="https://cocode.dk">cocode.dk</a>
+  <a href="../../privacy/" hreflang="en">EN</a>
+  <span class="on">DA</span>
+</cocode-head>
+
+<div class="shell">
+
+<header class="site-nav">
+<!-- cocode-apps:nav:start -->
+<link rel="stylesheet" href="/css/cocode-nav.css">
+<a class="skip" href="#main">Spring til indhold</a>
+<nav class="cocode-nav" aria-label="Weather">
+  <a class="brand" href="/da/" data-nav="home"><img src="/img/icon.png" alt="" width="32" height="32">Weather</a>
+  <a href="/da/#how" data-nav="how">Sådan virker det</a>
+  <a href="/da/#install" data-nav="install">Installér</a>
+  <a href="https://cocode.dk/" data-nav="more">Flere apps</a>
+</nav>
+<!-- cocode-apps:nav:end -->
+</header>
+
+<main id="main" class="policy" tabindex="-1">
+  <h1>Privatlivspolitik: Weather</h1>
+  <p class="meta">Gældende fra <time datetime="2026-10-07">7. oktober 2026</time>. Politikken gælder Weather-appen til Android (<code>dk.cocode.weather</code>).</p>
+
+  <section>
+    <h2>Resumé</h2>
+    <p>Weather har ingen konto, ingen reklamer, ingen analyse og ingen server, som vi driver. Cocode, der har lavet appen, modtager ingenting fra den. Appen henter prognoser og stednavne hos en gratis vejrtjeneste, Open-Meteo, så de steder, du ser på og søger efter, når frem til Open-Meteo. Bruger du din nuværende position, giver appen også en omtrentlig position videre til Androids egen tjeneste til stednavne på telefonen. Alt andet bliver på telefonen.</p>
+  </section>
+
+  <section>
+    <h2>Hvad der indsamles</h2>
+    <p>Cocode indsamler ingen personoplysninger gennem appen. Den har ingen tilmelding og ingen server hos os at sende noget til. De eneste webadresser, den kalder, er de to hos Open-Meteo, som står længere nede. Det her håndterer appen:</p>
+    <ul>
+      <li><strong>Den tekst, du skriver i søgefeltet.</strong> Fra to tegn og opefter sendes den til Open-Meteo, så tjenesten kan finde steder, der passer. Søgning er den eneste grund til, at appen sender det, du skriver, nogen steder hen.</li>
+      <li><strong>Koordinaterne for det sted, du ser på.</strong> Det kan være et sted, du har søgt efter, et sted, du har gemt, eller det sted, der er fundet ud fra din position. De sendes med fire decimaler til Open-Meteo, så appen kan hente prognosen.</li>
+      <li><strong>Din omtrentlige position, kun hvis du beder om det.</strong> Den bruges én gang pr. tryk til at finde dit sted. Se Tilladelser.</li>
+      <li><strong>Telefonens sprogkode,</strong> for eksempel <code>en</code> eller <code>da</code>. Den følger med en søgning, så stednavnene kommer tilbage på dit sprog.</li>
+      <li><strong>Din IP-adresse og tidspunktet for hver forespørgsel.</strong> Appen forbinder direkte til Open-Meteo, så Open-Meteo kan se dem, ligesom ethvert websted, du besøger.</li>
+    </ul>
+    <p>Appen sender hverken konto, nøgle eller enheds-id med nogen forespørgsel.</p>
+  </section>
+
+  <section>
+    <h2>Servere appen kontakter</h2>
+    <p>To, begge drevet af Open-Meteo, og begge over HTTPS. Appen kontakter ingen andre servere og åbner ingen links.</p>
+
+    <h3>api.open-meteo.com: prognoser</h3>
+    <p>Henter de aktuelle forhold, prognosen time for time og prognosen for de næste syv dage. Forespørgslen indeholder det valgte steds breddegrad og længdegrad med fire decimaler og en liste over de vejrværdier, appen vil have, for eksempel temperatur, vind og nedbør. Den har også en User-Agent-header, <code>dk.cocode.weather/1.0 (Android)</code>, fordi Open-Meteo beder apps om at sige, hvem de er.</p>
+    <p>Appen spørger, når den starter, når du vælger et sted, og når du vælger Refresh. Har du lagt Weather-widgetten på startskærmen, spørger den også: cirka hver halve time (Android bestemmer det nøjagtige tidspunkt), når du trykker på dens opdateringsikon, og når du skifter sted eller enheder i appen.</p>
+
+    <h3>geocoding-api.open-meteo.com: stedsøgning</h3>
+    <p>Finder steder ud fra navn. Forespørgslen indeholder den tekst, du har skrevet, sendt når du holder en kort pause, og telefonens sprogkode. Intet fra en søgning bliver gemt, medmindre du vælger et sted blandt resultaterne. Så kommer det på din liste over gemte steder.</p>
+
+    <h3>Hvad Open-Meteo gør med det</h3>
+    <p>Open-Meteo er en uafhængig tjeneste, og appen kan hverken se eller styre, hvad den gemmer. Dens egne vilkår og oplysninger om privatliv står på <a href="https://open-meteo.com/en/terms">open-meteo.com/en/terms</a>.</p>
+
+    <h3>Androids tjeneste til stednavne (ikke en server i appen)</h3>
+    <p>Når du bruger din nuværende position, giver appen positionen til Androids indbyggede Geocoder, som gør den om til et stednavn. Tjenesten hører til din telefon. Appen kan ikke se, hvilket firmas tjeneste telefonen bruger, eller hvor den sender positionen hen, og nogle telefoner har ingen. Mangler den eller fejler den, viser appen koordinaterne i stedet for et navn.</p>
+  </section>
+
+  <section>
+    <h2>Tilladelser</h2>
+    <ul>
+      <li><strong>Internet.</strong> Til at nå de to Open-Meteo-servere ovenfor.</li>
+      <li><strong>Netværksstatus.</strong> Appen angiver tilladelsen, men bruger den ikke i sin egen kode.</li>
+      <li><strong>Omtrentlig placering.</strong> Valgfri, og appen spørger kun, når du trykker på "Use my current location" (appens egne tekster er på engelsk). Den beder om omtrentlig placering, ikke præcis, og aldrig om placering i baggrunden. Siger du nej, virker søgningen stadig. Siger du ja, beder appen Android om én position, hver gang du trykker, enten en nylig, som Android allerede har, eller en ny, og holder så op med at spørge. Widgetten og appens andre prognoseforespørgsler læser aldrig din placering. De bruger det sted, der blev gemt, sidste gang du trykkede.</li>
+    </ul>
+    <p>Appen beder ikke om andre tilladelser.</p>
+  </section>
+
+  <section>
+    <h2>Hvad der bliver på telefonen</h2>
+    <p>Appen gemmer disse ting i sin egen private lagerplads på telefonen:</p>
+    <ul>
+      <li>Dine gemte steder: navn, land, område, koordinater og tidszone. Det gælder også hvert sted, du vælger efter en søgning. Appen starter med Copenhagen gemt. Et sted, der er fundet ud fra din position, gemmes med sine koordinater og bliver erstattet af det næste, så de ikke hober sig op.</li>
+      <li>Hvilket sted der er valgt, om du bruger metriske eller imperiale enheder, og dit tema.</li>
+      <li>Den seneste prognose, appen fik for hvert sted, så den kan vise noget, når du er offline.</li>
+    </ul>
+    <p>Du fjerner et gemt sted ved at trykke på dets slet-ikon i listen Locations. Ikonet vises kun, når du har mere end ét sted gemt, og appen sletter ikke den mellemlagrede prognose for et fjernet sted. Rydder du appens data i Androids indstillinger, eller afinstallerer du appen, forsvinder alt, hvad den har gemt.</p>
+    <p>Appen tillader Androids egen sikkerhedskopiering af sine data og har ingen undtagelser. Er sikkerhedskopiering slået til på telefonen, kan filerne være med i den. Hvor kopien ligger, afgør telefonen, ikke appen.</p>
+  </section>
+
+  <section>
+    <h2>Tredjeparter</h2>
+    <ul>
+      <li><strong>Open-Meteo</strong> leverer prognoserne og stedsøgningen, som beskrevet ovenfor.</li>
+      <li><strong>Androids Geocoder</strong> giver din position et navn, som beskrevet ovenfor, og er en del af telefonen.</li>
+    </ul>
+    <p>Appen har ingen analyse, ingen reklamer og ingen fejlrapportering og bruger ikke Google Play-tjenester. Byggefilen nævner ingen af dem. Appens biblioteker er AndroidX-biblioteker til skærmen, livscyklussen og lokal lagring. Forespørgslerne sendes med den HTTP-kode, der følger med Android, ikke med et netværksbibliotek.</p>
+    <p><strong>Hjemmesiden er noget andet.</strong> Politikken handler om appen. På weather.cocode.dk sender den levende prognosevisning det, du søger efter, og koordinaterne for det sted, den viser, til Open-Meteo fra din browser, og den gemmer den seneste prognose i browserens lokale lager. Siderne henter også skrifttyper fra Google Fonts og den fælles cocode.dk-top og -bund fra brand.cocode.dk, og de leveres af GitHub Pages.</p>
+  </section>
+
+  <section>
+    <h2>Dine rettigheder</h2>
+    <p>Efter databeskyttelsesforordningen (GDPR) kan du bede om indsigt i dine oplysninger og om at få dem rettet eller slettet, og du kan bede os begrænse brugen af dem. Appen sender ingenting til Cocode, så Cocode har ingen personoplysninger om dig fra appen, og der er intet, vi kan give dig indsigt i, rette eller slette. Det, appen gemmer på din telefon, kan du selv fjerne, som beskrevet ovenfor.</p>
+    <p>Oplysninger, der er nået til Open-Meteo, ligger hos Open-Meteo, og dem skal du bruge dine rettigheder over for hos dem. Du kan også klage til <a href="https://www.datatilsynet.dk/">Datatilsynet</a>.</p>
+  </section>
+
+  <section>
+    <h2>Kontakt</h2>
+    <p>Cocode (Babak Bandpey), <a href="mailto:bb@cocode.dk">bb@cocode.dk</a>. Spørgsmål om appen eller politikken kan også stilles som <a href="https://github.com/cocodedk/weather-android/issues">issues på GitHub</a>.</p>
+  </section>
+
+  <section>
+    <h2>Ændringer</h2>
+    <p>Hvis politikken ændres, skifter datoen øverst, og dette afsnit siger, hvad der er nyt. Ældre udgaver ligger i projektets historik på <a href="https://github.com/cocodedk/weather-android">GitHub</a>.</p>
+    <p><strong>7. oktober 2026:</strong> første udgave som en side for sig. Den følger afsnittet Privacy i projektets README.</p>
+  </section>
+</main>
+
+<div class="site-foot">
+  <!-- cocode-apps:footer:start -->
+<footer class="cocode-footer">
+  <a href="https://github.com/cocodedk/weather-android">Kildekode</a> ·
+  Licens: Apache-2.0 ·
+  <a href="https://cocode.dk/">Lavet af Cocode (cocode.dk)</a>
+</footer>
+<!-- cocode-apps:footer:end -->
+</div>
+
+</div>
+
+<cocode-foot repo="cocodedk/weather-android" dark>
+  <a href="https://cocode.dk">cocode.dk</a>
+</cocode-foot>
+
+</body>
+</html>

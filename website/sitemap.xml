@@ -25,4 +25,18 @@
     <xhtml:link rel="alternate" hreflang="fa" href="https://weather.cocode.dk/fa/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://weather.cocode.dk/"/>
   </url>
+  <url>
+    <loc>https://weather.cocode.dk/privacy/</loc>
+    <lastmod>2026-10-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://weather.cocode.dk/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://weather.cocode.dk/da/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://weather.cocode.dk/privacy/"/>
+  </url>
+  <url>
+    <loc>https://weather.cocode.dk/da/privacy/</loc>
+    <lastmod>2026-10-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://weather.cocode.dk/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="da" href="https://weather.cocode.dk/da/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://weather.cocode.dk/privacy/"/>
+  </url>
 </urlset>

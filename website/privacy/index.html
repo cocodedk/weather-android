@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Privacy policy: Weather for Android</title>
+<meta name="description" content="Privacy policy for Weather for Android: no account, no ads, no analytics and no server of ours. Places you search for and the coordinates of the place you view go to Open-Meteo.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://weather.cocode.dk/privacy/">
+
+<link rel="alternate" hreflang="en" href="https://weather.cocode.dk/privacy/">
+<link rel="alternate" hreflang="da" href="https://weather.cocode.dk/da/privacy/">
+<link rel="alternate" hreflang="x-default" href="https://weather.cocode.dk/privacy/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Weather for Android">
+<meta property="og:title" content="Privacy policy: Weather for Android">
+<meta property="og:description" content="What the Weather app sends, to whom and why, and what stays on your phone.">
+<meta property="og:url" content="https://weather.cocode.dk/privacy/">
+<meta property="og:image" content="https://weather.cocode.dk/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Weather app showing 18 degrees and partly cloudy for Copenhagen, beside a seven-day forecast.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="da_DK">
+
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/policy.css">
+<link rel="stylesheet" href="https://brand.cocode.dk/v1.css">
+<script type="module" src="https://brand.cocode.dk/v1.js"></script>
+</head>
+<body>
+
+<!-- The cocode.dk family frame. Without JavaScript its children show instead: a way home
+     and the language links. -->
+<cocode-head project="Weather" accent="#ffd257" on-accent="#17457f" dark>
+  <a href="https://cocode.dk">cocode.dk</a>
+  <span class="on">EN</span>
+  <a href="../da/privacy/" hreflang="da">DA</a>
+</cocode-head>
+
+<div class="shell">
+
+<header class="site-nav">
+<!-- cocode-apps:nav:start -->
+<link rel="stylesheet" href="/css/cocode-nav.css">
+<a class="skip" href="#main">Skip to content</a>
+<nav class="cocode-nav" aria-label="Weather">
+  <a class="brand" href="/" data-nav="home"><img src="/img/icon.png" alt="" width="32" height="32">Weather</a>
+  <a href="/#how" data-nav="how">How it works</a>
+  <a href="/#install" data-nav="install">Install</a>
+  <a href="https://cocode.dk/" data-nav="more">More apps</a>
+</nav>
+<!-- cocode-apps:nav:end -->
+</header>
+
+<main id="main" class="policy" tabindex="-1">
+  <h1>Privacy policy: Weather</h1>
+  <p class="meta">Effective <time datetime="2026-10-07">7 October 2026</time>. This policy covers the Weather app for Android (<code>dk.cocode.weather</code>).</p>
+
+  <section>
+    <h2>Summary</h2>
+    <p>Weather has no account, no ads, no analytics and no server run by us. Cocode, who makes the app, receives nothing from it. The app asks a free weather service, Open-Meteo, for forecasts and for places that match what you type, so the places you view and search for reach Open-Meteo. If you choose to use your current location, the app also hands an approximate position to Android's own place-name service on your phone. Everything else stays on the phone.</p>
+  </section>
+
+  <section>
+    <h2>What is collected</h2>
+    <p>Cocode collects no personal data through the app. The app has no sign-up and no server of ours to send anything to; the only web addresses it calls are the two Open-Meteo ones listed below. This is what the app handles:</p>
+    <ul>
+      <li><strong>The text you type in the search box.</strong> From two characters on, it is sent to Open-Meteo to find matching places. Searching is the only reason the app sends your typing anywhere.</li>
+      <li><strong>The coordinates of the place you are viewing.</strong> A place you searched for, a place you saved, or the place found from your location. They go to Open-Meteo, to four decimals, to get its forecast.</li>
+      <li><strong>Your approximate location, only if you ask for it.</strong> Used once per tap, to find your place. See Permissions.</li>
+      <li><strong>Your phone's language code,</strong> for example <code>en</code> or <code>da</code>. It goes along with a search so the place names come back in your language.</li>
+      <li><strong>Your IP address and the time of each request.</strong> The app connects straight to Open-Meteo, so Open-Meteo sees them, as any website you visit would.</li>
+    </ul>
+    <p>The app adds no account, key or device identifier to any request.</p>
+  </section>
+
+  <section>
+    <h2>Servers the app contacts</h2>
+    <p>Two, both run by Open-Meteo, and both over HTTPS. The app contacts no other server and opens no links.</p>
+
+    <h3>api.open-meteo.com: forecasts</h3>
+    <p>Gets the current conditions, the hourly outlook and the seven-day forecast. The request carries the latitude and longitude of the selected place, to four decimals, and the list of weather values the app wants, such as temperature, wind and precipitation. It also carries a User-Agent header, <code>dk.cocode.weather/1.0 (Android)</code>, because Open-Meteo asks apps to identify themselves.</p>
+    <p>The app asks when it starts, when you pick a place and when you choose Refresh. If you have put the Weather widget on your home screen, the widget asks too: about every 30 minutes (Android decides the exact timing), when you tap its refresh icon, and when you change place or units in the app.</p>
+
+    <h3>geocoding-api.open-meteo.com: place search</h3>
+    <p>Finds places by name. The request carries the text you typed, sent when you pause for a moment, and your phone's language code. Nothing from a search is saved unless you pick a place from the results, which adds it to your saved places.</p>
+
+    <h3>What Open-Meteo does with it</h3>
+    <p>Open-Meteo is an independent service and the app cannot see or control what it keeps. Its own terms and privacy notice are at <a href="https://open-meteo.com/en/terms">open-meteo.com/en/terms</a>.</p>
+
+    <h3>Android's place-name service (not a server of the app)</h3>
+    <p>When you use your current location, the app passes your position to Android's built-in Geocoder to turn it into a place name. That service belongs to your phone. The app cannot tell which company's service your phone uses or where it sends the position, and some phones have none. If it is missing or fails, the app shows the coordinates as the place name.</p>
+  </section>
+
+  <section>
+    <h2>Permissions</h2>
+    <ul>
+      <li><strong>Internet.</strong> To reach the two Open-Meteo servers above.</li>
+      <li><strong>Network state.</strong> The app lists this permission, but its own code does not use it.</li>
+      <li><strong>Approximate location.</strong> Optional, and asked for only when you tap "Use my current location". The app asks for approximate location, not precise location, and never for location in the background. If you say no, search keeps working. With a yes, the app asks Android for a single position each time you tap, either a recent one Android already has or a fresh one, and then stops asking. The widget and the app's other forecast requests never read your location: they reuse the place saved at your last tap.</li>
+    </ul>
+    <p>The app asks for no other permissions.</p>
+  </section>
+
+  <section>
+    <h2>What stays on the phone</h2>
+    <p>The app keeps these in its own private storage on the phone:</p>
+    <ul>
+      <li>Your saved places: name, country, region, coordinates and time zone. This includes every place you pick from a search. The app starts with Copenhagen saved. A place found from your location is saved with its coordinates and replaced by the next one, not stacked.</li>
+      <li>Which place is selected, your choice of metric or imperial units, and your theme.</li>
+      <li>The last forecast the app received for each place, so it can show something when you are offline.</li>
+    </ul>
+    <p>To remove a saved place, tap its delete icon in the Locations list. The icon appears only while you have more than one place saved, and the app does not delete a removed place's cached forecast. Clearing the app's data in Android's settings, or uninstalling the app, removes everything the app keeps.</p>
+    <p>The app allows Android's own backup of its data, and sets no exclusions. If backup is switched on for your phone, these files can be part of it. Where that backup is stored is decided by your phone, not by the app.</p>
+  </section>
+
+  <section>
+    <h2>Third parties</h2>
+    <ul>
+      <li><strong>Open-Meteo</strong> provides the forecasts and the place search, as described above.</li>
+      <li><strong>Android's Geocoder</strong> names your location, as described above, and is part of your phone.</li>
+    </ul>
+    <p>The app has no analytics, no ads and no crash reporting, and does not use Google Play services; its build lists none of them. Its libraries are AndroidX libraries for the screen, the lifecycle and local storage. The app makes its requests with the HTTP code that comes with Android, not with a networking library.</p>
+    <p><strong>The website is separate.</strong> This policy is about the app. On weather.cocode.dk, the live forecast panel sends what you search for and the coordinates of the place it shows to Open-Meteo from your browser, and keeps the last forecast in your browser's local storage. The pages also load fonts from Google Fonts and the shared cocode.dk header and footer from brand.cocode.dk, and are served by GitHub Pages.</p>
+  </section>
+
+  <section>
+    <h2>Your rights</h2>
+    <p>Under the General Data Protection Regulation (GDPR) you can ask for access to, correction of and deletion of your data, and ask us to limit its use. The app sends nothing to Cocode, so Cocode holds no personal data about you from the app, and there is nothing for us to give you, correct or delete. What the app keeps on your phone is yours to remove, as described above.</p>
+    <p>Data that reached Open-Meteo is held by Open-Meteo, and you take up those rights with it. You can also complain to the Danish Data Protection Agency, <a href="https://www.datatilsynet.dk/english">Datatilsynet</a>.</p>
+  </section>
+
+  <section>
+    <h2>Contact</h2>
+    <p>Cocode (Babak Bandpey), <a href="mailto:bb@cocode.dk">bb@cocode.dk</a>. Questions about the app or this policy can also go to <a href="https://github.com/cocodedk/weather-android/issues">GitHub issues</a>.</p>
+  </section>
+
+  <section>
+    <h2>Changes</h2>
+    <p>If this policy changes, the date at the top changes and this section says what is new. Older versions are in the project's history on <a href="https://github.com/cocodedk/weather-android">GitHub</a>.</p>
+    <p><strong>7 October 2026:</strong> the first version as a page of its own. It follows the Privacy section of the project's README.</p>
+  </section>
+</main>
+
+<div class="site-foot">
+  <!-- cocode-apps:footer:start -->
+<footer class="cocode-footer">
+  <a href="https://github.com/cocodedk/weather-android">Source code</a> ·
+  License: Apache-2.0 ·
+  <a href="https://cocode.dk/">Made by Cocode (cocode.dk)</a>
+</footer>
+<!-- cocode-apps:footer:end -->
+</div>
+
+</div>
+
+<cocode-foot repo="cocodedk/weather-android" dark>
+  <a href="https://cocode.dk">cocode.dk</a>
+</cocode-foot>
+
+</body>
+</html>
