@@ -5,7 +5,6 @@
     <!-- Home screen widget -->
     <string name="widget_description">Vejret lige nu for det sted, du har valgt.</string>
     <string name="widget_refresh">Opdatér</string>
-    <string name="widget_loading">Henter…</string>
     <string name="widget_no_data">Tryk for at åbne Weather</string>
     <string name="widget_unavailable">Prognosen er ikke tilgængelig</string>
     <string name="temp_placeholder">--°</string>
