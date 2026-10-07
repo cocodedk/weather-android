@@ -43,36 +43,41 @@ class WeatherWidgetProvider : AppWidgetProvider() {
      * of onReceive — without it the process can be killed mid-request and the
      * widget silently keeps showing yesterday's numbers.
      */
-    private fun refresh(context: Context, manager: AppWidgetManager, ids: IntArray) {
-        if (ids.isEmpty()) return
+    private fun refresh(context: Context, manager: AppWidgetManager, requested: IntArray) {
+        if (requested.isEmpty()) return
 
-        ids.forEach { manager.updateAppWidget(it, WidgetViews.loading(context)) }
+        val ticket = publisher.begin()
+        requested.forEach { manager.updateAppWidget(it, WidgetViews.loading(context)) }
 
         val pending = goAsync()
         val appContext = context.applicationContext
         CoroutineScope(SupervisorJob()).launch {
             try {
                 val store = WeatherStore(appContext)
-                val views = when (val found = loadForWidget({ store.prefs.first() }, ForecastRepository(store))) {
-                    WidgetLoad.NoPlace -> WidgetViews.empty(appContext)
-                    // No network and no cache for this place. Say so rather than
-                    // leaving a spinner on the home screen forever.
-                    WidgetLoad.Unavailable ->
-                        WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
-                    WidgetLoad.Superseded -> return@launch
-                    is WidgetLoad.Ready -> WidgetViews.forecast(
-                        appContext,
-                        found.place,
-                        found.loaded.forecast,
-                        unitsFor(
-                            appContext.resources,
-                            imperial = found.imperial,
-                            use24Hour = DateFormat.is24HourFormat(appContext),
-                        ),
-                        found.loaded.stale,
-                    )
+                val found = loadForWidget({ store.prefs.first() }, ForecastRepository(store))
+                publisher.publish(ticket, found, { store.prefs.first() }) { draw ->
+                    val views = when (draw) {
+                        WidgetLoad.NoPlace -> WidgetViews.empty(appContext)
+                        // No network and no cache for this place. Say so rather than
+                        // leaving a spinner on the home screen forever.
+                        is WidgetLoad.Unavailable ->
+                            WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
+                        is WidgetLoad.Ready -> WidgetViews.forecast(
+                            appContext,
+                            draw.place,
+                            draw.loaded.forecast,
+                            unitsFor(
+                                appContext.resources,
+                                imperial = draw.imperial,
+                                use24Hour = DateFormat.is24HourFormat(appContext),
+                            ),
+                            draw.loaded.stale,
+                        )
+                    }
+                    // Every widget, not just the ones this refresh was asked about: an older
+                    // refresh for other widgets may have been dropped in favour of this one.
+                    ids(appContext, manager).forEach { manager.updateAppWidget(it, views) }
                 }
-                ids.forEach { manager.updateAppWidget(it, views) }
             } finally {
                 pending.finish()
             }
@@ -80,6 +85,9 @@ class WeatherWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
+        /** One for the whole process: refreshes from every broadcast take their turn through it. */
+        private val publisher = WidgetPublisher()
+
         const val ACTION_REFRESH = "dk.cocode.weather.widget.REFRESH"
 
         private fun ids(context: Context, manager: AppWidgetManager): IntArray =

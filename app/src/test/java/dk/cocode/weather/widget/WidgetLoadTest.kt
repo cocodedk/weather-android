@@ -14,7 +14,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
@@ -22,7 +21,6 @@ import java.util.concurrent.CountDownLatch
 class WidgetLoadTest {
     private val copenhagen = Place(name = "Copenhagen", latitude = 55.68, longitude = 12.57)
     private val spotA = Place(name = "A", latitude = 55.0, longitude = 12.0, isDeviceLocation = true)
-    private val spotB = spotA.copy(name = "B", latitude = 35.0, longitude = 139.0)
     private val forecast: Forecast = ForecastApi.parse("{}")
 
     private object NoCache : ForecastCache {
@@ -38,6 +36,12 @@ class WidgetLoadTest {
     )
 
     @Test
+    fun nothingSavedIsNoPlace() = runBlocking {
+        val repo = ForecastRepository(NoCache) { forecast to "{}" }
+        assertEquals(WidgetLoad.NoPlace, loadForWidget({ prefs(null).copy(places = emptyList()) }, repo))
+    }
+
+    @Test
     fun theSelectedPlaceLoadsAsReady() = runBlocking {
         val repo = ForecastRepository(NoCache) { forecast to "{}" }
         val found = loadForWidget({ prefs(spotA, imperial = true) }, repo)
@@ -47,27 +51,7 @@ class WidgetLoadTest {
     @Test
     fun noNetworkAndNoCacheIsUnavailable() = runBlocking {
         val repo = ForecastRepository(NoCache) { throw IOException("offline") }
-        assertEquals(WidgetLoad.Unavailable, loadForWidget({ prefs(copenhagen) }, repo))
-    }
-
-    @Test
-    fun aRefreshThatStartedBeforeTheSelectionChangedDoesNotDrawTheOldPlace() = runBlocking {
-        var saved = prefs(spotA)
-        val inFlight = CompletableDeferred<Unit>()
-        val answer = CompletableDeferred<Unit>()
-        val repoA = ForecastRepository(NoCache) { inFlight.complete(Unit); answer.await(); forecast to "{}" }
-        val repoB = ForecastRepository(NoCache) { forecast to "{}" }
-
-        var late: WidgetLoad? = null
-        val refreshA = launch { late = loadForWidget({ saved }, repoA) } // A starts
-        withTimeout(5_000) { inFlight.await() }
-        saved = prefs(spotB) // the phone moves on
-        val refreshB = loadForWidget({ saved }, repoB) // B completes
-        answer.complete(Unit)
-        refreshA.join() // A completes late
-
-        assertTrue(refreshB is WidgetLoad.Ready && refreshB.place == spotB)
-        assertEquals(WidgetLoad.Superseded, late)
+        assertEquals(WidgetLoad.Unavailable(copenhagen), loadForWidget({ prefs(copenhagen) }, repo))
     }
 
     @Test
