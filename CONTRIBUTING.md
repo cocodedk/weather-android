@@ -51,9 +51,14 @@ adb shell am start -n dk.cocode.weather.debug/dk.cocode.weather.MainActivity
 python3 -m http.server -d website 8099
 ```
 
-`tools/selftest.html` exercises `website/js/wx.js` against the live Open-Meteo API
-— open it through the same server (`http://localhost:8099/../tools/selftest.html`
-will not work; copy it into `website/` temporarily, or serve the repo root).
+`tools/selftest.html` exercises `website/js/wx.js` against the live Open-Meteo API.
+It needs the repository root as the server root, so serve that instead:
+
+```bash
+python3 -m http.server 8099
+```
+
+Then open http://localhost:8099/tools/selftest.html.
 
 Check every change at **360px, 768px and 1280px in all three languages**. Persian
 is RTL, so it mirrors margins and padding, not just text — it needs its own look.

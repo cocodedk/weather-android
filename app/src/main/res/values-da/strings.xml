@@ -1,8 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Weather</string>
+
+    <!-- Home screen widget -->
     <string name="widget_description">Vejret lige nu for det sted, du har valgt.</string>
     <string name="widget_refresh">Opdatér</string>
     <string name="widget_loading">Henter…</string>
     <string name="widget_no_data">Tryk for at åbne Weather</string>
+    <string name="widget_unavailable">Prognosen er ikke tilgængelig</string>
+    <string name="temp_placeholder">--°</string>
+    <string name="widget_range">H %1$s°\nL %2$s°</string>
+    <string name="widget_updated">Vejret kl. %1$s</string>
+    <string name="widget_not_updated">Ikke opdateret · %1$s</string>
+
+    <!-- Forecast screen -->
+    <string name="error_title">Prognosen kunne ikke hentes</string>
+    <string name="error_detail">Tjek, at din telefon har forbindelse til internettet, og tryk på opdateringsikonet nedenfor for at prøve igen.</string>
+    <string name="error_retry">Prøv igen</string>
+    <string name="status_updated">Vejret kl. %1$s · Open-Meteo</string>
+    <string name="status_not_updated">Kunne ikke opdatere. Viser prognosen fra %1$s.</string>
+
+    <!-- Top bar and menu -->
+    <string name="cd_change_location">Skift sted</string>
+    <string name="cd_more">Mere</string>
+    <string name="menu_units_metric">Brug °C og m/s</string>
+    <string name="menu_units_imperial">Brug °F og mph</string>
+    <string name="menu_theme_day">Brug dagtema</string>
+    <string name="menu_theme_night">Brug nattema</string>
+    <string name="menu_theme_auto">Tilpas tema efter dag og nat</string>
+    <string name="menu_refresh">Opdatér</string>
+    <string name="menu_add_widget">Tilføj widget til hjemmeskærmen</string>
+    <string name="device_location">Telefonens placering</string>
+
+    <!-- Location sheet -->
+    <string name="locations_title">Steder</string>
+    <string name="search_hint">Søg efter en by</string>
+    <string name="cd_clear_search">Ryd søgning</string>
+    <string name="search_searching">Søger…</string>
+    <string name="search_failed">Søgningen mislykkedes. Tjek din forbindelse, og prøv igen.</string>
+    <string name="search_no_match">Ingen steder passer til “%1$s”</string>
+    <string name="search_results_title">Søgeresultater</string>
+    <string name="saved_places_title">Gemte steder</string>
+    <string name="gps_use">Brug min nuværende placering</string>
+    <string name="gps_finding">Finder din placering…</string>
+    <string name="cd_remove_place">Fjern %1$s</string>
+
+    <!-- Messages shown briefly at the bottom of the screen -->
+    <string name="msg_keep_one_location">Weather skal have mindst ét gemt sted, så det sidste kan ikke fjernes.</string>
+    <string name="msg_location_denied">Du har ikke givet tilladelse til placering. Du kan stadig søge efter et sted.</string>
+    <string name="msg_location_failed">Kunne ikke hente din placering.</string>
+    <string name="msg_location_service_missing">Telefonens placeringstjeneste er ikke tilgængelig.</string>
+    <string name="msg_location_no_fix">Kunne ikke finde din placering. Tjek, at placering er slået til på telefonen, og prøv igen.</string>
+
+    <!-- Headline for the chosen day -->
+    <string name="hero_high_low">Højest %1$s° · Lavest %2$s°</string>
+    <string name="hero_range_today">%1$s · %2$s</string>
+    <string name="hero_range_day">%1$s %2$s · %3$s</string>
+    <string name="hero_precip_today">%1$s i dag</string>
+    <string name="hero_dry_day">Tør dag</string>
+    <string name="hero_precip_unknown">Ingen nedbørsdata</string>
+
+    <!-- Hour by hour and the daily list -->
+    <string name="hourly_title">Time for time</string>
+    <string name="hourly_next_24">næste 24 timer</string>
+    <string name="hourly_now">Nu</string>
+    <string name="daily_today">I dag</string>
+    <plurals name="daily_title">
+        <item quantity="one">Næste %d dag</item>
+        <item quantity="other">Næste %d dage</item>
+    </plurals>
+
+    <!-- Stat tiles -->
+    <string name="stat_feels_like">Føles som</string>
+    <string name="stat_feels_like_note">Faktisk %1$s</string>
+    <string name="stat_wind">Vind</string>
+    <string name="stat_wind_from">Vind fra %1$s</string>
+    <string name="stat_wind_note">Maks i dag %1$s</string>
+    <string name="stat_wind_day_note">Dagens kraftigste</string>
+    <string name="stat_humidity">Luftfugtighed</string>
+    <string name="stat_humidity_note">Relativ</string>
+    <string name="stat_precip">Nedbør</string>
+    <string name="stat_precip_note">Seneste 15 min\n%1$s chance i timen</string>
+    <string name="stat_precip_day_note">I alt for dagen</string>
+    <string name="stat_pressure">Lufttryk</string>
+    <string name="stat_pressure_note">Ved jordoverfladen</string>
+    <string name="stat_sunrise">Solopgang</string>
+    <string name="stat_sunrise_note">Solnedgang %1$s</string>
+    <string name="stat_high_low">Højest / lavest</string>
+    <string name="stat_high_low_note">Døgnets udsving</string>
+    <string name="stat_rain_chance">Regn eller sne</string>
+    <string name="stat_rain_chance_note">Største chance</string>
+    <string name="stat_uv">UV-indeks</string>
+
+    <!-- UV risk bands, as the World Health Organization names them -->
+    <string name="uv_low">Lav</string>
+    <string name="uv_moderate">Moderat</string>
+    <string name="uv_high">Høj</string>
+    <string name="uv_very_high">Meget høj</string>
+    <string name="uv_extreme">Ekstrem</string>
+
+    <!-- Weather conditions (WMO codes) -->
+    <string name="wmo_clear_sky">Klar himmel</string>
+    <string name="wmo_mainly_clear">Overvejende klart</string>
+    <string name="wmo_partly_cloudy">Delvist skyet</string>
+    <string name="wmo_overcast">Overskyet</string>
+    <string name="wmo_fog">Tåge</string>
+    <string name="wmo_freezing_fog">Rimtåge</string>
+    <string name="wmo_light_drizzle">Let støvregn</string>
+    <string name="wmo_drizzle">Støvregn</string>
+    <string name="wmo_dense_drizzle">Tæt støvregn</string>
+    <string name="wmo_freezing_drizzle">Frysende støvregn</string>
+    <string name="wmo_light_rain">Let regn</string>
+    <string name="wmo_rain">Regn</string>
+    <string name="wmo_heavy_rain">Kraftig regn</string>
+    <string name="wmo_freezing_rain">Frysende regn</string>
+    <string name="wmo_light_snow">Let sne</string>
+    <string name="wmo_snow">Sne</string>
+    <string name="wmo_heavy_snow">Kraftig sne</string>
+    <string name="wmo_snow_grains">Snekorn</string>
+    <string name="wmo_light_showers">Lette byger</string>
+    <string name="wmo_showers">Byger</string>
+    <string name="wmo_violent_showers">Kraftige byger</string>
+    <string name="wmo_snow_showers">Snebyger</string>
+    <string name="wmo_heavy_snow_showers">Kraftige snebyger</string>
+    <string name="wmo_thunderstorm">Tordenvejr</string>
+    <string name="wmo_thunderstorm_hail">Tordenvejr med hagl</string>
+    <string name="wmo_heavy_thunderstorm">Kraftigt tordenvejr</string>
+    <string name="wmo_unknown">Ukendt</string>
+
+    <!-- Wind direction, 16 points from north, clockwise. Danish writes east as Ø and west as V. -->
+    <string-array name="compass_points">
+        <item>N</item>
+        <item>NNØ</item>
+        <item>NØ</item>
+        <item>ØNØ</item>
+        <item>Ø</item>
+        <item>ØSØ</item>
+        <item>SØ</item>
+        <item>SSØ</item>
+        <item>S</item>
+        <item>SSV</item>
+        <item>SV</item>
+        <item>VSV</item>
+        <item>V</item>
+        <item>VNV</item>
+        <item>NV</item>
+        <item>NNV</item>
+    </string-array>
+
+    <!-- Twelve-hour clock, used only when the phone is set to a 12-hour clock -->
+    <string name="clock_am">am</string>
+    <string name="clock_pm">pm</string>
+
+    <!-- About screen -->
+    <string name="about_title">Om Weather</string>
+    <string name="about_back">Tilbage</string>
+    <string name="about_name_title">Navn og version</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_check_updates">Se den nyeste version</string>
+    <string name="about_check_updates_note">Det åbner siden med den nyeste version i din browser. Weather søger aldrig selv efter opdateringer.</string>
+    <string name="about_what_title">Hvad appen kan</string>
+    <string name="about_what">Weather viser vejret lige nu, de næste 24 timer og en prognose for de næste 7 dage for ethvert sted, du vælger. Søg efter en by ved navn, eller lad appen bruge telefonens placering. Prognoserne kommer fra Open-Meteo.</string>
+    <string name="about_privacy_title">Privatliv</string>
+    <string name="about_privacy">Weather har ingen konto, ingen reklamer og ingen indsamling af brugsstatistik, og appen sender intet til Cocode. For at vise en prognose spørger den Open-Meteo, en gratis vejrtjeneste, som andre driver. Open-Meteo kan derfor se, hvilke steder du ser og søger efter. Det er valgfrit at bruge din placering, og appen spørger kun, når du trykker på “Brug min nuværende placering”. Dine gemte steder og indstillinger gemmes på din telefon. Hvis sikkerhedskopiering er slået til på din telefon, kan Android tage dem med i sikkerhedskopien, og det er din telefon, der bestemmer, hvor den gemmes.</string>
+    <string name="about_privacy_link">Læs privatlivspolitikken</string>
+    <string name="about_links_title">Links</string>
+    <string name="about_website">Åbn hjemmesiden</string>
+    <string name="about_source">Se kildekoden på GitHub</string>
+    <string name="about_report">Meld et problem på GitHub</string>
+    <string name="about_no_browser">Ingen app på telefonen kunne åbne linket.</string>
+    <string name="about_credits">Kilder og licenser</string>
+    <string name="about_credits_data">Vejrdata og stedsøgning kommer fra Open-Meteo.com og bruges på deres gratis vilkår for ikke-kommerciel brug.</string>
+    <string name="about_credits_license">Weather er fri software, udgivet under Apache License 2.0.</string>
+    <string name="about_made_by">Lavet af Cocode (cocode.dk)</string>
 </resources>

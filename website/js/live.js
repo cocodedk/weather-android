@@ -18,12 +18,15 @@
   if (I.wmo) { WX.setLabels(I.wmo); }
 
   var EN = {
-    feels: 'Feels like', wind: 'Wind', humidity: 'Humidity', rain: 'Rain chance',
-    now: 'Now', today: 'Today', localTime: 'local time', updated: 'updated',
+    feels: 'Feels like', wind: 'Wind', humidity: 'Humidity',
+    rain: 'Peak chance of rain or snow today',
+    now: 'Now', today: 'Today', localTime: 'local time', updated: 'Conditions as of',
     searching: 'Searching…', noMatch: 'No places match that',
     searchFailed: 'Search is unavailable right now',
-    offline: 'Offline, showing the last saved forecast',
-    failed: 'Could not reach the forecast'
+    offline: 'Could not update. Showing the forecast from {when}.',
+    failed: 'Could not load the forecast',
+    failedHint: 'Check your connection and try again.',
+    unknown: 'Unknown'
   };
   var t = {};
   for (var k in EN) {
@@ -33,6 +36,7 @@
   }
 
   var LANG = document.documentElement.getAttribute('lang') || 'en';
+  WX.setUnknown(t.unknown);
 
   /* The glow behind the panel is the current condition, as light. */
   var GLOW = {
@@ -119,8 +123,11 @@
     var status = $('wx-status');
     status.className = 'wx-status' + (stale ? ' is-stale' : '');
     /* Labelled, because an unadorned time sits right beside the location's own
-       clock and the two are otherwise indistinguishable. */
-    status.textContent = stale ? t.offline : t.updated + ' ' + WX.clock(c.time);
+       clock and the two are otherwise indistinguishable. A saved forecast gets its
+       date too, since it can be days old. */
+    status.textContent = stale
+      ? t.offline.replace('{when}', WX.dateLabel(c.time) + ((I.ui && I.ui.whenSep) || ', ') + WX.clock(c.time))
+      : t.updated + ' ' + WX.clock(c.time);
 
     var html = '';
     for (var i = start; i < Math.min(start + 12, model.hourly.length); i++) {
@@ -128,7 +135,7 @@
       var pp = h.precipitation_probability;
       var dry = (pp === null || pp === undefined || pp < 5) ? ' is-dry' : '';
       html += '<li class="hour">' +
-        '<span class="hour-t">' + (i === start ? t.now : WX.hourLabel(h.time)) + '</span>' +
+        '<span class="hour-t">' + (i === start && !stale ? t.now : WX.hourLabel(h.time)) + '</span>' +
         svg(WX.icon(h.weather_code, h.is_day), 'hour-i') +
         '<span class="hour-d">' + WX.temp(h.temperature_2m) + '°</span>' +
         '<span class="hour-p' + dry + '">' + WX.percent(pp) + '</span>' +
@@ -140,7 +147,7 @@
     for (var k = 0; k < model.daily.length; k++) {
       var d = model.daily[k];
       html += '<li class="day">' +
-        '<span class="day-n">' + (k === 0 ? t.today : WX.weekday(d.time)) +
+        '<span class="day-n">' + (k === 0 && !stale ? t.today : WX.weekday(d.time)) +
         '<span class="day-sub">' + WX.dateLabel(d.time) + '</span></span>' +
         svg(WX.icon(d.weather_code, 1), 'day-i') +
         '<span class="day-p">' + WX.percent(d.precipitation_probability_max) + '</span>' +
@@ -151,10 +158,10 @@
     $('wx-days').innerHTML = html;
   }
 
-  function failed(message) {
+  function failed() {
     var status = $('wx-status');
     status.className = 'wx-status is-error';
-    status.textContent = message;
+    status.textContent = t.failedHint;
     $('wx-cond').textContent = t.failed;
   }
 
@@ -167,7 +174,7 @@
       $('wx-panel').classList.remove('is-loading');
       var cached = WX.loadCached();
       if (cached) { render(cached, true); }
-      else { failed(String(err && err.message ? err.message : err)); }
+      else { failed(); }
     });
   }
 

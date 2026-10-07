@@ -9,27 +9,30 @@ window.WXI18N = {
     feels: 'Føles som',
     wind: 'Vind',
     humidity: 'Luftfugtighed',
-    rain: 'Regn i dag',
+    rain: 'Største chance for regn eller sne i dag',
     now: 'Nu',
     today: 'I dag',
-    updated: 'opdateret',
+    updated: 'Vejret kl.',
     localTime: 'lokal tid',
     searching: 'Søger…',
     noMatch: 'Ingen steder passer på det',
     searchFailed: 'Søgningen er ikke tilgængelig lige nu',
-    offline: 'Offline, viser sidst gemte prognose',
-    failed: 'Kunne ikke hente prognosen'
+    offline: 'Kunne ikke opdatere. Viser prognosen fra {when}.',
+    failed: 'Prognosen kunne ikke hentes',
+    failedHint: 'Tjek din forbindelse, og prøv igen.',
+    unknown: 'Ukendt'
   },
   wmo: {
     0: 'Klar himmel', 1: 'Overvejende klart', 2: 'Delvist skyet', 3: 'Overskyet',
     45: 'Tåge', 48: 'Rimtåge',
     51: 'Let støvregn', 53: 'Støvregn', 55: 'Tæt støvregn',
-    56: 'Let isslag', 57: 'Isslag',
+    56: 'Frysende støvregn', 57: 'Frysende støvregn',
     61: 'Let regn', 63: 'Regn', 65: 'Kraftig regn',
-    66: 'Let isslag', 67: 'Isslag',
+    66: 'Frysende regn', 67: 'Frysende regn',
     71: 'Let sne', 73: 'Sne', 75: 'Kraftig sne', 77: 'Snekorn',
     80: 'Lette byger', 81: 'Byger', 82: 'Kraftige byger',
     85: 'Snebyger', 86: 'Kraftige snebyger',
-    95: 'Tordenvejr', 96: 'Tordenvejr med hagl', 99: 'Tordenvejr med hagl'
+    95: 'Tordenvejr', 96: 'Tordenvejr med hagl', 97: 'Kraftigt tordenvejr',
+    99: 'Tordenvejr med hagl'
   }
 };

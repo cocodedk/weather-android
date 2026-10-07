@@ -30,23 +30,25 @@ Android 8.0 (API 26) or newer.
 
 ## Features
 
-- **Any location.** Type-ahead search over Open-Meteo's geocoder. Country and
-  region are shown, so the dozen places that share a name stay tellable apart.
-- **Device GPS.** One tap resolves your coordinates and reverse-geocodes them to a
-  place name, falling back to coordinates where no geocoder backend exists.
-- **Saved locations.** Switch between them; the list persists. The GPS entry
-  updates in place instead of stacking a new row per fix.
-- **The right local time.** Each location shows its own wall clock and its own
-  day/night icons, taken from the API's UTC offset — Tokyo reads as Tokyo even
-  from Denmark.
+- **Any location.** Start typing a city name to see matching places. Country and
+  region are shown, so you can tell places with the same name apart.
+- **Your location.** One tap finds your coordinates and asks Android for a place name.
+  If Android has no naming service on your phone, or it fails, the app shows the
+  coordinates instead. Location access is optional, and search works without it.
+- **Saved locations.** Switch between them; the list is kept on your phone. The entry
+  for your own location updates in place instead of adding a new row each time.
+- **The right local time.** Each location shows its own local time, with weather icons
+  that show daytime or nighttime there. Tokyo reads as Tokyo even from Denmark.
 - **Seven days, selectable.** Tap a day and the headline, the six stat tiles and
-  the hourly strip all retarget to it.
+  the hourly strip all switch to it.
 - **Home screen widget.** Current conditions for the selected location, in the
   app's own artwork. Follows whatever place is selected in the app, refreshes
   every half hour, and taps through to the full forecast.
-- **Metric or imperial.** Converted on the client, so switching needs no refetch.
-- **Works offline.** The last successful response is cached per location and shown
-  with a stale marker when the network is unavailable.
+- **Metric or imperial.** Units are converted on your device. Changing units also
+  refreshes any installed widgets.
+- **Works without a connection.** If the forecast cannot be updated, the app shows
+  the last forecast it saved for that place and says when it is from.
+- **English and Danish.** The app follows your phone's language.
 - **Nothing to sign up for.** No API key, no account, no analytics, no ads.
 
 ## Privacy
@@ -66,6 +68,10 @@ the phone, as the code stands:
   that it needs a backend service some devices and ROMs lack, and the app cannot say
   whether or where that service sends the coordinates. If it is missing or fails, the
   app uses the coordinates as the name.
+- **Links.** The About screen has buttons that open web pages in your browser: the
+  website, the privacy policy, the source code, the issue tracker and the page with
+  the latest version. A page opens only when you tap its button, and your browser, not the app,
+  contacts it. The app never checks for updates by itself.
 
 Saved places, the selected place, the unit and theme preferences and the last forecast
 per place are stored in the app's private storage on the device. The manifest allows
