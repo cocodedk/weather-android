@@ -1,5 +1,6 @@
 package dk.cocode.weather.ui
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -35,6 +35,8 @@ import dk.cocode.weather.ui.theme.LocalPalette
 @Composable
 fun ScreenBody(
     state: WeatherUiState,
+    /** Held by the caller, so the forecast keeps its place while the About screen is open. */
+    scrollState: ScrollState,
     onSelectDay: (Int) -> Unit,
     onRefresh: () -> Unit,
 ) {
@@ -44,7 +46,7 @@ fun ScreenBody(
 
     when {
         // A stale cached forecast still renders normally; only the status line says so.
-        forecast != null -> Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+        forecast != null -> Column(Modifier.fillMaxSize().verticalScroll(scrollState)) {
             Spacer(Modifier.height(8.dp))
             Hero(forecast, state.dayIndex, units)
             Spacer(Modifier.height(18.dp))

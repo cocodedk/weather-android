@@ -3,6 +3,7 @@ package dk.cocode.weather.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -41,6 +42,11 @@ fun WeatherScreen(
     val snackbars = remember { SnackbarHostState() }
     var sheetOpen by remember { mutableStateOf(false) }
     var aboutOpen by rememberSaveable { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
+
+    // The scroll state lives here, above the About switch below, so closing About returns to
+    // the same spot. A different place starts at the top, as it did before.
+    LaunchedEffect(state.selected?.key) { scrollState.scrollTo(0) }
 
     LaunchedEffect(state.message) {
         state.message?.let {
@@ -76,7 +82,7 @@ fun WeatherScreen(
             onRefresh = onRefresh,
             modifier = Modifier.fillMaxSize().padding(padding),
         ) {
-            ScreenBody(state, onSelectDay, onRefresh)
+            ScreenBody(state, scrollState, onSelectDay, onRefresh)
         }
     }
 

@@ -67,6 +67,11 @@ fun AboutScreen(onBack: () -> Unit) {
             )
         }
 
+        // Fixed under the title, not in the scrolling part, so it is seen whichever button was tapped.
+        if (noBrowser) {
+            AboutBody(R.string.about_no_browser, Modifier.padding(horizontal = 20.dp, vertical = 8.dp))
+        }
+
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp)) {
             AboutHeading(R.string.about_name_title, Modifier.padding(top = 12.dp))
             Text(
@@ -93,7 +98,6 @@ fun AboutScreen(onBack: () -> Unit) {
             AboutButton(R.string.about_website) { open(AboutLink.Website) }
             AboutButton(R.string.about_source) { open(AboutLink.Source) }
             AboutButton(R.string.about_report) { open(AboutLink.Issues) }
-            if (noBrowser) AboutBody(R.string.about_no_browser)
 
             AboutHeading(R.string.about_credits)
             AboutBody(R.string.about_credits_data)
