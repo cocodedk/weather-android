@@ -4,17 +4,18 @@ import dk.cocode.weather.data.ForecastRepository
 import dk.cocode.weather.data.Place
 import dk.cocode.weather.data.WeatherStore
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * How long a refresh may fetch. The broadcast that started it is held open with goAsync(), and
- * Android gives it about ten seconds before it counts as stuck.
+ * The broadcast that starts a refresh is held open with goAsync(), and Android gives it about ten
+ * seconds before it counts as stuck. A whole refresh gets [WIDGET_REFRESH_MS]; the fetch inside
+ * it gets [WIDGET_FETCH_MS], which leaves time to draw the saved forecast when the fetch gives up.
  */
-const val WIDGET_DEADLINE_MS = 8_000L
+const val WIDGET_REFRESH_MS = 9_000L
+const val WIDGET_FETCH_MS = 7_000L
 
 /** What a widget refresh found, before any view is built from it. */
 sealed interface WidgetLoad {
@@ -44,14 +45,12 @@ sealed interface WidgetLoad {
 suspend fun loadForWidget(
     readPrefs: suspend () -> WeatherStore.Prefs,
     repo: ForecastRepository,
-    deadlineMs: Long = WIDGET_DEADLINE_MS,
+    deadlineMs: Long = WIDGET_FETCH_MS,
 ): WidgetLoad {
     val prefs = readPrefs()
     val place = prefs.selected ?: return WidgetLoad.NoPlace
     val loaded = try {
-        withTimeout(deadlineMs) { repo.load(place) }
-    } catch (e: TimeoutCancellationException) {
-        repo.cached(place)
+        withTimeoutOrNull(deadlineMs) { repo.load(place) } ?: repo.cached(place)
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
@@ -97,5 +96,23 @@ class WidgetPublisher(private val lock: Mutex = Mutex()) {
         val views = surface.build(found)
         surface.allIds().forEach { surface.update(it, views) }
         true
+    }
+}
+
+/**
+ * One whole refresh, from loading to drawing. If it has not finished within [overallMs] (a stuck
+ * lock or storage read, say) it gives up and draws nothing more.
+ */
+suspend fun <V> refreshWidget(
+    ticket: Long,
+    publisher: WidgetPublisher,
+    readPrefs: suspend () -> WeatherStore.Prefs,
+    repo: ForecastRepository,
+    surface: WidgetSurface<V>,
+    overallMs: Long = WIDGET_REFRESH_MS,
+    fetchMs: Long = WIDGET_FETCH_MS,
+) {
+    withTimeoutOrNull(overallMs) {
+        publisher.publish(ticket, loadForWidget(readPrefs, repo, fetchMs), readPrefs, surface)
     }
 }

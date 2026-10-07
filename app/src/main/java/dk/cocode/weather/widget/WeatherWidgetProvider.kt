@@ -55,7 +55,6 @@ class WeatherWidgetProvider : AppWidgetProvider() {
         CoroutineScope(SupervisorJob()).launch {
             try {
                 val store = WeatherStore(appContext)
-                val found = loadForWidget({ store.prefs.first() }, ForecastRepository(store))
                 val surface = object : WidgetSurface<RemoteViews> {
                     override fun build(found: WidgetLoad): RemoteViews = when (found) {
                         WidgetLoad.NoPlace -> WidgetViews.empty(appContext)
@@ -80,7 +79,7 @@ class WeatherWidgetProvider : AppWidgetProvider() {
 
                     override fun update(id: Int, views: RemoteViews) = manager.updateAppWidget(id, views)
                 }
-                publisher.publish(ticket, found, { store.prefs.first() }, surface)
+                refreshWidget(ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface)
             } finally {
                 pending.finish()
             }
