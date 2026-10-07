@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.widget.RemoteViews
+import androidx.core.content.pm.PackageInfoCompat
 import dk.cocode.weather.R
 import dk.cocode.weather.data.ForecastRepository
 import dk.cocode.weather.data.WeatherStore
@@ -57,6 +58,18 @@ class WeatherWidgetProvider : AppWidgetProvider() {
         CoroutineScope(SupervisorJob()).launch {
             try {
                 val store = WeatherStore(appContext)
+                // Kept in each widget's own options: system calls, no stored data to read. The app version
+                // is part of the mark because an update clears a widget's views but keeps its options.
+                val version = PackageInfoCompat.getLongVersionCode(
+                    appContext.packageManager.getPackageInfo(appContext.packageName, 0),
+                )
+                val marks = DrawnMarks(
+                    version,
+                    read = { id -> manager.getAppWidgetOptions(id).getLong(DRAWN_VERSION_OPTION, DrawnMarks.NEVER) },
+                    write = { id, v ->
+                        manager.updateAppWidgetOptions(id, Bundle().apply { putLong(DRAWN_VERSION_OPTION, v) })
+                    },
+                )
                 val surface = object : WidgetSurface<RemoteViews> {
                     override fun build(found: WidgetLoad): RemoteViews = when (found) {
                         WidgetLoad.NoPlace -> WidgetViews.empty(appContext)
@@ -82,12 +95,11 @@ class WeatherWidgetProvider : AppWidgetProvider() {
 
                     override fun allIds(): IntArray = ids(appContext, manager)
 
-                    // Kept in the widget's own options: a system call, no stored data to read.
-                    override fun isDrawn(id: Int): Boolean = manager.getAppWidgetOptions(id).getBoolean(DRAWN_OPTION)
+                    override fun isDrawn(id: Int): Boolean = marks.isDrawn(id)
 
                     override fun update(id: Int, views: RemoteViews) {
                         manager.updateAppWidget(id, views)
-                        if (!isDrawn(id)) manager.updateAppWidgetOptions(id, Bundle().apply { putBoolean(DRAWN_OPTION, true) })
+                        marks.markDrawn(id)
                     }
                 }
                 refreshWidget(ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface, startedNanos)
@@ -103,8 +115,8 @@ class WeatherWidgetProvider : AppWidgetProvider() {
 
         const val ACTION_REFRESH = "dk.cocode.weather.widget.REFRESH"
 
-        /** Set in a widget's options once a full view has been drawn on it. */
-        private const val DRAWN_OPTION = "dk.cocode.weather.drawn"
+        /** Set in a widget's options to the app version (versionCode) a full view was last drawn on it at. */
+        private const val DRAWN_VERSION_OPTION = "dk.cocode.weather.drawnVersion"
 
         private fun ids(context: Context, manager: AppWidgetManager): IntArray =
             manager.getAppWidgetIds(ComponentName(context, WeatherWidgetProvider::class.java))

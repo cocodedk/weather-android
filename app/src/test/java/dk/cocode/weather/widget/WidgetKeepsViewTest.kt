@@ -65,6 +65,32 @@ class WidgetKeepsViewTest {
     }
 
     @Test
+    fun aWidgetLastDrawnByAnEarlierVersionGetsThePlaceholderWhenItsRefreshTimesOut() = runBlocking {
+        // An update clears the widget's views but keeps its options: drawn at version 7, now running 8.
+        val marks = FakeSurface.versionedMarks(running = 8, drawnAt = mapOf(1 to 7L))
+        val surface = FakeSurface(intArrayOf(1), marks = marks)
+        val publisher = WidgetPublisher()
+        val stuckPrefs: suspend () -> WeatherStore.Prefs = { delay(5_000); prefs() }
+
+        refreshWidget(publisher.begin(), publisher, stuckPrefs, answering, surface, overallMs = 400)
+
+        assertEquals(listOf(1 to "placeholder"), surface.updates)
+        assertTrue(marks.isDrawn(1)) // and is now marked as drawn at version 8
+    }
+
+    @Test
+    fun aWidgetDrawnAtTheRunningVersionIsLeftAloneWhenItsRefreshTimesOut() = runBlocking {
+        val marks = FakeSurface.versionedMarks(running = 8, drawnAt = mapOf(1 to 8L))
+        val surface = FakeSurface(intArrayOf(1), marks = marks)
+        val publisher = WidgetPublisher()
+        val stuckPrefs: suspend () -> WeatherStore.Prefs = { delay(5_000); prefs() }
+
+        refreshWidget(publisher.begin(), publisher, stuckPrefs, answering, surface, overallMs = 400)
+
+        assertEquals(noUpdates, surface.updates)
+    }
+
+    @Test
     fun onceAWidgetHasBeenDrawnALaterRefreshThatTimesOutLeavesItAlone() = runBlocking {
         val surface = FakeSurface(intArrayOf(1), neverDrawn = setOf(1))
         val publisher = WidgetPublisher()
