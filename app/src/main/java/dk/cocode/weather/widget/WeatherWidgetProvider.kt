@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.text.format.DateFormat
+import android.widget.RemoteViews
 import dk.cocode.weather.R
 import dk.cocode.weather.data.ForecastRepository
 import dk.cocode.weather.data.WeatherStore
@@ -55,8 +56,8 @@ class WeatherWidgetProvider : AppWidgetProvider() {
             try {
                 val store = WeatherStore(appContext)
                 val found = loadForWidget({ store.prefs.first() }, ForecastRepository(store))
-                publisher.publish(ticket, found, { store.prefs.first() }) { draw ->
-                    val views = when (draw) {
+                val surface = object : WidgetSurface<RemoteViews> {
+                    override fun build(found: WidgetLoad): RemoteViews = when (found) {
                         WidgetLoad.NoPlace -> WidgetViews.empty(appContext)
                         // No network and no cache for this place. Say so rather than
                         // leaving a spinner on the home screen forever.
@@ -64,20 +65,22 @@ class WeatherWidgetProvider : AppWidgetProvider() {
                             WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
                         is WidgetLoad.Ready -> WidgetViews.forecast(
                             appContext,
-                            draw.place,
-                            draw.loaded.forecast,
+                            found.place,
+                            found.loaded.forecast,
                             unitsFor(
                                 appContext.resources,
-                                imperial = draw.imperial,
+                                imperial = found.imperial,
                                 use24Hour = DateFormat.is24HourFormat(appContext),
                             ),
-                            draw.loaded.stale,
+                            found.loaded.stale,
                         )
                     }
-                    // Every widget, not just the ones this refresh was asked about: an older
-                    // refresh for other widgets may have been dropped in favour of this one.
-                    ids(appContext, manager).forEach { manager.updateAppWidget(it, views) }
+
+                    override fun allIds(): IntArray = ids(appContext, manager)
+
+                    override fun update(id: Int, views: RemoteViews) = manager.updateAppWidget(id, views)
                 }
+                publisher.publish(ticket, found, { store.prefs.first() }, surface)
             } finally {
                 pending.finish()
             }

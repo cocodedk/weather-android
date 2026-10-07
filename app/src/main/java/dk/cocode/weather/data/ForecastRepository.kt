@@ -19,6 +19,10 @@ class ForecastRepository(
 
     data class Loaded(val forecast: Forecast, val stale: Boolean)
 
+    /** The saved forecast for [place], marked stale, or null when there is none. */
+    suspend fun cached(place: Place): Loaded? =
+        cache.cachedForecast(place.cacheKey)?.let { Loaded(it, stale = true) }
+
     suspend fun load(place: Place): Loaded {
         return try {
             val (forecast, body) = fetch(place)

@@ -8,6 +8,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -15,6 +16,20 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Collections
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicInteger
+
+/** A mutex that says when somebody asks for it, before they start waiting. */
+private class SpyMutex(private val onAsked: (Int) -> Unit) : Mutex by Mutex() {
+    private val inner = Mutex()
+    private val asks = AtomicInteger()
+
+    override suspend fun lock(owner: Any?) {
+        onAsked(asks.incrementAndGet())
+        inner.lock(owner)
+    }
+
+    override fun unlock(owner: Any?) = inner.unlock(owner)
+}
 
 class WidgetPublisherTest {
     private val spotA = Place(name = "A", latitude = 55.0, longitude = 12.0, isDeviceLocation = true)
@@ -28,63 +43,71 @@ class WidgetPublisherTest {
         places = listOf(selected), selectedKey = selected.key, imperial = false, theme = "auto",
     )
 
-    /** What reached the home screen, in order. */
-    private val drawn = Collections.synchronizedList(mutableListOf<Place?>())
-    private val draw: (WidgetLoad) -> Unit = { drawn += it.place }
-
     @Test
     fun aRefreshThatPassedTheCheckFinishesDrawingBeforeANewerOneDraws() = runBlocking {
-        val publisher = WidgetPublisher()
+        val bAsked = CompletableDeferred<Unit>()
+        val publisher = WidgetPublisher(SpyMutex { count -> if (count == 2) bAsked.complete(Unit) })
+        val drawn = Collections.synchronizedList(mutableListOf<Pair<Int, String>>())
         var saved = prefs(spotA)
-        val drawing = CompletableDeferred<Unit>()
+
+        val inDraw = CompletableDeferred<Unit>()
         val resume = CountDownLatch(1)
+        val surfaceA = FakeSurface(intArrayOf(1), log = drawn, beforeUpdate = {
+            inDraw.complete(Unit)
+            resume.await() // A stalls in the middle of drawing
+        })
+        val surfaceB = FakeSurface(intArrayOf(1), log = drawn)
 
-        val ticketA = publisher.begin()
-        val refreshA = async(Dispatchers.Default) {
-            // A passes the check, then stalls in the middle of drawing.
-            publisher.publish(ticketA, ready(spotA), { saved }) { found ->
-                drawing.complete(Unit)
-                resume.await()
-                draw(found)
+        try {
+            val refreshA = async(Dispatchers.Default) {
+                publisher.publish(publisher.begin(), ready(spotA), { saved }, surfaceA)
             }
+            withTimeout(5_000) { inDraw.await() }
+
+            saved = prefs(spotB) // the phone moves on
+            val ticketB = publisher.begin()
+            val refreshB = async(Dispatchers.Default) { publisher.publish(ticketB, ready(spotB), { saved }, surfaceB) }
+            // B asked for the lock while A still holds it. (Without a lock, B never asks and this fails.)
+            withTimeout(5_000) { bAsked.await() }
+            assertEquals(emptyList<Pair<Int, String>>(), drawn.toList()) // nothing drawn yet: A is mid-draw
+
+            resume.countDown() // A resumes
+            withTimeout(5_000) { refreshA.await(); refreshB.await() }
+            assertEquals(listOf(1 to "A", 1 to "B"), drawn.toList()) // B is the last on screen
+        } finally {
+            resume.countDown()
         }
-        withTimeout(5_000) { drawing.await() }
-
-        saved = prefs(spotB) // the phone moves on
-        val ticketB = publisher.begin()
-        val refreshB = async(Dispatchers.Default) { publisher.publish(ticketB, ready(spotB), { saved }, draw) }
-        Thread.sleep(200) // B is ready to draw while A is still mid-draw
-        resume.countDown() // A resumes
-        refreshA.await()
-        refreshB.await()
-
-        assertEquals(listOf<Place?>(spotA, spotB), drawn.toList()) // B is the last on screen
     }
 
     @Test
-    fun aRefreshThatIsNoLongerTheNewestDrawsNothing() = runBlocking {
+    fun theNewestRefreshDrawsOnEveryWidgetEvenOnesAnOlderRefreshWasAskedAbout() = runBlocking {
         val publisher = WidgetPublisher()
-        val ticketA = publisher.begin()
-        val ticketB = publisher.begin() // a newer refresh has started
+        val surface = FakeSurface(intArrayOf(11, 12, 13))
+        val askedAboutEleven = publisher.begin()
+        val askedAboutTwelve = publisher.begin()
 
-        assertFalse(publisher.publish(ticketA, ready(spotA), { prefs(spotA) }, draw))
-        assertTrue(publisher.publish(ticketB, ready(spotA), { prefs(spotA) }, draw))
-        assertEquals(listOf<Place?>(spotA), drawn.toList())
+        assertFalse(publisher.publish(askedAboutEleven, ready(spotA), { prefs(spotA) }, surface))
+        assertEquals(emptyList<Pair<Int, String>>(), surface.updates)
+
+        assertTrue(publisher.publish(askedAboutTwelve, ready(spotA), { prefs(spotA) }, surface))
+        assertEquals(listOf(11 to "A", 12 to "A", 13 to "A"), surface.updates)
     }
 
     @Test
     fun aRefreshForAPlaceThatIsNoLongerSelectedDrawsNothing() = runBlocking {
         val publisher = WidgetPublisher()
-        val ticket = publisher.begin()
+        val surface = FakeSurface(intArrayOf(1))
 
-        assertFalse(publisher.publish(ticket, ready(spotA), { prefs(spotB) }, draw))
-        assertEquals(emptyList<Place?>(), drawn.toList())
+        assertFalse(publisher.publish(publisher.begin(), ready(spotA), { prefs(spotB) }, surface))
+        assertEquals(emptyList<Pair<Int, String>>(), surface.updates)
     }
 
     @Test
     fun theNewestRefreshForTheSelectedPlaceDraws() = runBlocking {
         val publisher = WidgetPublisher()
-        assertTrue(publisher.publish(publisher.begin(), ready(spotA), { prefs(spotA) }, draw))
-        assertEquals(listOf<Place?>(spotA), drawn.toList())
+        val surface = FakeSurface(intArrayOf(1))
+
+        assertTrue(publisher.publish(publisher.begin(), ready(spotA), { prefs(spotA) }, surface))
+        assertEquals(listOf(1 to "A"), surface.updates)
     }
 }
