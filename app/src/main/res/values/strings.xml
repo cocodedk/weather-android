@@ -90,7 +90,7 @@
     <string name="stat_humidity_note">Relative</string>
     <string name="stat_precip">Precipitation</string>
     <!-- %1$s is a percentage. -->
-    <string name="stat_precip_note">Last 15 min · %1$s chance</string>
+    <string name="stat_precip_note">15 min · %1$s chance</string>
     <string name="stat_precip_day_note">Total for the day</string>
     <string name="stat_pressure">Pressure</string>
     <string name="stat_pressure_note">At ground level</string>
