@@ -84,6 +84,21 @@
 
 <div class="shell">
 
+<header class="site-nav">
+<!-- cocode-apps:nav:start -->
+<link rel="stylesheet" href="/css/cocode-nav.css">
+<a class="skip" href="#main">Skip to content</a>
+<nav class="cocode-nav" aria-label="Weather">
+  <a class="brand" href="/" data-nav="home" aria-current="page"><img src="/img/icon.png" alt="" width="32" height="32">Weather</a>
+  <a href="/#how" data-nav="how">How it works</a>
+  <a href="/#install" data-nav="install">Install</a>
+  <a href="https://cocode.dk/" data-nav="more">More apps</a>
+</nav>
+<!-- cocode-apps:nav:end -->
+</header>
+
+<main id="main" tabindex="-1">
+
 <div class="hero-grid">
 
   <header class="hero">
@@ -134,9 +149,7 @@
 
 </div>
 
-<main>
-
-<section>
+<section id="how">
   <h2>What it does</h2>
   <p class="sub">
     The same six readings, the same 24-hour strip and the same seven days the TV
@@ -206,11 +219,17 @@
   </div>
 </section>
 
-<section>
+<section id="install">
   <h2>Get it</h2>
   <p class="sub">Android 8.0 or newer. The APK is signed and attached to every release.</p>
+  <!-- cocode-apps:install:start -->
+<ul class="install" role="list">
+  <li><p class="fdroid-soon">Coming to F-Droid</p></li>
+  <li><a href="https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk">Download the APK from GitHub</a></li>
+  <li><a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cocodedk/weather-android">Auto-update the GitHub APK with Obtainium</a></li>
+</ul>
+<!-- cocode-apps:install:end -->
   <div class="cta">
-    <a class="btn btn-primary" href="https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk">Download the APK</a>
     <a class="btn btn-ghost" href="https://github.com/cocodedk/weather-android">Read the source</a>
   </div>
   <pre><code>git clone https://github.com/cocodedk/weather-android.git
@@ -221,9 +240,16 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk</code></pre>
 
 </main>
 
-<footer>
+<div class="site-foot">
   <p>Forecasts from <a href="https://open-meteo.com" target="_blank" rel="noreferrer">Open-Meteo</a>.</p>
+  <!-- cocode-apps:footer:start -->
+<footer class="cocode-footer">
+  <a href="https://github.com/cocodedk/weather-android">Source code</a> ·
+  License: Apache-2.0 ·
+  <a href="https://cocode.dk/">Made by Cocode (cocode.dk)</a>
 </footer>
+<!-- cocode-apps:footer:end -->
+</div>
 
 </div>
 

@@ -20,8 +20,13 @@ anything.
 
 ## Download
 
-[**Download Weather**](https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk)
-— Android 8.0 (API 26) or newer.
+<!-- cocode-apps:install:start -->
+- Coming to F-Droid
+- [Download the APK from GitHub](https://github.com/cocodedk/weather-android/releases/latest/download/Weather.apk)
+- [Auto-update the GitHub APK with Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cocodedk/weather-android)
+<!-- cocode-apps:install:end -->
+
+Android 8.0 (API 26) or newer.
 
 ## Features
 
@@ -44,7 +49,30 @@ anything.
   with a stale marker when the network is unavailable.
 - **Nothing to sign up for.** No API key, no account, no analytics, no ads.
 
-## Build from source
+## Privacy
+
+Weather has no account, no analytics, no ads and no server of its own. What leaves
+the phone, as the code stands:
+
+- **Forecasts.** For the selected place (searched, saved or your device location),
+  in the app and in the home screen widget, the latitude and longitude, to four
+  decimals, go in a plain HTTPS `GET` request to `api.open-meteo.com`.
+- **Search.** What you type in the search box (two characters or more) and the
+  phone's language code go to `geocoding-api.open-meteo.com`.
+- **Naming your location.** Location permission is optional and coarse only; search
+  works without it. With it, the app asks Android's location manager for a fix, then
+  passes the fix's latitude and longitude to Android's built-in `Geocoder` to get a
+  place name. That service is provided by the device, not by the app. The code notes
+  that it needs a backend service some devices and ROMs lack, and the app cannot say
+  whether or where that service sends the coordinates. If it is missing or fails, the
+  app uses the coordinates as the name.
+
+Saved places, the selected place, the unit and theme preferences and the last forecast
+per place are stored in the app's private storage on the device. The manifest allows
+Android's own device backup (`allowBackup`), so if backup is on for the phone, that data
+may be included in it.
+
+## Build
 
 Requires JDK 17 and the Android SDK (platform 37, build-tools 36).
 
@@ -64,8 +92,11 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 ./gradlew buildSmoke   # build + unit tests + lint — what CI runs
 ```
 
-Contributors should run `./scripts/install-hooks.sh` after cloning. See
-[CONTRIBUTING.md](CONTRIBUTING.md).
+## Contributing
+
+Run `./scripts/install-hooks.sh` after cloning. Setup, branch naming, coding
+conventions and the PR checklist are in [CONTRIBUTING.md](CONTRIBUTING.md).
+Security reports go through [SECURITY.md](SECURITY.md).
 
 ## Architecture
 
