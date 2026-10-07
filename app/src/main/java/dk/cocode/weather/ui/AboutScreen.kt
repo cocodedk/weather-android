@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
@@ -46,8 +47,10 @@ import dk.cocode.weather.ui.theme.LocalPalette
 fun AboutScreen(onBack: () -> Unit) {
     val palette = LocalPalette.current
     val context = LocalContext.current
+    // The language the app's own strings use, so the website and privacy pages match it.
+    val language = LocalConfiguration.current.locales[0].language
     var noBrowser by rememberSaveable { mutableStateOf(false) }
-    val open = { link: AboutLink -> aboutUrl(link)?.let { noBrowser = !openLink(context, it) } }
+    val open = { link: AboutLink -> aboutUrl(link, language)?.let { noBrowser = !openLink(context, it) } }
 
     Column(Modifier.fillMaxSize().statusBarsPadding()) {
         Row(Modifier.padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -89,8 +92,8 @@ fun AboutScreen(onBack: () -> Unit) {
 
             AboutHeading(R.string.about_privacy_title)
             AboutBody(R.string.about_privacy)
-            // Left out if the privacy policy has no page to link to (AboutTargets.PRIVACY_URL).
-            if (aboutUrl(AboutLink.Privacy) != null) {
+            // Left out if the privacy policy has no page to link to (aboutUrl returns null).
+            if (aboutUrl(AboutLink.Privacy, language) != null) {
                 AboutButton(R.string.about_privacy_link) { open(AboutLink.Privacy) }
             }
 
