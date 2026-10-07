@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,7 +60,7 @@ fun DailyList(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
+                        .heightIn(min = 56.dp)
                         .background(
                             if (selected) palette.tile else palette.tile2,
                             RoundedCornerShape(12.dp),
@@ -69,9 +71,9 @@ fun DailyList(
                             ) else Modifier
                         )
                         .clickable { onSelectDay(i) }
-                        .padding(horizontal = 14.dp),
+                        .padding(horizontal = 14.dp, vertical = 6.dp),
                 ) {
-                    Column(Modifier.width(96.dp)) {
+                    Column(Modifier.widthIn(min = 96.dp)) {
                         Text(
                             text = if (i == 0) stringResource(R.string.daily_today) else units.weekday(d.time),
                             color = palette.fg,
@@ -97,7 +99,7 @@ fun DailyList(
                         color = if ((d.precipitationProbabilityMax ?: 0.0) < 5) palette.fgDim
                         else palette.wet,
                         fontSize = 13.sp,
-                        modifier = Modifier.width(44.dp),
+                        modifier = Modifier.widthIn(min = 44.dp),
                     )
 
                     Spacer(Modifier.weight(1f))
@@ -107,14 +109,15 @@ fun DailyList(
                         fontSize = 17.sp,
                         fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.End,
-                        modifier = Modifier.width(42.dp),
+                        modifier = Modifier.widthIn(min = 42.dp),
                     )
                     Text(
                         text = units.temp(d.temperatureMin) + "°",
                         color = palette.fgDim,
                         fontSize = 17.sp,
                         textAlign = TextAlign.End,
-                        modifier = Modifier.width(42.dp),
+                        // 6 dp of space plus a 36 dp box is the old 42 dp, and stays apart from the high at large fonts.
+                        modifier = Modifier.padding(start = 6.dp).widthIn(min = 36.dp),
                     )
                 }
                 Spacer(Modifier.height(8.dp))

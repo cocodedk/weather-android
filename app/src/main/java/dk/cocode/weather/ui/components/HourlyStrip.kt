@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -91,13 +92,13 @@ fun HourlyStrip(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .width(64.dp)
-                        .height(118.dp)
+                        .widthIn(min = 64.dp)
+                        .heightIn(min = 118.dp)
                         .background(
                             if (isNow) palette.tile else palette.tile2,
                             RoundedCornerShape(14.dp),
                         )
-                        .padding(vertical = 10.dp),
+                        .padding(horizontal = 6.dp, vertical = 10.dp),
                 ) {
                     Text(
                         text = if (isNow) stringResource(R.string.hourly_now) else units.hourLabel(h.time),

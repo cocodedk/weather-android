@@ -59,15 +59,14 @@ class Units(
 
     fun precip(mm: Double?): String {
         if (mm == null) return "--"
-        if (imperial) return String.format(locale, "%.2f${NBSP}in", mm / 25.4)
-        return if (mm < 10) String.format(locale, "%.1f${NBSP}mm", mm)
-        else "${mm.roundToInt()}${NBSP}mm"
+        if (imperial) return String.format(locale, "%.2f in", mm / 25.4)
+        return if (mm < 10) String.format(locale, "%.1f mm", mm)
+        else "${mm.roundToInt()} mm"
     }
 
     fun percent(p: Double?): String = if (p == null) "--" else "${p.roundToInt()}%"
 
-    fun pressure(hpa: Double?): String =
-        if (hpa == null) "--" else "${hpa.roundToInt()}${NBSP}hPa"
+    fun pressure(hpa: Double?): String = if (hpa == null) "--" else "${hpa.roundToInt()} hPa"
 
     // --- time ---
 
@@ -154,8 +153,10 @@ class Units(
     }
 
     companion object {
-        // A number and its unit stay on one line when a tile wraps at a large font size. The
-        // word joiner keeps the line from breaking inside "m/s", where "/" would allow it.
+        // A wind speed stays on one line with its unit when a tile wraps at a large font size.
+        // The word joiner keeps the line from breaking inside "m/s", where "/" would allow it.
+        // Other units may break after the number: "1015 hPa" is too wide for a tile at 200%,
+        // and splitting it at the space reads better than splitting "hPa".
         private const val NBSP = ' '
         private const val WORD_JOINER = '⁠'
         private val ISO = Regex("""^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?""")
