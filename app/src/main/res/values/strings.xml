@@ -1,8 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Weather</string>
+
+    <!-- Home screen widget -->
     <string name="widget_description">Current conditions for your selected location.</string>
     <string name="widget_refresh">Refresh</string>
-    <string name="widget_loading">Loading…</string>
     <string name="widget_no_data">Tap to open Weather</string>
+    <string name="widget_unavailable">Forecast unavailable</string>
+    <!-- Shown where there is no temperature to show. -->
+    <string name="temp_placeholder">--°</string>
+    <!-- Two lines: today's high, then today's low. -->
+    <string name="widget_range">H %1$s°\nL %2$s°</string>
+    <!-- %1$s is a clock time at the place. -->
+    <string name="widget_updated">Conditions as of %1$s</string>
+    <!-- %1$s is a date and clock time at the place, such as "7 Oct, 14:20". -->
+    <string name="widget_not_updated">Not updated · %1$s</string>
+
+    <!-- Forecast screen -->
+    <string name="error_title">Could not load the forecast</string>
+    <string name="error_detail">Check that your phone is online, then tap the refresh icon below to try again.</string>
+    <string name="error_retry">Retry</string>
+    <!-- %1$s is a clock time at the place. -->
+    <string name="status_updated">Conditions as of %1$s · Open-Meteo</string>
+    <!-- %1$s is a date and clock time at the place, such as "7 Oct, 14:20". -->
+    <string name="status_not_updated">Could not update. Showing the forecast from %1$s.</string>
+
+    <!-- Top bar and menu -->
+    <string name="cd_change_location">Change location</string>
+    <string name="cd_more">More</string>
+    <string name="menu_units_metric">Use °C and m/s</string>
+    <string name="menu_units_imperial">Use °F and mph</string>
+    <!-- Each tap moves to the next theme, so the label names the theme it switches to. -->
+    <string name="menu_theme_day">Use day theme</string>
+    <string name="menu_theme_night">Use night theme</string>
+    <string name="menu_theme_auto">Match theme to day and night</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_add_widget">Add widget to home screen</string>
+    <string name="device_location">Device location</string>
+
+    <!-- Location sheet -->
+    <string name="locations_title">Locations</string>
+    <string name="search_hint">Search any city or town</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="search_searching">Searching…</string>
+    <string name="search_failed">Search failed. Check your connection and try again.</string>
+    <string name="search_no_match">No places match “%1$s”</string>
+    <string name="search_results_title">Search results</string>
+    <string name="saved_places_title">Saved places</string>
+    <string name="gps_use">Use my current location</string>
+    <string name="gps_finding">Finding your location…</string>
+    <string name="cd_remove_place">Remove %1$s</string>
+
+    <!-- Messages shown briefly at the bottom of the screen -->
+    <string name="msg_keep_one_location">Weather needs at least one saved location, so the last one cannot be removed.</string>
+    <string name="msg_location_denied">Location permission was not given. You can still search for a place.</string>
+    <string name="msg_location_failed">Could not get your location.</string>
+    <string name="msg_location_service_missing">This phone\'s location service is not available.</string>
+    <string name="msg_location_no_fix">Could not find your location. Check that location is turned on for this phone, then try again.</string>
+
+    <!-- Headline for the chosen day -->
+    <string name="hero_high_low">High %1$s° · Low %2$s°</string>
+    <!-- %1$s is the high and low, %2$s is the rain or dry note. -->
+    <string name="hero_range_today">%1$s · %2$s</string>
+    <!-- %1$s is the weekday, %2$s the date, %3$s the high and low. -->
+    <string name="hero_range_day">%1$s %2$s · %3$s</string>
+    <string name="hero_precip_today">%1$s today</string>
+    <string name="hero_dry_day">Dry day</string>
+    <string name="hero_precip_unknown">Precipitation not available</string>
+
+    <!-- Hour by hour and the daily list -->
+    <string name="hourly_title">Hour by hour</string>
+    <string name="hourly_next_24">next 24 hours</string>
+    <string name="hourly_now">Now</string>
+    <string name="daily_today">Today</string>
+    <plurals name="daily_title">
+        <item quantity="one">Next %d day</item>
+        <item quantity="other">Next %d days</item>
+    </plurals>
+
+    <!-- Stat tiles. Each tile has a name (shown in capitals), a value and a short note. -->
+    <string name="stat_feels_like">Feels like</string>
+    <string name="stat_feels_like_note">Actual %1$s</string>
+    <string name="stat_wind">Wind</string>
+    <!-- %1$s is a compass point such as ESE: the direction the wind blows from. -->
+    <string name="stat_wind_from">Wind from %1$s</string>
+    <!-- %1$s is today's strongest wind, with its unit. -->
+    <string name="stat_wind_note">Max today %1$s</string>
+    <string name="stat_wind_day_note">Strongest of the day</string>
+    <string name="stat_humidity">Humidity</string>
+    <string name="stat_humidity_note">Relative</string>
+    <string name="stat_precip">Precipitation</string>
+    <!-- %1$s is a percentage. -->
+    <!-- Two lines: the amount above is for the last 15 minutes; the chance is for the hour. -->
+    <string name="stat_precip_note">Last 15 min\n%1$s hourly chance</string>
+    <string name="stat_precip_day_note">Total for the day</string>
+    <string name="stat_pressure">Pressure</string>
+    <string name="stat_pressure_note">At ground level</string>
+    <string name="stat_sunrise">Sunrise</string>
+    <string name="stat_sunrise_note">Sunset %1$s</string>
+    <string name="stat_high_low">High / low</string>
+    <string name="stat_high_low_note">Daily range</string>
+    <string name="stat_rain_chance">Rain or snow</string>
+    <string name="stat_rain_chance_note">Highest chance</string>
+    <string name="stat_uv">UV index</string>
+
+    <!-- UV risk bands, as the World Health Organization names them -->
+    <string name="uv_low">Low</string>
+    <string name="uv_moderate">Moderate</string>
+    <string name="uv_high">High</string>
+    <string name="uv_very_high">Very high</string>
+    <string name="uv_extreme">Extreme</string>
+
+    <!-- Weather conditions (WMO codes), one per condition -->
+    <string name="wmo_clear_sky">Clear sky</string>
+    <string name="wmo_mainly_clear">Mainly clear</string>
+    <string name="wmo_partly_cloudy">Partly cloudy</string>
+    <string name="wmo_overcast">Overcast</string>
+    <string name="wmo_fog">Fog</string>
+    <string name="wmo_freezing_fog">Freezing fog</string>
+    <string name="wmo_light_drizzle">Light drizzle</string>
+    <string name="wmo_drizzle">Drizzle</string>
+    <string name="wmo_dense_drizzle">Dense drizzle</string>
+    <string name="wmo_freezing_drizzle">Freezing drizzle</string>
+    <string name="wmo_light_rain">Light rain</string>
+    <string name="wmo_rain">Rain</string>
+    <string name="wmo_heavy_rain">Heavy rain</string>
+    <string name="wmo_freezing_rain">Freezing rain</string>
+    <string name="wmo_light_snow">Light snow</string>
+    <string name="wmo_snow">Snow</string>
+    <string name="wmo_heavy_snow">Heavy snow</string>
+    <string name="wmo_snow_grains">Snow grains</string>
+    <string name="wmo_light_showers">Light showers</string>
+    <string name="wmo_showers">Showers</string>
+    <string name="wmo_violent_showers">Violent showers</string>
+    <string name="wmo_snow_showers">Snow showers</string>
+    <string name="wmo_heavy_snow_showers">Heavy snow showers</string>
+    <string name="wmo_thunderstorm">Thunderstorm</string>
+    <string name="wmo_thunderstorm_hail">Thunderstorm, hail</string>
+    <string name="wmo_heavy_thunderstorm">Heavy thunderstorm</string>
+    <string name="wmo_unknown">Unknown</string>
+
+    <!-- Wind direction, 16 points from north, clockwise -->
+    <string-array name="compass_points">
+        <item>N</item>
+        <item>NNE</item>
+        <item>NE</item>
+        <item>ENE</item>
+        <item>E</item>
+        <item>ESE</item>
+        <item>SE</item>
+        <item>SSE</item>
+        <item>S</item>
+        <item>SSW</item>
+        <item>SW</item>
+        <item>WSW</item>
+        <item>W</item>
+        <item>WNW</item>
+        <item>NW</item>
+        <item>NNW</item>
+    </string-array>
+
+    <!-- Twelve-hour clock, used only when the phone is set to a 12-hour clock -->
+    <string name="clock_am">am</string>
+    <string name="clock_pm">pm</string>
+
+    <!-- About screen -->
+    <string name="about_title">About Weather</string>
+    <string name="about_back">Back</string>
+    <string name="about_name_title">Name and version</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_check_updates">See the latest version</string>
+    <string name="about_check_updates_note">This opens the page with the latest version in your browser. Weather never checks for updates by itself.</string>
+    <string name="about_what_title">What the app does</string>
+    <string name="about_what">Weather shows the current conditions, the next 24 hours and a 7-day forecast for any place you choose. Search for a city or town by name, or let the app use your phone\'s location. The forecasts come from Open-Meteo.</string>
+    <string name="about_privacy_title">Privacy</string>
+    <string name="about_privacy">Weather has no account, no ads and no analytics, and it sends nothing to Cocode. To show a forecast, it asks Open-Meteo, a free weather service run by someone else, so Open-Meteo learns which places you view and search for. Using your location is optional, and the app asks for it only when you tap “Use my current location”. Your saved places and settings are kept on your phone. If backup is switched on for your phone, Android can include them in that backup, and your phone decides where the backup is stored.</string>
+    <string name="about_privacy_link">Read the privacy policy</string>
+    <string name="about_links_title">Links</string>
+    <string name="about_website">Open the website</string>
+    <string name="about_source">See the source code on GitHub</string>
+    <string name="about_report">Report a problem on GitHub</string>
+    <string name="about_no_browser">No app on this phone could open the link.</string>
+    <string name="about_credits">Credits and licenses</string>
+    <string name="about_credits_data">Weather data and place search come from Open-Meteo.com, used under their free terms for non-commercial use.</string>
+    <string name="about_credits_license">Weather is free software, released under the Apache License 2.0.</string>
+    <string name="about_made_by">Made by Cocode (cocode.dk)</string>
 </resources>

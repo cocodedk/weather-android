@@ -3,10 +3,13 @@ package dk.cocode.weather.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -15,15 +18,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dk.cocode.weather.R
 import dk.cocode.weather.data.Forecast
 import dk.cocode.weather.domain.Units
 import dk.cocode.weather.domain.WeatherIcon
 import dk.cocode.weather.domain.Wmo
 import dk.cocode.weather.ui.icons.WeatherIconView
+import dk.cocode.weather.ui.labelRes
 import dk.cocode.weather.ui.theme.LocalPalette
 
 private data class Stat(
@@ -46,10 +51,12 @@ fun StatsGrid(forecast: Forecast, dayIndex: Int, units: Units, modifier: Modifie
 
     Column(modifier = modifier.padding(horizontal = 20.dp)) {
         stats.chunked(2).forEach { pair ->
-            Row(Modifier.fillMaxWidth()) {
+            // Min intrinsic height: a tile whose text wraps (large fonts) grows, and its
+            // neighbour grows with it, so a row of tiles stays level and nothing is cut off.
+            Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
                 pair.forEachIndexed { i, stat ->
                     if (i > 0) Spacer(Modifier.width(10.dp))
-                    StatTile(stat, Modifier.weight(1f))
+                    StatTile(stat, Modifier.weight(1f).fillMaxHeight())
                 }
                 // Keeps a lone trailing tile at half width instead of stretching it.
                 if (pair.size == 1) {
@@ -67,75 +74,91 @@ private fun StatTile(stat: Stat, modifier: Modifier = Modifier) {
     val palette = LocalPalette.current
     Row(
         modifier = modifier
-            .height(76.dp)
+            .heightIn(min = 76.dp)
             .background(palette.tile, RoundedCornerShape(14.dp))
-            .padding(horizontal = 12.dp),
+            .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         WeatherIconView(stat.icon, Modifier.size(26.dp), palette.fgDim)
         Spacer(Modifier.width(10.dp))
+        // No line limits: a long word or a large font wraps rather than being cut off.
         Column(verticalArrangement = Arrangement.Center) {
             Text(
                 text = stat.key.uppercase(),
                 color = palette.fgDim,
                 fontSize = 10.sp,
                 letterSpacing = 1.1.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = stat.value,
                 color = palette.fg,
                 fontSize = 19.sp,
                 fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = stat.sub,
                 color = palette.fgDim,
                 fontSize = 11.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
         }
     }
 }
 
+@Composable
 private fun todayStats(f: Forecast, u: Units): List<Stat> {
     val c = f.current
     val d0 = f.daily.firstOrNull()
     val hNow = f.hourly.getOrNull(nowIndex(f))
     return listOf(
-        Stat(WeatherIcon.THERMO, "Feels like", u.tempFull(c.apparentTemperature),
-            "Actual ${u.tempFull(c.temperature)}"),
-        Stat(WeatherIcon.WIND, "Wind", u.wind(c.windSpeed),
-            "From ${u.bearing(c.windDirection)} · max ${u.wind(d0?.windSpeedMax)}"),
-        Stat(WeatherIcon.DROP, "Humidity", u.percent(c.humidity), "Relative"),
-        Stat(WeatherIcon.RAIN, "Precipitation", u.precip(c.precipitation),
-            "Last hour · ${u.percent(hNow?.precipitationProbability)} chance"),
-        Stat(WeatherIcon.GAUGE, "Pressure", u.pressure(c.pressure), "At surface"),
-        Stat(WeatherIcon.SUNRISE, "Sunrise", u.clock(d0?.sunrise), "Sunset ${u.clock(d0?.sunset)}"),
+        Stat(WeatherIcon.THERMO, stringResource(R.string.stat_feels_like),
+            u.tempFull(c.apparentTemperature),
+            stringResource(R.string.stat_feels_like_note, u.tempFull(c.temperature))),
+        Stat(WeatherIcon.WIND, windKey(u.bearing(c.windDirection)), u.wind(c.windSpeed),
+            stringResource(R.string.stat_wind_note, u.wind(d0?.windSpeedMax))),
+        Stat(WeatherIcon.DROP, stringResource(R.string.stat_humidity), u.percent(c.humidity),
+            stringResource(R.string.stat_humidity_note)),
+        Stat(WeatherIcon.RAIN, stringResource(R.string.stat_precip), u.precip(c.precipitation),
+            stringResource(
+                R.string.stat_precip_note, u.percent(hNow?.precipitationProbability),
+            )),
+        Stat(WeatherIcon.GAUGE, stringResource(R.string.stat_pressure), u.pressure(c.pressure),
+            stringResource(R.string.stat_pressure_note)),
+        sunStat(u, d0?.sunrise, d0?.sunset),
     )
 }
 
+@Composable
 private fun dayStats(f: Forecast, dayIndex: Int, u: Units): List<Stat> {
     val d = f.daily.getOrNull(dayIndex)
     val uv = d?.uvIndexMax
     return listOf(
-        Stat(WeatherIcon.THERMO, "High / low",
+        Stat(WeatherIcon.THERMO, stringResource(R.string.stat_high_low),
             "${u.temp(d?.temperatureMax)} / ${u.temp(d?.temperatureMin)}${u.tempUnit()}",
-            "Daily range"),
-        Stat(WeatherIcon.WIND, "Wind", u.wind(d?.windSpeedMax), "Strongest of the day"),
-        Stat(WeatherIcon.DROP, "Chance of rain", u.percent(d?.precipitationProbabilityMax),
-            "Peak for the day"),
-        Stat(WeatherIcon.RAIN, "Precipitation", u.precip(d?.precipitationSum), "Total for the day"),
-        Stat(WeatherIcon.UV, "UV index",
+            stringResource(R.string.stat_high_low_note)),
+        Stat(WeatherIcon.WIND, stringResource(R.string.stat_wind), u.wind(d?.windSpeedMax),
+            stringResource(R.string.stat_wind_day_note)),
+        Stat(WeatherIcon.DROP, stringResource(R.string.stat_rain_chance),
+            u.percent(d?.precipitationProbabilityMax),
+            stringResource(R.string.stat_rain_chance_note)),
+        Stat(WeatherIcon.RAIN, stringResource(R.string.stat_precip), u.precip(d?.precipitationSum),
+            stringResource(R.string.stat_precip_day_note)),
+        Stat(WeatherIcon.UV, stringResource(R.string.stat_uv),
             if (uv == null) "--" else String.format(java.util.Locale.US, "%.1f", uv),
-            Wmo.uvBand(uv)),
-        Stat(WeatherIcon.SUNRISE, "Sunrise", u.clock(d?.sunrise), "Sunset ${u.clock(d?.sunset)}"),
+            Wmo.uvBand(uv)?.let { stringResource(it.labelRes()) }.orEmpty()),
+        sunStat(u, d?.sunrise, d?.sunset),
     )
 }
+
+/** "Wind from ESE", or just "Wind" when the API gave no direction. */
+@Composable
+private fun windKey(compassPoint: String): String =
+    if (compassPoint.isEmpty()) stringResource(R.string.stat_wind)
+    else stringResource(R.string.stat_wind_from, compassPoint)
+
+@Composable
+private fun sunStat(u: Units, sunrise: String?, sunset: String?) =
+    Stat(WeatherIcon.SUNRISE, stringResource(R.string.stat_sunrise), u.clock(sunrise),
+        stringResource(R.string.stat_sunrise_note, u.clock(sunset)))
 
 /**
  * Index of the hourly row covering the current wall-clock hour.

@@ -23,10 +23,12 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dk.cocode.weather.R
 import dk.cocode.weather.data.Place
 import dk.cocode.weather.ui.SearchUiState
 import dk.cocode.weather.ui.theme.LocalPalette
@@ -58,19 +60,19 @@ fun LocationSheet(
         contentColor = palette.fg,
     ) {
         Column(Modifier.padding(horizontal = 20.dp).padding(bottom = 24.dp)) {
-            Text("Locations", color = palette.fg, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.locations_title), color = palette.fg, fontSize = 20.sp, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = search.query,
                 onValueChange = onQueryChange,
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Search any city or town", color = palette.fgDim) },
+                placeholder = { Text(stringResource(R.string.search_hint), color = palette.fgDim) },
                 leadingIcon = { Icon(Icons.Default.Search, null, tint = palette.fgDim) },
                 trailingIcon = {
                     if (search.query.isNotEmpty()) {
                         IconButton(onClick = { onQueryChange("") }) {
-                            Icon(Icons.Default.Close, "Clear", tint = palette.fgDim)
+                            Icon(Icons.Default.Close, stringResource(R.string.cd_clear_search), tint = palette.fgDim)
                         }
                     }
                 },
@@ -92,16 +94,18 @@ fun LocationSheet(
             Spacer(Modifier.height(8.dp))
 
             when {
-                search.searching -> CenteredHint("Searching…")
-                search.error != null -> CenteredHint(search.error)
+                search.searching -> CenteredHint(stringResource(R.string.search_searching))
+                search.failed -> CenteredHint(stringResource(R.string.search_failed))
                 search.query.trim().length >= 2 && search.results.isEmpty() ->
-                    CenteredHint("No places match “${search.query.trim()}”")
+                    CenteredHint(stringResource(R.string.search_no_match, search.query.trim()))
             }
 
             val showingResults = search.results.isNotEmpty()
             if (showingResults || saved.isNotEmpty()) {
                 Text(
-                    text = if (showingResults) "SEARCH RESULTS" else "SAVED",
+                    text = stringResource(
+                        if (showingResults) R.string.search_results_title else R.string.saved_places_title,
+                    ).uppercase(),
                     color = palette.fgDim,
                     fontSize = 11.sp,
                     letterSpacing = 1.4.sp,

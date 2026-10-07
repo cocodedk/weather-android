@@ -107,8 +107,9 @@ only care does.
 
 ```
 domain/          pure Kotlin, no Android imports, no DOM equivalent
-  Wmo.kt         WMO code -> label + icon + UV band
-  Units.kt       metric/imperial conversion, wall-clock parsing, date formatting
+  Wmo.kt         WMO code -> condition + icon + UV band (words live in res/values/strings.xml)
+  Units.kt       metric/imperial conversion, wall-clock parsing, date formatting;
+                 compass points and am/pm arrive as UnitLabels from the UI edge
 
 data/            IO and persistence
   Models.kt          Place, Current, HourRow, DayRow, Forecast
@@ -124,8 +125,12 @@ data/            IO and persistence
 ui/
   WeatherViewModel.kt  state, selection, refresh, permission signalling
   PlaceSearch.kt       debounced type-ahead, isolated from forecast state
+  PlaceSelection.kt    picking a place or taking a device fix: state, save, widget poke, reload
   WeatherUiState.kt    one immutable snapshot the screen draws
-  WeatherScreen.kt     scaffold + body
+  WeatherScreen.kt     scaffold; swaps in the About screen
+  ScreenBody.kt        forecast, loading and error states, status line
+  AboutScreen.kt       About page (+ AboutParts.kt); AboutLinks.kt holds the tested URLs
+  Labels.kt            string-resource ids for conditions and UV bands, Units labels
   components/          Hero, StatsGrid, HourlyStrip, DailyList, LocationSheet, …
   icons/               the Tizen SVG sprite, as Canvas draw calls
   theme/Theme.kt       the two Tizen palettes + gradient
@@ -169,12 +174,17 @@ point of the page.
 ## Coding conventions
 
 - [ ] Files stay under **200 lines**; extract when one grows past it.
+- [ ] Every user-visible word lives in `res/values/strings.xml` (and `values-<lang>/`), never
+      in Kotlin. Write it for a customer new to the app (the `customer-words` skill).
 - [ ] Comments say *why*. Several record an API or platform quirk and will look
       like mistakes without the explanation.
 - [ ] No dependency that is not already in the local Gradle cache without a
       deliberate decision — the build currently resolves offline.
 - [ ] DRY / SOLID / KISS / YAGNI. Delete dead code immediately.
 - [ ] Never widen the permission set. Coarse location is enough for a forecast.
+- [ ] A `catch (e: Exception)` around a suspend call rethrows `CancellationException` first.
+      Cancelling a request is not a failure, and `Http.getString` only notices the
+      cancel when the response arrives, so the error would land on top of the newer result.
 
 ---
 
@@ -220,8 +230,8 @@ google-chrome-stable --headless --disable-gpu --no-sandbox \
 
 ## Verifying a change
 
-There is no test suite yet, so **screenshot the running app** rather than assuming
-a green build means a correct screen. Two defects in the first build compiled
+The unit tests cover only the pure code (URLs, units, condition mapping), so **screenshot
+the running app** rather than assuming a green build means a correct screen. Two defects in the first build compiled
 perfectly and were only visible in a screenshot: the header sat under the system
 status bar, and the hero icon tinted a rain cloud gold.
 

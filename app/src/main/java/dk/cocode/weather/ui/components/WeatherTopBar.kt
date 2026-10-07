@@ -1,5 +1,6 @@
 package dk.cocode.weather.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brightness4
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Refresh
@@ -25,7 +27,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import dk.cocode.weather.R
 import dk.cocode.weather.data.WeatherStore
 import dk.cocode.weather.ui.WeatherUiState
 import dk.cocode.weather.ui.theme.LocalPalette
@@ -43,6 +47,7 @@ fun WeatherTopBar(
     onCycleTheme: () -> Unit,
     onRefresh: () -> Unit,
     onAddWidget: () -> Unit,
+    onOpenAbout: () -> Unit,
 ) {
     val palette = LocalPalette.current
     var menuOpen by remember { mutableStateOf(false) }
@@ -62,26 +67,33 @@ fun WeatherTopBar(
         }
 
         IconButton(onClick = onOpenLocations) {
-            Icon(Icons.Default.Place, "Change location", tint = palette.fg)
+            Icon(Icons.Default.Place, stringResource(R.string.cd_change_location), tint = palette.fg)
         }
 
         Box {
             IconButton(onClick = { menuOpen = true }) {
-                Icon(Icons.Default.MoreVert, "More", tint = palette.fg)
+                Icon(Icons.Default.MoreVert, stringResource(R.string.cd_more), tint = palette.fg)
             }
             DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                 DropdownMenuItem(
-                    text = { Text(if (state.imperial) "Use °C and m/s" else "Use °F and mph") },
+                    text = {
+                        Text(
+                            stringResource(
+                                if (state.imperial) R.string.menu_units_metric
+                                else R.string.menu_units_imperial,
+                            ),
+                        )
+                    },
                     leadingIcon = { Icon(Icons.Default.Thermostat, null) },
                     onClick = { onToggleUnits(); menuOpen = false },
                 )
                 DropdownMenuItem(
-                    text = { Text("Theme: ${themeLabel(state.theme)}") },
+                    text = { Text(stringResource(nextThemeLabel(state.theme))) },
                     leadingIcon = { Icon(Icons.Default.Brightness4, null) },
                     onClick = { onCycleTheme(); menuOpen = false },
                 )
                 DropdownMenuItem(
-                    text = { Text("Refresh") },
+                    text = { Text(stringResource(R.string.menu_refresh)) },
                     leadingIcon = { Icon(Icons.Default.Refresh, null) },
                     onClick = { onRefresh(); menuOpen = false },
                 )
@@ -89,18 +101,25 @@ fun WeatherTopBar(
                 // the widget is still available from the long-press widget drawer.
                 if (WeatherWidgetProvider.canPin(LocalContext.current)) {
                     DropdownMenuItem(
-                        text = { Text("Add widget to home screen") },
+                        text = { Text(stringResource(R.string.menu_add_widget)) },
                         leadingIcon = { Icon(Icons.Default.Widgets, null) },
                         onClick = { onAddWidget(); menuOpen = false },
                     )
                 }
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.about_title)) },
+                    leadingIcon = { Icon(Icons.Default.Info, null) },
+                    onClick = { onOpenAbout(); menuOpen = false },
+                )
             }
         }
     }
 }
 
-private fun themeLabel(theme: String) = when (theme) {
-    WeatherStore.THEME_DAY -> "Day"
-    WeatherStore.THEME_NIGHT -> "Night"
-    else -> "Auto"
+/** Each tap cycles Auto -> Day -> Night -> Auto (see WeatherViewModel.cycleTheme); name the next one. */
+@StringRes
+private fun nextThemeLabel(theme: String) = when (theme) {
+    WeatherStore.THEME_AUTO -> R.string.menu_theme_day
+    WeatherStore.THEME_DAY -> R.string.menu_theme_night
+    else -> R.string.menu_theme_auto
 }

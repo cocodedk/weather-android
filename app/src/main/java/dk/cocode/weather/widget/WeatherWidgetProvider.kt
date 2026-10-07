@@ -5,10 +5,13 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.text.format.DateFormat
+import android.widget.RemoteViews
+import dk.cocode.weather.R
 import dk.cocode.weather.data.ForecastRepository
 import dk.cocode.weather.data.WeatherStore
-import dk.cocode.weather.domain.Units
+import dk.cocode.weather.ui.unitsFor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
@@ -42,37 +45,62 @@ class WeatherWidgetProvider : AppWidgetProvider() {
      * of onReceive — without it the process can be killed mid-request and the
      * widget silently keeps showing yesterday's numbers.
      */
-    private fun refresh(context: Context, manager: AppWidgetManager, ids: IntArray) {
-        if (ids.isEmpty()) return
+    private fun refresh(context: Context, manager: AppWidgetManager, requested: IntArray) {
+        if (requested.isEmpty()) return
 
-        ids.forEach { manager.updateAppWidget(it, WidgetViews.loading(context)) }
-
+        // The time the broadcast allows runs from here, not from when the coroutine gets going.
+        val startedNanos = System.nanoTime()
         val pending = goAsync()
+        val ticket = publisher.begin()
+
         val appContext = context.applicationContext
         CoroutineScope(SupervisorJob()).launch {
             try {
                 val store = WeatherStore(appContext)
-                val prefs = store.prefs.first()
-                val place = prefs.places.firstOrNull { it.key == prefs.selectedKey }
-                    ?: prefs.places.firstOrNull()
-
-                val views = if (place == null) {
-                    WidgetViews.empty(appContext)
-                } else {
-                    val units = Units(
-                        imperial = prefs.imperial,
-                        use24Hour = DateFormat.is24HourFormat(appContext),
-                    )
-                    try {
-                        val loaded = ForecastRepository(store).load(place)
-                        WidgetViews.forecast(appContext, place, loaded.forecast, units, loaded.stale)
-                    } catch (e: Exception) {
+                // Kept in each widget's own options: system calls, no stored data to read. The time of the
+                // install is part of the mark because installing the app clears a widget's views (even at
+                // the same version) but keeps its options.
+                val installedAt = appContext.packageManager.getPackageInfo(appContext.packageName, 0).lastUpdateTime
+                val marks = DrawnMarks(
+                    installedAt,
+                    read = { id -> manager.getAppWidgetOptions(id).getLong(DRAWN_AT_OPTION, DrawnMarks.NEVER) },
+                    write = { id, at ->
+                        manager.updateAppWidgetOptions(id, Bundle().apply { putLong(DRAWN_AT_OPTION, at) })
+                    },
+                )
+                val surface = object : WidgetSurface<RemoteViews> {
+                    override fun build(found: WidgetLoad): RemoteViews = when (found) {
+                        WidgetLoad.NoPlace -> WidgetViews.empty(appContext)
                         // No network and no cache for this place. Say so rather than
-                        // leaving a spinner on the home screen forever.
-                        WidgetViews.empty(appContext, "Forecast unavailable")
+                        // leaving the home screen without an answer.
+                        is WidgetLoad.Unavailable ->
+                            WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
+                        is WidgetLoad.Ready -> WidgetViews.forecast(
+                            appContext,
+                            found.place,
+                            found.loaded.forecast,
+                            unitsFor(
+                                appContext.resources,
+                                imperial = found.imperial,
+                                use24Hour = DateFormat.is24HourFormat(appContext),
+                            ),
+                            found.loaded.stale,
+                        )
+                    }
+
+                    // The "Tap to open Weather" view, which unlike the layout Android first shows has its clicks wired.
+                    override fun placeholder(): RemoteViews = WidgetViews.empty(appContext)
+
+                    override fun allIds(): IntArray = ids(appContext, manager)
+
+                    override fun isDrawn(id: Int): Boolean = marks.isDrawn(id)
+
+                    override fun update(id: Int, views: RemoteViews) {
+                        manager.updateAppWidget(id, views)
+                        marks.markDrawn(id)
                     }
                 }
-                ids.forEach { manager.updateAppWidget(it, views) }
+                refreshWidget(ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface, startedNanos)
             } finally {
                 pending.finish()
             }
@@ -80,7 +108,13 @@ class WeatherWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
+        /** One for the whole process: refreshes from every broadcast take their turn through it. */
+        private val publisher = WidgetPublisher()
+
         const val ACTION_REFRESH = "dk.cocode.weather.widget.REFRESH"
+
+        /** Set in a widget's options to the install time (lastUpdateTime) of the app that last drew a full view on it. */
+        private const val DRAWN_AT_OPTION = "dk.cocode.weather.drawnAt"
 
         private fun ids(context: Context, manager: AppWidgetManager): IntArray =
             manager.getAppWidgetIds(ComponentName(context, WeatherWidgetProvider::class.java))

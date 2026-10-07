@@ -2,7 +2,6 @@ package dk.cocode.weather.ui
 
 import dk.cocode.weather.data.Forecast
 import dk.cocode.weather.data.Place
-import dk.cocode.weather.domain.Units
 
 /** Everything the screen draws, in one immutable snapshot. */
 data class WeatherUiState(
@@ -22,8 +21,6 @@ data class WeatherUiState(
     /** One-shot message for the snackbar; cleared once shown. */
     val message: String? = null,
 ) {
-    val units: Units get() = Units(imperial = imperial, use24Hour = use24Hour)
-
     /** Night styling follows the selected place's own day/night, not the phone's. */
     val isNight: Boolean
         get() = when (theme) {
@@ -38,5 +35,5 @@ data class SearchUiState(
     val query: String = "",
     val results: List<Place> = emptyList(),
     val searching: Boolean = false,
-    val error: String? = null,
+    val failed: Boolean = false,
 )

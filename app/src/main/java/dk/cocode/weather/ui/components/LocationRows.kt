@@ -22,9 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dk.cocode.weather.R
 import dk.cocode.weather.data.Place
 import dk.cocode.weather.ui.theme.LocalPalette
 
@@ -54,7 +56,7 @@ fun GpsRow(locating: Boolean, onClick: () -> Unit) {
         }
         Spacer(Modifier.width(12.dp))
         Text(
-            text = if (locating) "Finding your location…" else "Use my current location",
+            text = stringResource(if (locating) R.string.gps_finding else R.string.gps_use),
             color = palette.fg,
             fontSize = 15.sp,
             fontWeight = FontWeight.Medium,
@@ -97,8 +99,9 @@ fun PlaceRow(
                 fontSize = 15.sp,
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
             )
+            val deviceLocation = stringResource(R.string.device_location)
             val sub = place.region.ifBlank {
-                if (place.isDeviceLocation) "Device location" else ""
+                if (place.isDeviceLocation) deviceLocation else ""
             }
             if (sub.isNotBlank()) {
                 Text(sub, color = palette.fgDim, fontSize = 12.sp)
@@ -107,7 +110,7 @@ fun PlaceRow(
         if (onRemove != null) {
             IconButton(onClick = onRemove) {
                 Icon(
-                    Icons.Default.Delete, "Remove ${place.name}",
+                    Icons.Default.Delete, stringResource(R.string.cd_remove_place, place.name),
                     tint = palette.fgDim, modifier = Modifier.size(18.dp),
                 )
             }
