@@ -9,9 +9,19 @@ import java.util.concurrent.atomic.AtomicLong
 interface WidgetSurface<V> {
     fun build(found: WidgetLoad): V
 
+    /**
+     * What a widget that has never been drawn shows until a result is ready. Android gives a new
+     * widget its layout without click actions, so this has to be a full view that has them.
+     */
+    fun placeholder(): V
+
     /** Every widget on the home screen now, not just the ones a refresh was asked about. */
     fun allIds(): IntArray
 
+    /** True once a full view has been drawn on [id] (the widget remembers it, so no stored data is read). */
+    fun isDrawn(id: Int): Boolean
+
+    /** Draws [views] on [id] and remembers that it has been drawn. */
     fun update(id: Int, views: V)
 }
 
@@ -24,7 +34,8 @@ interface WidgetSurface<V> {
  *
  * A refresh draws only its result. Until then every widget keeps what it shows (the last forecast,
  * or "Forecast unavailable"), so a refresh that times out, fails or is cancelled leaves nothing
- * behind that a later refresh would have to clean up.
+ * behind that a later refresh would have to clean up. The one exception is a widget that has never
+ * been drawn: it gets the clickable placeholder first ([showPlaceholders]).
  */
 class WidgetPublisher(private val lock: Mutex = Mutex()) {
     private val newest = AtomicLong()
@@ -55,6 +66,24 @@ class WidgetPublisher(private val lock: Mutex = Mutex()) {
             surface.update(id, views)
         }
         true
+    }
+
+    /**
+     * Gives every widget that has never been drawn the placeholder view, so that a new widget whose
+     * first refresh runs out of time can still be tapped (Android's initial layout has no click
+     * actions). Widgets that have been drawn keep their view. Needs no stored data, and follows the
+     * same rules as [publish]: only the newest refresh, under the lock, stopping at the deadline.
+     */
+    suspend fun <V> showPlaceholders(
+        ticket: Long,
+        surface: WidgetSurface<V>,
+        deadlineNanos: Long? = null,
+    ) = lock.withLock {
+        val placeholder by lazy { surface.placeholder() }
+        for (id in surface.allIds()) {
+            if (ticket != newest.get() || timeIsUp(deadlineNanos)) return@withLock
+            if (!surface.isDrawn(id)) surface.update(id, placeholder)
+        }
     }
 
     private fun timeIsUp(deadlineNanos: Long?) = deadlineNanos != null && System.nanoTime() - deadlineNanos > 0

@@ -53,6 +53,53 @@ class WidgetKeepsViewTest {
     }
 
     @Test
+    fun aNeverDrawnWidgetWhoseRefreshTimesOutEndsOnTheClickablePlaceholder() = runBlocking {
+        // Widget 2 has just been added: Android's own layout has no click actions, so it is given the placeholder.
+        val surface = FakeSurface(intArrayOf(1, 2, 3), neverDrawn = setOf(2))
+        val publisher = WidgetPublisher()
+        val stuckPrefs: suspend () -> WeatherStore.Prefs = { delay(5_000); prefs() }
+
+        refreshWidget(publisher.begin(), publisher, stuckPrefs, answering, surface, overallMs = 400)
+
+        assertEquals(listOf(2 to "placeholder"), surface.updates) // widgets 1 and 3 keep their views
+    }
+
+    @Test
+    fun onceAWidgetHasBeenDrawnALaterRefreshThatTimesOutLeavesItAlone() = runBlocking {
+        val surface = FakeSurface(intArrayOf(1), neverDrawn = setOf(1))
+        val publisher = WidgetPublisher()
+        refreshWidget(publisher.begin(), publisher, { prefs() }, answering, surface)
+        assertEquals(listOf(1 to "placeholder", 1 to "Copenhagen"), surface.updates)
+
+        val stuckPrefs: suspend () -> WeatherStore.Prefs = { delay(5_000); prefs() }
+        refreshWidget(publisher.begin(), publisher, stuckPrefs, answering, surface, overallMs = 400)
+
+        assertEquals(listOf(1 to "placeholder", 1 to "Copenhagen"), surface.updates)
+    }
+
+    @Test
+    fun anOlderRefreshDoesNotGiveANeverDrawnWidgetItsPlaceholder() = runBlocking {
+        val surface = FakeSurface(intArrayOf(1), neverDrawn = setOf(1))
+        val publisher = WidgetPublisher()
+        val older = publisher.begin()
+        publisher.begin() // a newer refresh owns the widgets now
+
+        publisher.showPlaceholders(older, surface)
+
+        assertEquals(noUpdates, surface.updates)
+    }
+
+    @Test
+    fun placeholdersAreNotDrawnOnceTheTimeIsUp() = runBlocking {
+        val surface = FakeSurface(intArrayOf(1), neverDrawn = setOf(1))
+        val publisher = WidgetPublisher()
+
+        publisher.showPlaceholders(publisher.begin(), surface, deadlineNanos = System.nanoTime() - 1)
+
+        assertEquals(noUpdates, surface.updates)
+    }
+
+    @Test
     fun aRefreshThatFailsReadingTheSavedChoiceLeavesEveryWidgetUntouched() = runBlocking {
         val surface = FakeSurface(intArrayOf(1, 2, 3))
         val publisher = WidgetPublisher()

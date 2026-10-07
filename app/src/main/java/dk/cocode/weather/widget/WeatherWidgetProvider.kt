@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.text.format.DateFormat
 import android.widget.RemoteViews
 import dk.cocode.weather.R
@@ -76,9 +77,18 @@ class WeatherWidgetProvider : AppWidgetProvider() {
                         )
                     }
 
+                    // The "Tap to open Weather" view, which unlike the layout Android first shows has its clicks wired.
+                    override fun placeholder(): RemoteViews = WidgetViews.empty(appContext)
+
                     override fun allIds(): IntArray = ids(appContext, manager)
 
-                    override fun update(id: Int, views: RemoteViews) = manager.updateAppWidget(id, views)
+                    // Kept in the widget's own options: a system call, no stored data to read.
+                    override fun isDrawn(id: Int): Boolean = manager.getAppWidgetOptions(id).getBoolean(DRAWN_OPTION)
+
+                    override fun update(id: Int, views: RemoteViews) {
+                        manager.updateAppWidget(id, views)
+                        if (!isDrawn(id)) manager.updateAppWidgetOptions(id, Bundle().apply { putBoolean(DRAWN_OPTION, true) })
+                    }
                 }
                 refreshWidget(ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface, startedNanos)
             } finally {
@@ -92,6 +102,9 @@ class WeatherWidgetProvider : AppWidgetProvider() {
         private val publisher = WidgetPublisher()
 
         const val ACTION_REFRESH = "dk.cocode.weather.widget.REFRESH"
+
+        /** Set in a widget's options once a full view has been drawn on it. */
+        private const val DRAWN_OPTION = "dk.cocode.weather.drawn"
 
         private fun ids(context: Context, manager: AppWidgetManager): IntArray =
             manager.getAppWidgetIds(ComponentName(context, WeatherWidgetProvider::class.java))
