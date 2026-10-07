@@ -167,9 +167,9 @@
     <string name="about_links_title">Links</string>
     <string name="about_website">Åbn hjemmesiden</string>
     <string name="about_source">Se kildekoden på GitHub</string>
-    <string name="about_report">Meld et problem på GitHub</string>
+    <string name="about_report">Meld en fejl på GitHub</string>
     <string name="about_no_browser">Ingen app på telefonen kunne åbne linket.</string>
-    <string name="about_credits">Kilder og licenser</string>
+    <string name="about_credits">Tak og licenser</string>
     <string name="about_credits_data">Vejrdata og stedsøgning kommer fra Open-Meteo.com og bruges på deres gratis vilkår for ikke-kommerciel brug.</string>
     <string name="about_credits_license">Weather er fri software, udgivet under Apache License 2.0.</string>
     <string name="about_made_by">Lavet af Cocode (cocode.dk)</string>
