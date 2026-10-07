@@ -1,0 +1,21 @@
+/* The privacy policy pages: one readable column on a darker panel, so long text keeps its contrast
+   against the sky gradient. The rest of the look comes from ../styles.css. */
+.policy {
+  margin-top: 24px; padding: 4px 18px 30px;
+  background: rgba(6, 14, 40, 0.42); border: 1px solid var(--line); border-radius: var(--r);
+}
+.policy h1 { margin-top: 26px; font-size: clamp(1.9rem, 7vw, 2.7rem); letter-spacing: -0.03em; text-wrap: balance; }
+.policy .meta { margin: 10px 0 0; color: var(--ink-dim); font-family: var(--mono); font-size: 12.5px; }
+.policy section { padding: 30px 0 0; }
+.policy section > h2 { font-size: clamp(1.3rem, 5vw, 1.65rem); }
+.policy h3 { margin: 18px 0 4px; font-size: 1.05rem; }
+.policy p, .policy li { max-width: 68ch; color: var(--ink); }
+.policy p { margin: 10px 0 0; }
+.policy ul, .policy ol { margin: 10px 0 0; padding-inline-start: 1.3em; }
+.policy li { margin-bottom: 8px; }
+.policy strong { font-weight: 600; }
+.policy code { overflow-wrap: anywhere; }
+
+@media (min-width: 640px) {
+  .policy { margin-top: 32px; padding: 6px 32px 40px; }
+}
