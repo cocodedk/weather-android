@@ -134,4 +134,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
 
     testImplementation("junit:junit:4.13.2")
+    // The Android jar's org.json is a stub that throws in unit tests; WeatherStore's tests need the real one.
+    // Test-only: never packaged in the APK. (Already in the local Gradle cache.)
+    testImplementation("org.json:json:20260522")
 }

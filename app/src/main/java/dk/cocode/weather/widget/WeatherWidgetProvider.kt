@@ -10,7 +10,6 @@ import dk.cocode.weather.R
 import dk.cocode.weather.data.ForecastRepository
 import dk.cocode.weather.data.WeatherStore
 import dk.cocode.weather.ui.unitsFor
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
@@ -54,28 +53,24 @@ class WeatherWidgetProvider : AppWidgetProvider() {
         CoroutineScope(SupervisorJob()).launch {
             try {
                 val store = WeatherStore(appContext)
-                val prefs = store.prefs.first()
-                val place = prefs.places.firstOrNull { it.key == prefs.selectedKey }
-                    ?: prefs.places.firstOrNull()
-
-                val views = if (place == null) {
-                    WidgetViews.empty(appContext)
-                } else {
-                    val units = unitsFor(
-                        appContext.resources,
-                        imperial = prefs.imperial,
-                        use24Hour = DateFormat.is24HourFormat(appContext),
-                    )
-                    try {
-                        val loaded = ForecastRepository(store).load(place)
-                        WidgetViews.forecast(appContext, place, loaded.forecast, units, loaded.stale)
-                    } catch (e: CancellationException) {
-                        throw e
-                    } catch (e: Exception) {
-                        // No network and no cache for this place. Say so rather than
-                        // leaving a spinner on the home screen forever.
+                val views = when (val found = loadForWidget({ store.prefs.first() }, ForecastRepository(store))) {
+                    WidgetLoad.NoPlace -> WidgetViews.empty(appContext)
+                    // No network and no cache for this place. Say so rather than
+                    // leaving a spinner on the home screen forever.
+                    WidgetLoad.Unavailable ->
                         WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
-                    }
+                    WidgetLoad.Superseded -> return@launch
+                    is WidgetLoad.Ready -> WidgetViews.forecast(
+                        appContext,
+                        found.place,
+                        found.loaded.forecast,
+                        unitsFor(
+                            appContext.resources,
+                            imperial = found.imperial,
+                            use24Hour = DateFormat.is24HourFormat(appContext),
+                        ),
+                        found.loaded.stale,
+                    )
                 }
                 ids.forEach { manager.updateAppWidget(it, views) }
             } finally {
