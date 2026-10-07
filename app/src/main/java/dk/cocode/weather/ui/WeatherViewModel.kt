@@ -34,6 +34,15 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
 
     private var loadJob: Job? = null
 
+    private val selection = PlaceSelection(
+        state = _state,
+        scope = viewModelScope,
+        savePlaces = { store.savePlaces(it) },
+        saveSelected = { store.saveSelected(it) },
+        notifyWidgets = ::notifyWidgets,
+        reload = ::refresh,
+    )
+
     /** Signals the UI to launch the system permission dialog. */
     private val _permissionRequest = MutableStateFlow(false)
     val permissionRequest: StateFlow<Boolean> = _permissionRequest.asStateFlow()
@@ -83,17 +92,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
 
     // ---------- places ----------
 
-    fun selectPlace(place: Place) {
-        if (_state.value.isShowing(place)) return
-        _state.update { it.withSelectedPlace(place) }
-        viewModelScope.launch {
-            // Notify only after the write commits — the widget re-reads the store,
-            // and poking it first would just make it redraw the old place.
-            store.saveSelected(place.key)
-            notifyWidgets()
-        }
-        refresh()
-    }
+    fun selectPlace(place: Place) = selection.select(place)
 
     /**
      * The widget follows the app's selected place and unit preference, so anything
@@ -134,11 +133,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             _state.update { it.copy(locating = true, error = null) }
             try {
-                val place = DeviceLocation.current(app)
-                val places = withDevicePlace(_state.value.places, place)
-                _state.update { it.copy(places = places, locating = false) }
-                store.savePlaces(places)
-                selectPlace(place)
+                selection.useFix(DeviceLocation.current(app))
                 searcher.clear()
             } catch (e: LocationPermissionMissing) {
                 _state.update { it.copy(locating = false) }

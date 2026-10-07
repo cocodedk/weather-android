@@ -125,6 +125,7 @@ data/            IO and persistence
 ui/
   WeatherViewModel.kt  state, selection, refresh, permission signalling
   PlaceSearch.kt       debounced type-ahead, isolated from forecast state
+  PlaceSelection.kt    picking a place or taking a device fix: state, save, widget poke, reload
   WeatherUiState.kt    one immutable snapshot the screen draws
   WeatherScreen.kt     scaffold; swaps in the About screen
   ScreenBody.kt        forecast, loading and error states, status line
