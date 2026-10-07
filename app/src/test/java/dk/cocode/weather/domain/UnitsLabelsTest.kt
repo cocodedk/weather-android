@@ -28,6 +28,19 @@ class UnitsLabelsTest {
     }
 
     @Test
+    fun aNumberAndItsUnitCannotBeSplitAcrossLines() {
+        // A no-break space after the number, and a word joiner inside "m/s".
+        assertEquals("2.7 m/⁠s", metric24.wind(2.7))
+        assertEquals("12 m/⁠s", metric24.wind(12.0))
+        assertEquals("0.0 mm", metric24.precip(0.0))
+        assertEquals("1015 hPa", metric24.pressure(1015.2))
+        val imperial = Units(labels, imperial = true, use24Hour = true, locale = Locale.US)
+        assertEquals("6.0 mph", imperial.wind(2.7))
+        assertEquals("0.04 in", imperial.precip(1.0))
+        assertEquals("--", metric24.wind(null))
+    }
+
+    @Test
     fun twelveHourClockUsesTheAmAndPmLabels() {
         assertEquals("12:05 am", metric12.clock("2026-10-07T00:05"))
         assertEquals("1:30 pm", metric12.clock("2026-10-07T13:30"))

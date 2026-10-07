@@ -3,10 +3,13 @@ package dk.cocode.weather.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dk.cocode.weather.R
@@ -49,10 +51,12 @@ fun StatsGrid(forecast: Forecast, dayIndex: Int, units: Units, modifier: Modifie
 
     Column(modifier = modifier.padding(horizontal = 20.dp)) {
         stats.chunked(2).forEach { pair ->
-            Row(Modifier.fillMaxWidth()) {
+            // Min intrinsic height: a tile whose text wraps (large fonts) grows, and its
+            // neighbour grows with it, so a row of tiles stays level and nothing is cut off.
+            Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
                 pair.forEachIndexed { i, stat ->
                     if (i > 0) Spacer(Modifier.width(10.dp))
-                    StatTile(stat, Modifier.weight(1f))
+                    StatTile(stat, Modifier.weight(1f).fillMaxHeight())
                 }
                 // Keeps a lone trailing tile at half width instead of stretching it.
                 if (pair.size == 1) {
@@ -70,36 +74,31 @@ private fun StatTile(stat: Stat, modifier: Modifier = Modifier) {
     val palette = LocalPalette.current
     Row(
         modifier = modifier
-            .height(76.dp)
+            .heightIn(min = 76.dp)
             .background(palette.tile, RoundedCornerShape(14.dp))
-            .padding(horizontal = 12.dp),
+            .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         WeatherIconView(stat.icon, Modifier.size(26.dp), palette.fgDim)
         Spacer(Modifier.width(10.dp))
+        // No line limits: a long word or a large font wraps rather than being cut off.
         Column(verticalArrangement = Arrangement.Center) {
             Text(
                 text = stat.key.uppercase(),
                 color = palette.fgDim,
                 fontSize = 10.sp,
                 letterSpacing = 1.1.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = stat.value,
                 color = palette.fg,
                 fontSize = 19.sp,
                 fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = stat.sub,
                 color = palette.fgDim,
                 fontSize = 11.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
         }
     }
@@ -114,10 +113,8 @@ private fun todayStats(f: Forecast, u: Units): List<Stat> {
         Stat(WeatherIcon.THERMO, stringResource(R.string.stat_feels_like),
             u.tempFull(c.apparentTemperature),
             stringResource(R.string.stat_feels_like_note, u.tempFull(c.temperature))),
-        Stat(WeatherIcon.WIND, stringResource(R.string.stat_wind), u.wind(c.windSpeed),
-            stringResource(
-                R.string.stat_wind_note, u.bearing(c.windDirection), u.wind(d0?.windSpeedMax),
-            )),
+        Stat(WeatherIcon.WIND, windKey(u.bearing(c.windDirection)), u.wind(c.windSpeed),
+            stringResource(R.string.stat_wind_note, u.wind(d0?.windSpeedMax))),
         Stat(WeatherIcon.DROP, stringResource(R.string.stat_humidity), u.percent(c.humidity),
             stringResource(R.string.stat_humidity_note)),
         Stat(WeatherIcon.RAIN, stringResource(R.string.stat_precip), u.precip(c.precipitation),
@@ -151,6 +148,12 @@ private fun dayStats(f: Forecast, dayIndex: Int, u: Units): List<Stat> {
         sunStat(u, d?.sunrise, d?.sunset),
     )
 }
+
+/** "Wind from ESE", or just "Wind" when the API gave no direction. */
+@Composable
+private fun windKey(compassPoint: String): String =
+    if (compassPoint.isEmpty()) stringResource(R.string.stat_wind)
+    else stringResource(R.string.stat_wind_from, compassPoint)
 
 @Composable
 private fun sunStat(u: Units, sunrise: String?, sunset: String?) =

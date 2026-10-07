@@ -47,7 +47,7 @@ class Units(
         if (ms == null) return "--"
         val v = if (imperial) ms * 2.236936 else ms
         val n = if (v < 10) String.format(locale, "%.1f", v) else v.roundToInt().toString()
-        return n + if (imperial) " mph" else " m/s"
+        return n + if (imperial) "${NBSP}mph" else "${NBSP}m/${WORD_JOINER}s"
     }
 
     fun bearing(deg: Double?): String {
@@ -59,14 +59,15 @@ class Units(
 
     fun precip(mm: Double?): String {
         if (mm == null) return "--"
-        if (imperial) return String.format(locale, "%.2f in", mm / 25.4)
-        return if (mm < 10) String.format(locale, "%.1f mm", mm)
-        else "${mm.roundToInt()} mm"
+        if (imperial) return String.format(locale, "%.2f${NBSP}in", mm / 25.4)
+        return if (mm < 10) String.format(locale, "%.1f${NBSP}mm", mm)
+        else "${mm.roundToInt()}${NBSP}mm"
     }
 
     fun percent(p: Double?): String = if (p == null) "--" else "${p.roundToInt()}%"
 
-    fun pressure(hpa: Double?): String = if (hpa == null) "--" else "${hpa.roundToInt()} hPa"
+    fun pressure(hpa: Double?): String =
+        if (hpa == null) "--" else "${hpa.roundToInt()}${NBSP}hPa"
 
     // --- time ---
 
@@ -153,6 +154,10 @@ class Units(
     }
 
     companion object {
+        // A number and its unit stay on one line when a tile wraps at a large font size. The
+        // word joiner keeps the line from breaking inside "m/s", where "/" would allow it.
+        private const val NBSP = ' '
+        private const val WORD_JOINER = '⁠'
         private val ISO = Regex("""^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?""")
     }
 }

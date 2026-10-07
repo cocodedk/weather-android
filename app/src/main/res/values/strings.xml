@@ -83,8 +83,10 @@
     <string name="stat_feels_like">Feels like</string>
     <string name="stat_feels_like_note">Actual %1$s</string>
     <string name="stat_wind">Wind</string>
-    <!-- %1$s is a compass point, %2$s the day's strongest wind. -->
-    <string name="stat_wind_note">From %1$s · max %2$s</string>
+    <!-- %1$s is a compass point such as ESE: the direction the wind blows from. -->
+    <string name="stat_wind_from">Wind from %1$s</string>
+    <!-- %1$s is today's strongest wind, with its unit. -->
+    <string name="stat_wind_note">Max today %1$s</string>
     <string name="stat_wind_day_note">Strongest of the day</string>
     <string name="stat_humidity">Humidity</string>
     <string name="stat_humidity_note">Relative</string>

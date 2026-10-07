@@ -5,11 +5,10 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dk.cocode.weather.R
 import dk.cocode.weather.data.DeviceLocation
 import dk.cocode.weather.data.ForecastRepository
-import dk.cocode.weather.R
 import dk.cocode.weather.data.LocationPermissionMissing
-import dk.cocode.weather.data.LocationUnavailable
 import dk.cocode.weather.data.Place
 import dk.cocode.weather.data.WeatherStore
 import dk.cocode.weather.widget.WeatherWidgetProvider
@@ -65,17 +64,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
             _state.update { it.copy(loading = true, error = null) }
             try {
                 val loaded = repo.load(place)
-                _state.update {
-                    it.copy(
-                        forecast = loaded.forecast,
-                        stale = loaded.stale,
-                        loading = false,
-                        error = null,
-                        // A shorter forecast (or a new place) must not leave the
-                        // selector pointing past the end of the list.
-                        dayIndex = it.dayIndex.coerceIn(0, (loaded.forecast.daily.size - 1).coerceAtLeast(0)),
-                    )
-                }
+                _state.update { it.withForecast(loaded.forecast, loaded.stale) }
             } catch (e: Exception) {
                 _state.update {
                     it.copy(loading = false, error = e.message ?: text(R.string.error_title))
@@ -93,9 +82,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
 
     fun selectPlace(place: Place) {
         if (place.key == _state.value.selected?.key) return
-        // dayIndex resets: "Wednesday" in the old city is not the row the user wants
-        // to keep staring at after switching to a new one.
-        _state.update { it.copy(selected = place, forecast = null, dayIndex = 0, stale = false) }
+        _state.update { it.withSelectedPlace(place) }
         viewModelScope.launch {
             // Notify only after the write commits — the widget re-reads the store,
             // and poking it first would just make it redraw the old place.
@@ -115,19 +102,16 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Adds a searched place (if new), selects it, and persists the list. */
     fun addPlace(place: Place) {
-        val current = _state.value.places
-        val existing = current.firstOrNull { it.key == place.key }
-        val places = if (existing != null) current else current + place
+        val (places, toSelect) = withPlace(_state.value.places, place)
         _state.update { it.copy(places = places) }
         viewModelScope.launch { store.savePlaces(places) }
-        selectPlace(existing ?: place)
+        selectPlace(toSelect)
         searcher.clear()
     }
 
     fun removePlace(place: Place) {
-        val places = _state.value.places.filterNot { it.key == place.key }
         // Never leave the app with nothing to show.
-        if (places.isEmpty()) {
+        val places = withoutPlace(_state.value.places, place) ?: run {
             _state.update { it.copy(message = text(R.string.msg_keep_one_location)) }
             return
         }
@@ -148,8 +132,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
             _state.update { it.copy(locating = true, error = null) }
             try {
                 val place = DeviceLocation.current(app)
-                // Replace any previous device entry rather than stacking one per fix.
-                val places = _state.value.places.filterNot { it.isDeviceLocation } + place
+                val places = withDevicePlace(_state.value.places, place)
                 _state.update { it.copy(places = places, locating = false) }
                 store.savePlaces(places)
                 selectPlace(place)
@@ -158,9 +141,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
                 _state.update { it.copy(locating = false) }
                 _permissionRequest.value = true
             } catch (e: Exception) {
-                val message = if (e is LocationUnavailable) text(e.messageRes)
-                else text(R.string.msg_location_failed)
-                _state.update { it.copy(locating = false, message = message) }
+                _state.update { it.copy(locating = false, message = text(locationFailureMessage(e))) }
             }
         }
     }
@@ -187,11 +168,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun cycleTheme() {
-        val next = when (_state.value.theme) {
-            WeatherStore.THEME_AUTO -> WeatherStore.THEME_DAY
-            WeatherStore.THEME_DAY -> WeatherStore.THEME_NIGHT
-            else -> WeatherStore.THEME_AUTO
-        }
+        val next = nextTheme(_state.value.theme)
         _state.update { it.copy(theme = next) }
         viewModelScope.launch { store.saveTheme(next) }
     }
