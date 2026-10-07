@@ -125,6 +125,7 @@ data/            IO and persistence
 ui/
   WeatherViewModel.kt  state, selection, refresh, permission signalling
   PlaceSearch.kt       debounced type-ahead, isolated from forecast state
+  PlaceSelection.kt    picking a place or taking a device fix: state, save, widget poke, reload
   WeatherUiState.kt    one immutable snapshot the screen draws
   WeatherScreen.kt     scaffold; swaps in the About screen
   ScreenBody.kt        forecast, loading and error states, status line
@@ -181,6 +182,9 @@ point of the page.
       deliberate decision — the build currently resolves offline.
 - [ ] DRY / SOLID / KISS / YAGNI. Delete dead code immediately.
 - [ ] Never widen the permission set. Coarse location is enough for a forecast.
+- [ ] A `catch (e: Exception)` around a suspend call rethrows `CancellationException` first.
+      Cancelling a request is not a failure, and `Http.getString` only notices the
+      cancel when the response arrives, so the error would land on top of the newer result.
 
 ---
 

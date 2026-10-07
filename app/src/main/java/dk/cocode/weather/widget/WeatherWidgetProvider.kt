@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.text.format.DateFormat
+import android.widget.RemoteViews
 import dk.cocode.weather.R
 import dk.cocode.weather.data.ForecastRepository
 import dk.cocode.weather.data.WeatherStore
@@ -43,38 +44,43 @@ class WeatherWidgetProvider : AppWidgetProvider() {
      * of onReceive — without it the process can be killed mid-request and the
      * widget silently keeps showing yesterday's numbers.
      */
-    private fun refresh(context: Context, manager: AppWidgetManager, ids: IntArray) {
-        if (ids.isEmpty()) return
+    private fun refresh(context: Context, manager: AppWidgetManager, requested: IntArray) {
+        if (requested.isEmpty()) return
 
-        ids.forEach { manager.updateAppWidget(it, WidgetViews.loading(context)) }
-
+        // The time the broadcast allows runs from here, not from when the coroutine gets going.
+        val startedNanos = System.nanoTime()
         val pending = goAsync()
+        val ticket = publisher.begin()
+
         val appContext = context.applicationContext
         CoroutineScope(SupervisorJob()).launch {
             try {
                 val store = WeatherStore(appContext)
-                val prefs = store.prefs.first()
-                val place = prefs.places.firstOrNull { it.key == prefs.selectedKey }
-                    ?: prefs.places.firstOrNull()
-
-                val views = if (place == null) {
-                    WidgetViews.empty(appContext)
-                } else {
-                    val units = unitsFor(
-                        appContext.resources,
-                        imperial = prefs.imperial,
-                        use24Hour = DateFormat.is24HourFormat(appContext),
-                    )
-                    try {
-                        val loaded = ForecastRepository(store).load(place)
-                        WidgetViews.forecast(appContext, place, loaded.forecast, units, loaded.stale)
-                    } catch (e: Exception) {
+                val surface = object : WidgetSurface<RemoteViews> {
+                    override fun build(found: WidgetLoad): RemoteViews = when (found) {
+                        WidgetLoad.NoPlace -> WidgetViews.empty(appContext)
                         // No network and no cache for this place. Say so rather than
-                        // leaving a spinner on the home screen forever.
-                        WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
+                        // leaving the home screen without an answer.
+                        is WidgetLoad.Unavailable ->
+                            WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
+                        is WidgetLoad.Ready -> WidgetViews.forecast(
+                            appContext,
+                            found.place,
+                            found.loaded.forecast,
+                            unitsFor(
+                                appContext.resources,
+                                imperial = found.imperial,
+                                use24Hour = DateFormat.is24HourFormat(appContext),
+                            ),
+                            found.loaded.stale,
+                        )
                     }
+
+                    override fun allIds(): IntArray = ids(appContext, manager)
+
+                    override fun update(id: Int, views: RemoteViews) = manager.updateAppWidget(id, views)
                 }
-                ids.forEach { manager.updateAppWidget(it, views) }
+                refreshWidget(ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface, startedNanos)
             } finally {
                 pending.finish()
             }
@@ -82,6 +88,9 @@ class WeatherWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
+        /** One for the whole process: refreshes from every broadcast take their turn through it. */
+        private val publisher = WidgetPublisher()
+
         const val ACTION_REFRESH = "dk.cocode.weather.widget.REFRESH"
 
         private fun ids(context: Context, manager: AppWidgetManager): IntArray =

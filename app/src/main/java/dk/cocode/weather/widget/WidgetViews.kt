@@ -27,12 +27,6 @@ object WidgetViews {
         WeatherIcon.PARTLY, WeatherIcon.PARTLY_NIGHT, WeatherIcon.SHOWERS,
     )
 
-    fun loading(context: Context): RemoteViews =
-        RemoteViews(context.packageName, R.layout.widget_weather).apply {
-            setTextViewText(R.id.widget_status, context.getString(R.string.widget_loading))
-            wireClicks(context, this)
-        }
-
     fun empty(context: Context, message: String? = null): RemoteViews =
         RemoteViews(context.packageName, R.layout.widget_weather).apply {
             setTextViewText(R.id.widget_place, context.getString(R.string.app_name))

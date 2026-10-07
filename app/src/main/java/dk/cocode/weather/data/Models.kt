@@ -18,10 +18,25 @@ data class Place(
     val region: String
         get() = listOf(admin1, country).filter { it.isNotBlank() }.joinToString(", ")
 
-    /** Identity for saved-list dedupe: coordinates rounded to ~1 km. */
+    /** The coordinates rounded to ~1 km: two points that share it count as the same place. */
+    val coordinateKey: String
+        get() = "%.2f,%.2f".format(java.util.Locale.US, latitude, longitude)
+
+    /** Identity for saved-list dedupe. The device entry is one slot, whichever fix it holds. */
     val key: String
-        get() = if (isDeviceLocation) "device"
-        else "%.2f,%.2f".format(java.util.Locale.US, latitude, longitude)
+        get() = if (isDeviceLocation) DEVICE_KEY else coordinateKey
+
+    /**
+     * What the offline forecast cache is filed under. The device entry's [key] never changes, so
+     * its cache also carries where the phone was: a forecast for a spot the phone has left must
+     * not stand in for the forecast of the spot it is at now.
+     */
+    val cacheKey: String
+        get() = if (isDeviceLocation) "$DEVICE_KEY@$coordinateKey" else key
+
+    companion object {
+        const val DEVICE_KEY = "device"
+    }
 }
 
 data class Current(

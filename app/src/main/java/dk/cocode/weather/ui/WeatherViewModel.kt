@@ -12,6 +12,7 @@ import dk.cocode.weather.data.LocationPermissionMissing
 import dk.cocode.weather.data.Place
 import dk.cocode.weather.data.WeatherStore
 import dk.cocode.weather.widget.WeatherWidgetProvider
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +33,15 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
     val search: StateFlow<SearchUiState> = searcher.state
 
     private var loadJob: Job? = null
+
+    private val selection = PlaceSelection(
+        state = _state,
+        scope = viewModelScope,
+        savePlaces = { store.savePlaces(it) },
+        saveSelected = { store.saveSelected(it) },
+        notifyWidgets = ::notifyWidgets,
+        reload = ::refresh,
+    )
 
     /** Signals the UI to launch the system permission dialog. */
     private val _permissionRequest = MutableStateFlow(false)
@@ -65,6 +75,8 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 val loaded = repo.load(place)
                 _state.update { it.withForecast(loaded.forecast, loaded.stale) }
+            } catch (e: CancellationException) {
+                throw e // replaced by a newer refresh: its result, not an error, is what to show
             } catch (e: Exception) {
                 _state.update {
                     it.copy(loading = false, error = e.message ?: text(R.string.error_title))
@@ -80,17 +92,7 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
 
     // ---------- places ----------
 
-    fun selectPlace(place: Place) {
-        if (place.key == _state.value.selected?.key) return
-        _state.update { it.withSelectedPlace(place) }
-        viewModelScope.launch {
-            // Notify only after the write commits — the widget re-reads the store,
-            // and poking it first would just make it redraw the old place.
-            store.saveSelected(place.key)
-            notifyWidgets()
-        }
-        refresh()
-    }
+    fun selectPlace(place: Place) = selection.select(place)
 
     /**
      * The widget follows the app's selected place and unit preference, so anything
@@ -131,15 +133,13 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             _state.update { it.copy(locating = true, error = null) }
             try {
-                val place = DeviceLocation.current(app)
-                val places = withDevicePlace(_state.value.places, place)
-                _state.update { it.copy(places = places, locating = false) }
-                store.savePlaces(places)
-                selectPlace(place)
+                selection.useFix(DeviceLocation.current(app))
                 searcher.clear()
             } catch (e: LocationPermissionMissing) {
                 _state.update { it.copy(locating = false) }
                 _permissionRequest.value = true
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 _state.update { it.copy(locating = false, message = text(locationFailureMessage(e))) }
             }
