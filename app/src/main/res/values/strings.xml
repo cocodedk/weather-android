@@ -5,6 +5,9 @@
     <!-- Home screen widget -->
     <string name="widget_description">Current conditions for your selected location.</string>
     <string name="widget_refresh">Refresh</string>
+    <!-- Not used any more (the widget keeps its last view until the new one is ready). Kept for now because
+         the Danish translation in values-da on the i18n/danish branch still has it, and lint rejects a
+         translation without its default. Remove both together once that branch is merged. -->
     <string name="widget_loading">Loading…</string>
     <string name="widget_no_data">Tap to open Weather</string>
     <string name="widget_unavailable">Forecast unavailable</string>

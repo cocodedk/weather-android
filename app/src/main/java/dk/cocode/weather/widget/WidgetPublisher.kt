@@ -9,12 +9,6 @@ import java.util.concurrent.atomic.AtomicLong
 interface WidgetSurface<V> {
     fun build(found: WidgetLoad): V
 
-    /** What a widget shows while a refresh works on it. */
-    fun loading(): V
-
-    /** What a widget shows when a refresh ran out of time: needs no data, so it can always be built. */
-    fun unavailable(): V
-
     /** Every widget on the home screen now, not just the ones a refresh was asked about. */
     fun allIds(): IntArray
 
@@ -27,12 +21,13 @@ interface WidgetSurface<V> {
  * A refresh that is no longer the newest, or whose place is no longer the selected one, draws
  * nothing (the refresh that change set off draws instead). One that passes the check finishes
  * drawing before the next refresh can check, so an old place never overwrites a newer one.
+ *
+ * A refresh draws only its result. Until then every widget keeps what it shows (the last forecast,
+ * or "Forecast unavailable"), so a refresh that times out, fails or is cancelled leaves nothing
+ * behind that a later refresh would have to clean up.
  */
 class WidgetPublisher(private val lock: Mutex = Mutex()) {
     private val newest = AtomicLong()
-
-    /** The refresh that has drawn a result (the forecast, or its own "unavailable"), if any. */
-    private val drewResult = AtomicLong()
 
     /** Call when a refresh starts. */
     fun begin(): Long = newest.incrementAndGet()
@@ -57,53 +52,9 @@ class WidgetPublisher(private val lock: Mutex = Mutex()) {
         val views = surface.build(found)
         for (id in surface.allIds()) {
             if (timeIsUp(deadlineNanos)) return@withLock false
-            drewResult.set(ticket)
             surface.update(id, views)
         }
         true
-    }
-
-    /**
-     * Shows the "loading" views on [ids] while a refresh works, unless a newer refresh has started
-     * (its result, or its own "loading", must not be overwritten by an older one that is late) or
-     * the time is up. Looks at both before each widget, under the same lock as [publish]. Returns
-     * the widgets it drew on.
-     */
-    suspend fun <V> showLoading(
-        ticket: Long,
-        ids: IntArray,
-        surface: WidgetSurface<V>,
-        deadlineNanos: Long? = null,
-    ): IntArray = lock.withLock {
-        val views = surface.loading()
-        val drawn = mutableListOf<Int>()
-        for (id in ids) {
-            if (ticket != newest.get() || timeIsUp(deadlineNanos)) break
-            surface.update(id, views)
-            drawn += id
-        }
-        drawn.toIntArray()
-    }
-
-    /**
-     * The last step of a refresh that drew "loading" on [ids] and then ran out of time, failed or
-     * was cancelled without drawing a result: replaces that "loading" with the "unavailable" view,
-     * so the widget does not stay on it until some later refresh succeeds. It uses no stored data,
-     * and draws nothing if a newer refresh has started (it owns the widget now) or this one already
-     * drew a result.
-     */
-    suspend fun <V> settle(
-        ticket: Long,
-        ids: IntArray,
-        surface: WidgetSurface<V>,
-        deadlineNanos: Long? = null,
-    ) = lock.withLock {
-        if (ticket != newest.get() || drewResult.get() == ticket) return@withLock
-        val views = surface.unavailable()
-        for (id in ids) {
-            if (timeIsUp(deadlineNanos)) return@withLock
-            surface.update(id, views)
-        }
     }
 
     private fun timeIsUp(deadlineNanos: Long?) = deadlineNanos != null && System.nanoTime() - deadlineNanos > 0

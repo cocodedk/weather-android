@@ -17,10 +17,6 @@ class FakeSurface(
         is WidgetLoad.Ready -> found.place.name + if (found.loaded.stale) " (saved)" else ""
     }
 
-    override fun loading(): String = "loading"
-
-    override fun unavailable(): String = "unavailable"
-
     override fun allIds(): IntArray = ids
 
     override fun update(id: Int, views: String) {

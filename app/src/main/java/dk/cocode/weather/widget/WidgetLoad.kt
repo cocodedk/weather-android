@@ -10,12 +10,10 @@ import kotlinx.coroutines.withTimeoutOrNull
  * The broadcast that starts a refresh is held open with goAsync(), and Android gives it about ten
  * seconds before it counts as stuck. All the work of a refresh gets [WIDGET_REFRESH_MS]; the fetch
  * inside it gets [WIDGET_FETCH_MS], which leaves time to draw the saved forecast when the fetch
- * gives up. A refresh that ran out of time still has until [WIDGET_SETTLE_MS] to replace the
- * "loading" it drew with a plain "unavailable", so a widget never stays on "loading".
+ * gives up.
  */
-const val WIDGET_REFRESH_MS = 8_000L
-const val WIDGET_FETCH_MS = 6_000L
-const val WIDGET_SETTLE_MS = 9_000L
+const val WIDGET_REFRESH_MS = 9_000L
+const val WIDGET_FETCH_MS = 7_000L
 
 /** What a widget refresh found, before any view is built from it. */
 sealed interface WidgetLoad {

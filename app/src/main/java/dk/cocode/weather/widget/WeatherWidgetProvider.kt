@@ -60,7 +60,7 @@ class WeatherWidgetProvider : AppWidgetProvider() {
                     override fun build(found: WidgetLoad): RemoteViews = when (found) {
                         WidgetLoad.NoPlace -> WidgetViews.empty(appContext)
                         // No network and no cache for this place. Say so rather than
-                        // leaving a spinner on the home screen forever.
+                        // leaving the home screen without an answer.
                         is WidgetLoad.Unavailable ->
                             WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
                         is WidgetLoad.Ready -> WidgetViews.forecast(
@@ -76,18 +76,11 @@ class WeatherWidgetProvider : AppWidgetProvider() {
                         )
                     }
 
-                    override fun loading(): RemoteViews = WidgetViews.loading(appContext)
-
-                    override fun unavailable(): RemoteViews =
-                        WidgetViews.empty(appContext, appContext.getString(R.string.widget_unavailable))
-
                     override fun allIds(): IntArray = ids(appContext, manager)
 
                     override fun update(id: Int, views: RemoteViews) = manager.updateAppWidget(id, views)
                 }
-                refreshWidget(
-                    ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface, requested, startedNanos,
-                )
+                refreshWidget(ticket, publisher, { store.prefs.first() }, ForecastRepository(store), surface, startedNanos)
             } finally {
                 pending.finish()
             }

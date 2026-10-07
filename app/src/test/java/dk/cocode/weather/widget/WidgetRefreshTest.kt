@@ -45,18 +45,18 @@ class WidgetRefreshTest {
         val started = System.nanoTime()
         refreshWidget(
             publisher.begin(), publisher, { prefs() }, trickling(server, saved), surface,
-            requestedIds = intArrayOf(7), overallMs = 4_000, fetchMs = 1_000,
+            overallMs = 4_000, fetchMs = 1_000,
         )
         return (System.nanoTime() - started) / 1_000_000
     }
 
     @Test
-    fun aFetchThatNeverEndsDrawsTheSavedForecastNotLoading() = runBlocking {
+    fun aFetchThatNeverEndsDrawsTheSavedForecast() = runBlocking {
         SlowServer(SlowServer.Mode.TRICKLE).use { server ->
             val surface = FakeSurface(intArrayOf(7))
             val tookMs = refreshAgainst(server, saved = forecast, surface)
 
-            assertEquals(listOf(7 to "loading", 7 to "Copenhagen (saved)"), surface.updates)
+            assertEquals(listOf(7 to "Copenhagen (saved)"), surface.updates)
             assertTrue("took $tookMs ms", tookMs < 3_500)
             assertTrue("the request never reached the server", server.awaitRequest(0))
             assertTrue("the connection was left open", server.awaitClientGone(1_000))
@@ -69,7 +69,7 @@ class WidgetRefreshTest {
             val surface = FakeSurface(intArrayOf(7))
             val tookMs = refreshAgainst(server, saved = null, surface)
 
-            assertEquals(listOf(7 to "loading", 7 to "unavailable: Copenhagen"), surface.updates)
+            assertEquals(listOf(7 to "unavailable: Copenhagen"), surface.updates)
             assertTrue("took $tookMs ms", tookMs < 3_500)
             assertTrue("the connection was left open", server.awaitClientGone(1_000))
         }
@@ -92,11 +92,11 @@ class WidgetRefreshTest {
             // read would run until 6.5 s, past the overall deadline, and nothing would be drawn.
             refreshWidget(
                 publisher.begin(), publisher, slowPrefs, trickling(server, forecast), surface,
-                requestedIds = intArrayOf(7), overallMs = 5_000, fetchMs = 3_500,
+                overallMs = 5_000, fetchMs = 3_500,
             )
             val tookMs = (System.nanoTime() - started) / 1_000_000
 
-            assertEquals(listOf(7 to "loading", 7 to "Copenhagen (saved)"), surface.updates)
+            assertEquals(listOf(7 to "Copenhagen (saved)"), surface.updates)
             assertTrue("took $tookMs ms", tookMs < 4_500)
             assertTrue("the request never reached the server", server.awaitRequest(0))
             assertTrue("the connection was left open", server.awaitClientGone(1_000))
